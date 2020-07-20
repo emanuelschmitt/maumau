@@ -21,7 +21,6 @@ const rules: Record<ActionType, Rule> = {
         card.matchesNextSuit(nextSuit)
     ),
   PLAY_SEVEN: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
-    !pendingSevens &&
     players[playersTurnIndex].hasCard(
       (card) =>
         card.isSeven() &&

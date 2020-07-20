@@ -1,4 +1,4 @@
-import { State, reducer } from "../src/reducer";
+import { reducer } from "../src/reducer";
 import { initalizeGame } from "../src/game";
 
 describe("reducer", () => {
