@@ -4,7 +4,13 @@ type ActionType = Action["type"];
 type Rule = (state: State) => boolean;
 
 const rules: Record<ActionType, Rule> = {
-  PLAY_REGULAR_CARD: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
+  PLAY_REGULAR_CARD: ({
+    players,
+    playersTurnIndex,
+    pendingSevens,
+    stack,
+    nextSuit,
+  }) =>
     !pendingSevens &&
     players[playersTurnIndex].hasCard(
       (card) =>
@@ -55,6 +61,14 @@ export function getActionTypesForPlayer(
   }
 
   return allowedActions;
+}
+
+export function getPlayerRules(state: State): Record<number, ActionType[]> {
+  let rules: Record<number, ActionType[]> = {};
+  for (const player of state.players) {
+    rules[player.id] = getActionTypesForPlayer(player.id, state);
+  }
+  return rules;
 }
 
 export { rules };

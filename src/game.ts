@@ -51,7 +51,7 @@ export function initalizeGame(nPlayers: number = 2): State {
   return {
     stack,
     players,
-    hasDrawnAdditionalCard: false,
+    hasDrawnCard: false,
     nextSuit: null,
     pendingSevens: null,
     playersTurnIndex: 0,
