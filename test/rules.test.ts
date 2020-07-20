@@ -6,7 +6,6 @@ import { Suit } from "../src/suit";
 import { Rank } from "../src/rank";
 
 describe("rules", () => {
-
   // Need to override stack and player's hand to be able to
   // expect specific set of actions.
 
