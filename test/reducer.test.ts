@@ -2,11 +2,11 @@ import { State, reducer } from "../src/reducer";
 import { initalizeGame } from "../src/game";
 
 describe("reducer", () => {
-  describe("when PLAY_CARD action", () => {
+  describe("when PLAY_REGULAR_CARD action", () => {
     const state = initalizeGame(2);
     const cardToPlay = state.players[state.playersTurnIndex].hand[0];
     const newState = reducer(state, {
-      type: "PLAY_CARD",
+      type: "PLAY_REGULAR_CARD",
       payload: cardToPlay,
     });
 

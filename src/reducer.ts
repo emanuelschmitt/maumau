@@ -10,7 +10,7 @@ export type State = {
   // TODO: maybe refactor as enums, special state.
   nextSuit: Suit | null;
   pendingSevens: number | null; // Case when seven is pending and user has to drawn x cards
-  hasDrawnAdditionalCard: boolean; // Case where kannet and has to take card
+  hasDrawnCard: boolean; // Case where kannet and has to take card
 };
 
 /**
@@ -19,7 +19,7 @@ export type State = {
  * Bube
  * - PLAY_JACK kann immer ausgeführt werden
  * - dabei wird das `nextSuite` gesetzt, welches dem nächsten spieler das Suit vorgibt
- * - jedes mal wenn PLAY_CARD oder PLAY_JACK gespielt wird, wird das next suite zurueckgesetzt
+ * - jedes mal wenn PLAY_REGULAR_CARD oder PLAY_JACK gespielt wird, wird das next suite zurueckgesetzt
  *
  * 8er
  * - next player will miss turn
@@ -30,7 +30,7 @@ export type State = {
  */
 
 export type Action =
-  | { type: "PLAY_CARD"; payload: Card }
+  | { type: "PLAY_REGULAR_CARD"; payload: Card }
   | { type: "PLAY_EIGHT"; payload: Card }
   | { type: "PLAY_SEVEN"; payload: Card }
   | { type: "PLAY_JACK"; payload: { card: Card; suit: Suit } }
@@ -42,7 +42,7 @@ export function reducer(state: State, action: Action): State {
   const { players, playersTurnIndex, stack } = state;
 
   switch (action.type) {
-    case "PLAY_CARD": {
+    case "PLAY_REGULAR_CARD": {
       const player = players[playersTurnIndex];
       const newHand = player.hand.filter(
         (card) => !card.isEqual(action.payload)
@@ -50,11 +50,12 @@ export function reducer(state: State, action: Action): State {
       players[playersTurnIndex].hand = newHand;
 
       return {
-        ...state,
         players,
         stack: [...stack, action.payload],
         playersTurnIndex: (playersTurnIndex + 1) % players.length,
-        hasDrawnAdditionalCard: false,
+        hasDrawnCard: false,
+        nextSuit: null,
+        pendingSevens: null,
       };
     }
 
@@ -70,7 +71,7 @@ export function reducer(state: State, action: Action): State {
         players,
         stack: [...stack, action.payload],
         playersTurnIndex: (playersTurnIndex + 2) % players.length,
-        hasDrawnAdditionalCard: false,
+        hasDrawnCard: false,
       };
     }
 
@@ -86,7 +87,7 @@ export function reducer(state: State, action: Action): State {
         stack: [...stack, action.payload],
         playersTurnIndex: (playersTurnIndex + 1) % players.length,
         pendingSevens: (state?.pendingSevens ?? 0) + 1,
-        hasDrawnAdditionalCard: false,
+        hasDrawnCard: false,
         nextSuit: null,
       };
     }
@@ -103,7 +104,7 @@ export function reducer(state: State, action: Action): State {
         stack: [...stack, action.payload.card],
         playersTurnIndex: (playersTurnIndex + 1) % players.length,
         pendingSevens: null,
-        hasDrawnAdditionalCard: false,
+        hasDrawnCard: false,
         nextSuit: action.payload.suit,
       };
     }
@@ -120,7 +121,7 @@ export function reducer(state: State, action: Action): State {
       return {
         players,
         stack: stack.slice(1),
-        hasDrawnAdditionalCard: true,
+        hasDrawnCard: true,
         nextSuit: state.nextSuit,
         pendingSevens: null,
         playersTurnIndex,
@@ -130,7 +131,7 @@ export function reducer(state: State, action: Action): State {
     case "KANNET": {
       return {
         players,
-        hasDrawnAdditionalCard: false,
+        hasDrawnCard: false,
         nextSuit: state.nextSuit,
         pendingSevens: null,
         playersTurnIndex: (playersTurnIndex + 1) % players.length,
@@ -149,7 +150,7 @@ export function reducer(state: State, action: Action): State {
       return {
         players,
         stack: newStack,
-        hasDrawnAdditionalCard: false,
+        hasDrawnCard: false,
         nextSuit: null,
         pendingSevens: null,
         playersTurnIndex,

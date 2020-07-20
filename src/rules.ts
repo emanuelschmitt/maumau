@@ -4,7 +4,7 @@ type ActionType = Action["type"];
 type Rule = (state: State) => boolean;
 
 const rules: Record<ActionType, Rule> = {
-  PLAY_CARD: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
+  PLAY_REGULAR_CARD: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
     !pendingSevens &&
     players[playersTurnIndex].hasCard(
       (card) =>
@@ -31,14 +31,16 @@ const rules: Record<ActionType, Rule> = {
   PLAY_JACK: ({ players, playersTurnIndex, pendingSevens }) =>
     !pendingSevens &&
     players[playersTurnIndex].hasCard((card) => card.isJack()),
-  KANNET_AND_DRAW: ({ pendingSevens, hasDrawnAdditionalCard }) =>
-    !pendingSevens && !hasDrawnAdditionalCard,
-  KANNET: ({ pendingSevens, hasDrawnAdditionalCard }) =>
-    !pendingSevens && hasDrawnAdditionalCard,
+  KANNET_AND_DRAW: ({ pendingSevens, hasDrawnCard }) =>
+    !pendingSevens && !hasDrawnCard,
+  KANNET: ({ pendingSevens, hasDrawnCard }) => !pendingSevens && hasDrawnCard,
   ACCEPT_PENDING_SEVENS: ({ pendingSevens }) => Boolean(pendingSevens),
 };
 
-export function getActionTypesForPlayer(id: number, state: State): ActionType[] {
+export function getActionTypesForPlayer(
+  id: number,
+  state: State
+): ActionType[] {
   const { players, playersTurnIndex } = state;
 
   if (players[playersTurnIndex].id !== id) {
