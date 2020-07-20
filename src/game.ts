@@ -29,6 +29,9 @@ export function createStack(): Card[] {
 }
 
 export function initalizeGame(nPlayers: number = 2): State {
+  if (nPlayers < 2 || nPlayers > 4) {
+    throw new Error("Cannot initialize game with " + nPlayers + " players. Only 2-4 players allowed.");
+  }
   const stack = createStack();
   shuffle(stack);
 
