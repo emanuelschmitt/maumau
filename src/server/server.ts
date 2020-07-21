@@ -1,9 +1,9 @@
 import ws from "ws";
 
-import { initalizeGame } from "./game";
+import { initalizeGame } from "../game/game";
 import { tryParseAndValidateMessage } from "./parser";
-import { getPlayerRules } from "./rules";
-import { reducer } from "./reducer";
+import { getPlayerRules } from "../game/rules";
+import { reducer } from "../game/reducer";
 
 async function main() {
   let gameState = initalizeGame(2);

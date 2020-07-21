@@ -1,7 +1,7 @@
-import Player from "./player";
-import Card from "./card";
-import { Suit } from "./suit";
-import { ActionType } from "./action";
+import Player from "../models/player";
+import Card from "../models/card";
+import { Suit } from "../models/suit";
+import { ActionType } from "../models/action";
 
 export type State = {
   players: Player[];
