@@ -1,9 +1,9 @@
-import { Action } from "../src/reducer";
-import Card from "../src/card";
-import { Suit } from "../src/suit";
-import { Rank } from "../src/rank";
-import { tryParseAndValidateMessage, Message } from "../src/parser";
-import { ActionType } from "../src/action";
+import { Action } from "../src/game/reducer";
+import Card from "../src/models/card";
+import { Suit } from "../src/models/suit";
+import { Rank } from "../src/models/rank";
+import { tryParseAndValidateMessage, Message } from "../src/server/parser";
+import { ActionType } from "../src/models/action";
 
 describe("parser", () => {
   test("should parse action message with card payload", async () => {

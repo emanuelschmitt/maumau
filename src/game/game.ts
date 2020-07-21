@@ -1,9 +1,9 @@
-import Card from "./card";
-import { Suit } from "./suit";
-import { Rank } from "./rank";
+import Card from "../models/card";
+import { Suit } from "../models/suit";
+import { Rank } from "../models/rank";
 import { State } from "./reducer";
-import Player from "./player";
-import shuffle from "./utils/shuffle";
+import Player from "../models/player";
+import shuffle from "../utils/shuffle";
 
 export function createStack(): Card[] {
   const allSuit: Suit[] = [Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES];

@@ -1,7 +1,7 @@
 import joi from "@hapi/joi";
-import { Action } from "./reducer";
+import { Action } from "../game/reducer";
 import Joi from "@hapi/joi";
-import { ActionType } from "./action";
+import { ActionType } from "../models/action";
 
 const cardSchema = joi.object({
   suit: joi.string().required(),

@@ -1,4 +1,4 @@
-import { initalizeGame, createStack } from "../src/game";
+import { initalizeGame, createStack } from "../src/game/game";
 
 describe("game", () => {
   test("initalize should give players 7 cards", () => {

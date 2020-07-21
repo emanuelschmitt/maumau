@@ -1,9 +1,9 @@
-import { initalizeGame, createStack } from "../src/game";
-import { getActionTypesForPlayer } from "../src/rules";
+import { initalizeGame, createStack } from "../src/game/game";
+import { getActionTypesForPlayer } from "../src/game/rules";
 import util from "util";
-import Card from "../src/card";
-import { Suit } from "../src/suit";
-import { Rank } from "../src/rank";
+import Card from "../src/models/card";
+import { Suit } from "../src/models/suit";
+import { Rank } from "../src/models/rank";
 
 describe("rules", () => {
   // Need to override stack and player's hand to be able to
@@ -61,7 +61,6 @@ describe("rules", () => {
       new Card(Suit.DIAMONDS, Rank.SEVEN),
     ]
     const actions = getActionTypesForPlayer(0, state);
-    console.log(actions);
     expect(actions).toEqual(['PLAY_SEVEN', 'ACCEPT_PENDING_SEVENS']);
   })
 });

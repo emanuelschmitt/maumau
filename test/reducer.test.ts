@@ -1,6 +1,6 @@
-import { reducer } from "../src/reducer";
-import { initalizeGame } from "../src/game";
-import { ActionType } from "../src/action";
+import { reducer } from "../src/game/reducer";
+import { initalizeGame } from "../src/game/game";
+import { ActionType } from "../src/models/action";
 
 describe("reducer", () => {
   describe("when PLAY_REGULAR_CARD action", () => {
