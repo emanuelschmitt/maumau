@@ -1,6 +1,7 @@
 import Player from "./player";
 import Card from "./card";
 import { Suit } from "./suit";
+import { ActionType } from "./action";
 
 export type State = {
   players: Player[];
@@ -30,19 +31,19 @@ export type State = {
  */
 
 export type Action =
-  | { type: "PLAY_REGULAR_CARD"; payload: Card }
-  | { type: "PLAY_EIGHT"; payload: Card }
-  | { type: "PLAY_SEVEN"; payload: Card }
-  | { type: "PLAY_JACK"; payload: { card: Card; suit: Suit } }
-  | { type: "KANNET_AND_DRAW" }
-  | { type: "KANNET" }
-  | { type: "ACCEPT_PENDING_SEVENS" };
+  | { type: ActionType.PLAY_REGULAR_CARD; payload: Card }
+  | { type: ActionType.PLAY_EIGHT; payload: Card }
+  | { type: ActionType.PLAY_SEVEN; payload: Card }
+  | { type: ActionType.PLAY_JACK; payload: { card: Card; suit: Suit } }
+  | { type: ActionType.KANNET_AND_DRAW }
+  | { type: ActionType.KANNET }
+  | { type: ActionType.ACCEPT_PENDING_SEVENS };
 
 export function reducer(state: State, action: Action): State {
   const { players, playersTurnIndex, stack } = state;
 
   switch (action.type) {
-    case "PLAY_REGULAR_CARD": {
+    case ActionType.PLAY_REGULAR_CARD: {
       const player = players[playersTurnIndex];
       const newHand = player.hand.filter(
         (card) => !card.isEqual(action.payload)
@@ -59,7 +60,7 @@ export function reducer(state: State, action: Action): State {
       };
     }
 
-    case "PLAY_EIGHT": {
+    case ActionType.PLAY_EIGHT: {
       const player = players[playersTurnIndex];
       const newHand = player.hand.filter(
         (card) => !card.isEqual(action.payload)
@@ -75,7 +76,7 @@ export function reducer(state: State, action: Action): State {
       };
     }
 
-    case "PLAY_SEVEN": {
+    case ActionType.PLAY_SEVEN: {
       const player = players[playersTurnIndex];
       const newHand = player.hand.filter(
         (card) => !card.isEqual(action.payload)
@@ -92,7 +93,7 @@ export function reducer(state: State, action: Action): State {
       };
     }
 
-    case "PLAY_JACK": {
+    case ActionType.PLAY_JACK: {
       const player = players[playersTurnIndex];
       const newHand = player.hand.filter(
         (card) => !card.isEqual(action.payload.card)
@@ -109,7 +110,7 @@ export function reducer(state: State, action: Action): State {
       };
     }
 
-    case "KANNET_AND_DRAW": {
+    case ActionType.KANNET_AND_DRAW: {
       const firstCard = stack[0]; // stack will never be empty
       if (!firstCard) {
         throw new Error("stack is unexpectidly empty");
@@ -128,7 +129,7 @@ export function reducer(state: State, action: Action): State {
       };
     }
 
-    case "KANNET": {
+    case ActionType.KANNET: {
       return {
         players,
         hasDrawnCard: false,
@@ -139,7 +140,7 @@ export function reducer(state: State, action: Action): State {
       };
     }
 
-    case "ACCEPT_PENDING_SEVENS": {
+    case ActionType.ACCEPT_PENDING_SEVENS: {
       const numberOfCards = state?.pendingSevens ?? 0 * 2;
       const cardsToDraw = stack.slice(0, numberOfCards);
       const newStack = stack.slice(numberOfCards);
