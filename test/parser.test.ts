@@ -1,63 +1,63 @@
-import { Action } from "../src/game/reducer";
-import Card from "../src/models/card";
-import { Suit } from "../src/models/suit";
-import { Rank } from "../src/models/rank";
-import { tryParseAndValidateMessage, Message } from "../src/server/parser";
-import { ActionType } from "../src/models/action";
+import { Action } from '../src/game/reducer';
+import { ActionType } from '../src/models/action';
+import Card from '../src/models/card';
+import { Rank } from '../src/models/rank';
+import { Suit } from '../src/models/suit';
+import { Message, tryParseAndValidateMessage } from '../src/server/parser';
 
-describe("parser", () => {
-  test("should parse action message with card payload", async () => {
+describe('parser', () => {
+  test('should parse action message with card payload', async () => {
     const action: Action = {
       type: ActionType.PLAY_REGULAR_CARD,
       payload: new Card(Suit.CLUBS, Rank.ACE),
     };
     const message: Message = {
       playerId: 0,
-      action: action
-    }
+      action: action,
+    };
     const raw = JSON.stringify(message);
     const validated = await tryParseAndValidateMessage(raw);
     expect(validated).toBeDefined();
   });
 
-  test("should not parse action when sending rubbish string", async () => {
-    const raw = JSON.stringify("abc");
+  test('should not parse action when sending rubbish string', async () => {
+    const raw = JSON.stringify('abc');
     const validated = await tryParseAndValidateMessage(raw);
     expect(validated).not.toBeDefined();
   });
 
-  test("should not parse action when sending rubbish message", async () => {
+  test('should not parse action when sending rubbish message', async () => {
     const message = {
       playerId: 0,
-      action: "xzy"
-    }
+      action: 'xzy',
+    };
     const raw = JSON.stringify(message);
     const validated = await tryParseAndValidateMessage(raw);
     expect(validated).not.toBeDefined();
   });
 
-  test("should not parse action when sending rubbish action message", async () => {
+  test('should not parse action when sending rubbish action message', async () => {
     const action = {
-      type: "def"
+      type: 'def',
     };
     const message = {
       playerId: 0,
-      action: action
-    }
+      action: action,
+    };
     const raw = JSON.stringify(message);
     const validated = await tryParseAndValidateMessage(raw);
     expect(validated).not.toBeDefined();
   });
 
-  test("should not parse action when action is valid but payload is not", async () => {
+  test('should not parse action when action is valid but payload is not', async () => {
     const action = {
       type: ActionType.PLAY_REGULAR_CARD,
-      payload: null
+      payload: null,
     };
     const message = {
       playerId: 0,
-      action: action
-    }
+      action: action,
+    };
     const raw = JSON.stringify(message);
     const validated = await tryParseAndValidateMessage(raw);
     expect(validated).not.toBeDefined();

@@ -1,9 +1,9 @@
-import { reducer } from "../src/game/reducer";
-import { initalizeGame } from "../src/game/game";
-import { ActionType } from "../src/models/action";
+import { initalizeGame } from '../src/game/game';
+import { reducer } from '../src/game/reducer';
+import { ActionType } from '../src/models/action';
 
-describe("reducer", () => {
-  describe("when PLAY_REGULAR_CARD action", () => {
+describe('reducer', () => {
+  describe('when PLAY_REGULAR_CARD action', () => {
     const state = initalizeGame(2);
     const cardToPlay = state.players[0].hand[0];
     const newState = reducer(state, {
@@ -11,17 +11,15 @@ describe("reducer", () => {
       payload: cardToPlay,
     });
 
-    test("should remove card from current players hand", () => {
-      expect(
-        newState.players[0].hand.includes(cardToPlay)
-      ).toBeFalsy();
+    test('should remove card from current players hand', () => {
+      expect(newState.players[0].hand.includes(cardToPlay)).toBeFalsy();
     });
 
-    test("should set next player", () => {
+    test('should set next player', () => {
       expect(newState.playersTurnIndex).toEqual(1);
     });
 
-    test("should append card to stack", () => {
+    test('should append card to stack', () => {
       expect(newState.stack.includes(cardToPlay)).toBeTruthy();
     });
   });

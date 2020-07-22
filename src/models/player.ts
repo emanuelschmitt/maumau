@@ -1,4 +1,4 @@
-import Card from "./card";
+import Card from './card';
 
 export default class Player {
   constructor(public id: number, public name: string, public hand: Card[]) {}

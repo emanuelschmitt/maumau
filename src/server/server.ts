@@ -1,35 +1,27 @@
-import ws from "ws";
+import ws from 'ws';
 
-import { initalizeGame } from "../game/game";
-import { tryParseAndValidateMessage } from "./parser";
-import { getPlayerRules } from "../game/rules";
-import { reducer } from "../game/reducer";
+import { initalizeGame } from '../game/game';
+import { reducer } from '../game/reducer';
+import { getPlayerRules } from '../game/rules';
+
+import { tryParseAndValidateMessage } from './parser';
 
 async function main() {
   let gameState = initalizeGame(2);
-  const server = new ws.Server({ port: 8080, host: "0.0.0.0" });
+  const server = new ws.Server({ port: 8080, host: '0.0.0.0' });
 
   // Mutate gamestate.
-  server.on("connection", (ws) => {
-    ws.on("message", async (message) => {
-      const validatedMessage = await tryParseAndValidateMessage(
-        message.toString()
-      );
+  server.on('connection', (ws) => {
+    ws.on('message', async (message) => {
+      const validatedMessage = await tryParseAndValidateMessage(message.toString());
       if (!validatedMessage) {
         return;
       }
 
       // check if eligable to do action
       const playerRules = getPlayerRules(gameState);
-      if (
-        playerRules[validatedMessage.playerId].includes(
-          validatedMessage.action.type
-        )
-      ) {
-        console.log(
-          "action allowed, performing...",
-          validatedMessage.action.type
-        );
+      if (playerRules[validatedMessage.playerId].includes(validatedMessage.action.type)) {
+        console.log('action allowed, performing...', validatedMessage.action.type);
         gameState = reducer(gameState, validatedMessage.action);
       }
     });
@@ -42,12 +34,12 @@ async function main() {
         JSON.stringify({
           state: gameState,
           possibleActions: getPlayerRules(gameState),
-        })
+        }),
       );
     }
   }, 1000);
 
-  console.log("Server started at 0.0.0.0:8080");
+  console.log('Server started at 0.0.0.0:8080');
 }
 
 main().catch((err) => console.error(err));

@@ -1,5 +1,5 @@
-import { Suit } from "./suit";
-import { Rank } from "./rank";
+import { Rank } from './rank';
+import { Suit } from './suit';
 
 export default class Card {
   constructor(public suit: Suit, public rank: Rank) {}
@@ -7,9 +7,7 @@ export default class Card {
     return card.rank === this.rank && card.suit === this.suit;
   }
   public isRegular(): boolean {
-    return [Rank.ACE, Rank.NINE, Rank.TEN, Rank.QUEEN, Rank.KING].includes(
-      this.rank
-    );
+    return [Rank.ACE, Rank.NINE, Rank.TEN, Rank.QUEEN, Rank.KING].includes(this.rank);
   }
   public isSeven(): boolean {
     return this.rank === Rank.SEVEN;

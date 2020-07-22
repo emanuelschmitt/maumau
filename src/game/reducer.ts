@@ -1,7 +1,7 @@
-import Player from "../models/player";
-import Card from "../models/card";
-import { Suit } from "../models/suit";
-import { ActionType } from "../models/action";
+import { ActionType } from '../models/action';
+import Card from '../models/card';
+import Player from '../models/player';
+import { Suit } from '../models/suit';
 
 export type State = {
   players: Player[];
@@ -45,9 +45,7 @@ export function reducer(state: State, action: Action): State {
   switch (action.type) {
     case ActionType.PLAY_REGULAR_CARD: {
       const player = players[playersTurnIndex];
-      const newHand = player.hand.filter(
-        (card) => !card.isEqual(action.payload)
-      );
+      const newHand = player.hand.filter((card) => !card.isEqual(action.payload));
       players[playersTurnIndex].hand = newHand;
 
       return {
@@ -62,9 +60,7 @@ export function reducer(state: State, action: Action): State {
 
     case ActionType.PLAY_EIGHT: {
       const player = players[playersTurnIndex];
-      const newHand = player.hand.filter(
-        (card) => !card.isEqual(action.payload)
-      );
+      const newHand = player.hand.filter((card) => !card.isEqual(action.payload));
       players[playersTurnIndex].hand = newHand;
 
       return {
@@ -78,9 +74,7 @@ export function reducer(state: State, action: Action): State {
 
     case ActionType.PLAY_SEVEN: {
       const player = players[playersTurnIndex];
-      const newHand = player.hand.filter(
-        (card) => !card.isEqual(action.payload)
-      );
+      const newHand = player.hand.filter((card) => !card.isEqual(action.payload));
       players[playersTurnIndex].hand = newHand;
 
       return {
@@ -95,9 +89,7 @@ export function reducer(state: State, action: Action): State {
 
     case ActionType.PLAY_JACK: {
       const player = players[playersTurnIndex];
-      const newHand = player.hand.filter(
-        (card) => !card.isEqual(action.payload.card)
-      );
+      const newHand = player.hand.filter((card) => !card.isEqual(action.payload.card));
       players[playersTurnIndex].hand = newHand;
 
       return {
@@ -113,7 +105,7 @@ export function reducer(state: State, action: Action): State {
     case ActionType.KANNET_AND_DRAW: {
       const firstCard = stack[0]; // stack will never be empty
       if (!firstCard) {
-        throw new Error("stack is unexpectidly empty");
+        throw new Error('stack is unexpectidly empty');
       }
 
       const player = players[playersTurnIndex];
@@ -159,6 +151,6 @@ export function reducer(state: State, action: Action): State {
     }
 
     default:
-      throw new Error("invalid state");
+      throw new Error('invalid state');
   }
 }
