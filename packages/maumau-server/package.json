@@ -1,0 +1,21 @@
+{
+  "name": "maumau-server",
+  "version": "1.0.0",
+  "description": "epic maumau",
+  "main": "index.js",
+  "author": "Emanuel Schmitt <emanuel.schmitt@me.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "dev": "nodemon src/server/server.ts",
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --fix"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "ws": "^7.3.1"
+  }
+}
