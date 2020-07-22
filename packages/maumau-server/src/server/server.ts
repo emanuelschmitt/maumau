@@ -1,45 +1,58 @@
 import ws from 'ws';
 
-import { initalizeGame } from '../game/game';
-import { reducer } from '../game/reducer';
-import { getPlayerRules } from '../game/rules';
+import { CustomSocket } from './websocket';
 
-import { tryParseAndValidateMessage } from './parser';
+export default class Server {
+  private readonly server: ws.Server;
+  private readonly onMessage: (message: ws.Data) => void;
 
-async function main() {
-  let gameState = initalizeGame(2);
-  const server = new ws.Server({ port: 8080, host: '0.0.0.0' });
+  constructor({ onMessage, ...options }: { onMessage: (message: ws.Data) => void } & ws.ServerOptions) {
+    this.server = new ws.Server(options);
+    this.onMessage = onMessage;
+  }
 
-  // Mutate gamestate.
-  server.on('connection', (ws) => {
-    ws.on('message', async (message) => {
-      const validatedMessage = await tryParseAndValidateMessage(message.toString());
-      if (!validatedMessage) {
-        return;
+  public start() {
+    this.addConnectionHandler();
+    this.addCloseHandler();
+  }
+
+  public broadcast(onBroadcast: (client: ws) => void) {
+    for (const client of Array.from(this.server.clients)) {
+      if ((client as CustomSocket).isAlive === false) {
+        return client.terminate();
       }
 
-      // check if eligable to do action
-      const playerRules = getPlayerRules(gameState);
-      if (playerRules[validatedMessage.playerId].includes(validatedMessage.action.type)) {
-        console.log('action allowed, performing...', validatedMessage.action.type);
-        gameState = reducer(gameState, validatedMessage.action);
-      }
-    });
-  });
+      onBroadcast(client);
 
-  // Send state to clients.
-  setInterval(() => {
-    for (const client of Array.from(server.clients)) {
-      client.send(
-        JSON.stringify({
-          state: gameState,
-          possibleActions: getPlayerRules(gameState),
-        }),
-      );
+      (client as CustomSocket).isAlive = false;
+      client.ping();
     }
-  }, 1000);
+  }
 
-  console.log('Server started at 0.0.0.0:8080');
+  private addConnectionHandler() {
+    this.server.on('connection', (ws: CustomSocket, req) => {
+      const ip = req.socket.remoteAddress;
+      console.log(`Remote player with IP ${ip} joined.`);
+
+      ws.on('pong', () => {
+        // console.log(`pong to IP ${ip}`);
+        ws.isAlive = true;
+      });
+
+      ws.on('message', async (message) => {
+        console.log('incoming message');
+        this.onMessage(message);
+      });
+
+      ws.on('close', () => {
+        console.log(`closed connection to IP ${ip}.`);
+      });
+    });
+  }
+
+  private addCloseHandler(): void {
+    this.server.on('close', function close() {
+      console.log('socket closed. cleaning up.');
+    });
+  }
 }
-
-main().catch((err) => console.error(err));

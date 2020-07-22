@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "dev": "nodemon src/server/server.ts",
+    "dev": "nodemon src/server/main.ts",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix"
   },
   "devDependencies": {
