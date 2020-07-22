@@ -2,9 +2,9 @@ import ws from 'ws';
 
 import { CustomSocket } from './websocket';
 
-export default class Server {
+export default class WebSocketServer {
   private readonly server: ws.Server;
-  private readonly onMessage: (message: ws.Data) => void;
+  private readonly onMessage: (message: ws.Data) => void | Promise<void>;
 
   constructor({ onMessage, ...options }: { onMessage: (message: ws.Data) => void } & ws.ServerOptions) {
     this.server = new ws.Server(options);
@@ -41,7 +41,7 @@ export default class Server {
 
       ws.on('message', async (message) => {
         console.log('incoming message');
-        this.onMessage(message);
+        await this.onMessage(message);
       });
 
       ws.on('close', () => {

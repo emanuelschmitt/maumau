@@ -3,12 +3,12 @@ import { reducer } from '../game/reducer';
 import { getPlayerRules } from '../game/rules';
 
 import { tryParseAndValidateMessage } from './parser';
-import Server from './server';
+import WebSocketServer from './websocket-server';
 
 async function main() {
   let gameState = initalizeGame(2);
 
-  const server = new Server({
+  const server = new WebSocketServer({
     host: '0.0.0.0',
     port: 8080,
     onMessage: async (message) => {
