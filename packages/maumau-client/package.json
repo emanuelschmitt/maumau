@@ -1,0 +1,44 @@
+{
+  "name": "maumau-client",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --fix",
+    "dev": "yarn clean && yarn build:tsc && yarn dev:serve",
+    "dev:serve": "NODE_ENV=development webpack-dev-server --open",
+    "build:webpack": "yarn clean && NODE_ENV=production webpack --mode production",
+    "build:tsc": "tsc --build",
+    "build": "yarn build:tsc && yarn build:webpack",
+    "clean": "rimraf bundle/ node_modules/.cache/",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "@babel/core": "7.10.5",
+    "@babel/plugin-proposal-class-properties": "7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "7.10.4",
+    "@babel/plugin-transform-typescript": "^7.9.0",
+    "@babel/preset-env": "7.10.4",
+    "@babel/preset-react": "7.10.4",
+    "@babel/preset-typescript": "7.10.4",
+    "@types/friendly-errors-webpack-plugin": "0.1.2",
+    "@types/node": "14.0.24",
+    "@types/webpack": "4.41.21",
+    "@types/webpack-dev-server": "^3.10.1",
+    "@types/webpack-manifest-plugin": "2.1.0",
+    "@types/webpackbar": "4.0.0",
+    "babel-loader": "8.1.0",
+    "core-js": "3.6.5",
+    "friendly-errors-webpack-plugin": "1.7.0",
+    "html-webpack-plugin": "^4.3.0",
+    "webpack": "4.43.0",
+    "webpack-cli": "3.3.12",
+    "webpack-dev-server": "3.11.0",
+    "webpack-manifest-plugin": "2.2.0",
+    "webpack-serve": "3.2.0",
+    "webpackbar": "^4.0.0"
+  }
+}
