@@ -1,5 +1,3 @@
-import util from 'util';
-
 import { createStack, initalizeGame } from '../src/game/game';
 import { getActionTypesForPlayer } from '../src/game/rules';
 import Card from '../src/models/card';
