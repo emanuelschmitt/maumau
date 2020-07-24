@@ -30,7 +30,7 @@ describe('reducer', () => {
 
   describe("when ACCEPT_PENDING_SEVENS action", () => {
 
-    var state = initalizeGame(2);
+    const state = initalizeGame(2);
     const cardsCount = state.players[1].hand.length
     state = reducer(state, {
       type: ActionType.PLAY_SEVEN,
