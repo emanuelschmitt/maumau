@@ -7,16 +7,16 @@ const rules: Record<ActionType, Rule> = {
   PLAY_REGULAR_CARD: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
     !pendingSevens &&
     players[playersTurnIndex].hasCard(
-      (card) => card.isRegular() && card.doesMatch(stack[0]) && card.matchesNextSuit(nextSuit),
+      (card) => card.isRegular() && card.doesMatch(stack[stack.length - 1]) && card.matchesNextSuit(nextSuit),
     ),
   PLAY_EIGHT: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
     !pendingSevens &&
     players[playersTurnIndex].hasCard(
-      (card) => card.isEight() && card.doesMatch(stack[0]) && card.matchesNextSuit(nextSuit),
+      (card) => card.isEight() && card.doesMatch(stack[stack.length - 1]) && card.matchesNextSuit(nextSuit),
     ),
   PLAY_SEVEN: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
     players[playersTurnIndex].hasCard(
-      (card) => card.isSeven() && card.doesMatch(stack[0]) && card.matchesNextSuit(nextSuit),
+      (card) => card.isSeven() && card.doesMatch(stack[stack.length - 1]) && card.matchesNextSuit(nextSuit),
     ),
   PLAY_JACK: ({ players, playersTurnIndex, pendingSevens }) =>
     !pendingSevens && players[playersTurnIndex].hasCard((card) => card.isJack()),
