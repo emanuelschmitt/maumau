@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Card, { getBackgroundUrl } from './card';
-import CardFrame from './card-frame';
-import CardStack from './card-stack';
+import PlayableCard from './card/playable-card';
+import StackCard from './card/stack-card';
+import TopCard from './card/top-card';
 import { useConnectionContext } from './connection-context';
 import Deck from './deck';
 import Grid from './grid';
@@ -21,20 +21,20 @@ function Board() {
       <Grid.One>
         <Deck>
           {players[0].hand.map((card) => (
-            <Card card={card} player={players[0]} />
+            <PlayableCard card={card} player={players[0]} />
           ))}
         </Deck>
       </Grid.One>
       <Grid.Two>
-        <CardFrame backgroundUrl={getBackgroundUrl(state.stack[state.stack.length - 1])} />
+        <TopCard card={state.stack[state.stack.length - 1]} />
       </Grid.Two>
       <Grid.Three>
-        <CardStack />
+        <StackCard />
       </Grid.Three>
       <Grid.Four>
         <Deck>
           {players[1].hand.map((card) => (
-            <Card card={card} player={players[1]} />
+            <PlayableCard card={card} player={players[1]} />
           ))}
         </Deck>
       </Grid.Four>

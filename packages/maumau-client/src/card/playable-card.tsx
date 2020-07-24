@@ -1,9 +1,12 @@
 import { Action } from 'maumau-server/src/game/reducer';
 import { Card as TCard, ActionType, Rank, Player, IncomingMessage, Suit } from 'maumau-server/src/types';
 import React from 'react';
+import styled from 'styled-components';
 
-import CardFrame from './card-frame';
-import { useConnectionContext } from './connection-context';
+import { useConnectionContext } from '../connection-context';
+
+import { cardStyle } from './style';
+import { getCardAssetUrlByCard } from './utils';
 
 type Props = {
   card: TCard;
@@ -14,24 +17,6 @@ type Props = {
 function isMatch(cardA: TCard, cardB: TCard): boolean {
   return cardA.rank === cardB.rank || cardA.suit === cardB.suit;
 }
-
-const rankMap: Record<Rank, string> = {
-  [Rank.ACE]: 'A',
-  [Rank.KING]: 'K',
-  [Rank.QUEEN]: 'Q',
-  [Rank.JACK]: 'J',
-  [Rank.TEN]: '10',
-  [Rank.NINE]: '9',
-  [Rank.EIGHT]: '8',
-  [Rank.SEVEN]: '7',
-};
-
-const suitMap: Record<Suit, string> = {
-  [Suit.CLUBS]: 'C',
-  [Suit.DIAMONDS]: 'D',
-  [Suit.HEARTS]: 'H',
-  [Suit.SPADES]: 'S',
-};
 
 function canPlayCard(card: TCard, topCard: TCard, possibleActions: ActionType[]): boolean {
   switch (card.rank) {
@@ -79,9 +64,13 @@ function getAction(card: TCard): Action {
   }
 }
 
-export function getBackgroundUrl(card: TCard) {
-  return `/static/${rankMap[card.rank]}${suitMap[card.suit]}.png`;
-}
+const Frame = styled.div<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
+  ...cardStyle,
+  background: `url('${url}')`,
+  opacity: disabled ? '0.3' : '1',
+  cursor: disabled ? 'unset' : 'pointer',
+  backgroundSize: 'cover',
+}));
 
 function Card({ card, player, children }: Props) {
   const { state, possibleActions, sendJsonMessage } = useConnectionContext();
@@ -99,9 +88,9 @@ function Card({ card, player, children }: Props) {
   };
 
   return (
-    <CardFrame disabled={!isEnabled} onClick={onClick} backgroundUrl={getBackgroundUrl(card)}>
+    <Frame disabled={!isEnabled} onClick={onClick} url={getCardAssetUrlByCard(card)}>
       {children}
-    </CardFrame>
+    </Frame>
   );
 }
 
