@@ -66,6 +66,7 @@ export default (): webpack.Configuration => {
       new WebpackBar(),
     ],
     devtool,
+    //@ts-ignore
     devServer: {
       host: '0.0.0.0',
       contentBase: [path.join(__dirname, 'bundle'), path.join(__dirname, 'public')],
