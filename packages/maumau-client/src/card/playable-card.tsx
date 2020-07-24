@@ -73,18 +73,17 @@ const Frame = styled.div<{ url: string; disabled?: boolean }>(({ url, disabled =
 }));
 
 function Card({ card, player, children }: Props) {
-  const { state, possibleActions, sendJsonMessage } = useConnectionContext();
+  const { state, possibleActions, sendAction } = useConnectionContext();
   const isEnabled = canPlayCard(card, state.stack[state.stack.length - 1], possibleActions[player.id]);
 
   const onClick = () => {
     if (!isEnabled) {
       return;
     }
-    const message: IncomingMessage = {
+    sendAction({
       playerId: player.id,
       action: getAction(card),
-    };
-    sendJsonMessage(message);
+    });
   };
 
   return (
