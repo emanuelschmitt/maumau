@@ -54,4 +54,19 @@ describe('rules', () => {
     const actions = getActionTypesForPlayer(0, state);
     expect(actions).toEqual(['PLAY_SEVEN', 'ACCEPT_PENDING_SEVENS']);
   });
+
+  test('should only allow to play cards matching the next suit of a played jack', () => {
+    const state = initalizeGame(2);
+    state.stack = [new Card(Suit.HEARTS, Rank.JACK)];
+    state.nextSuit = Suit.DIAMONDS;
+    state.players[0].hand = [
+      new Card(Suit.HEARTS, Rank.TEN),
+      new Card(Suit.DIAMONDS, Rank.EIGHT),
+      new Card(Suit.DIAMONDS, Rank.SEVEN),
+    ];
+    const actions = getActionTypesForPlayer(0, state);
+    expect(actions).toContain('PLAY_EIGHT');
+    expect(actions).toContain('PLAY_SEVEN');
+    expect(actions).not.toContain(['PLAY_REGULAR_CARD']);
+  });
 });

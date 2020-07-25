@@ -39,7 +39,7 @@ async function main() {
         }),
       );
     });
-  }, 1000);
+  }, 200);
 
   console.log('Server started at 0.0.0.0:8080');
 }
