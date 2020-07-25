@@ -133,7 +133,7 @@ export function reducer(state: State, action: Action): State {
     }
 
     case ActionType.ACCEPT_PENDING_SEVENS: {
-      const numberOfCards = state?.pendingSevens ?? 0 * 2;
+      const numberOfCards = (state?.pendingSevens ?? 0) * 2;
       const cardsToDraw = stack.slice(0, numberOfCards);
       const newStack = stack.slice(numberOfCards);
 
