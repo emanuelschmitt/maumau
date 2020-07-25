@@ -7,28 +7,10 @@ export type State = {
   players: Player[];
   playersTurnIndex: number;
   stack: Card[];
-
-  // TODO: maybe refactor as enums, special state.
   nextSuit: Suit | null;
   pendingSevens: number | null; // Case when seven is pending and user has to drawn x cards
   hasDrawnCard: boolean; // Case where kannet and has to take card
 };
-
-/**
- * Rules
- *
- * Bube
- * - PLAY_JACK kann immer ausgeführt werden
- * - dabei wird das `nextSuite` gesetzt, welches dem nächsten spieler das Suit vorgibt
- * - jedes mal wenn PLAY_REGULAR_CARD oder PLAY_JACK gespielt wird, wird das next suite zurueckgesetzt
- *
- * 8er
- * - next player will miss turn
- * - player index will be double incremented
- *
- * 7er
- * - next player has to chose between PLAY_SEVEN and ACCEPT_PENDING_SEVENS;
- */
 
 export type Action =
   | { type: ActionType.PLAY_REGULAR_CARD; payload: Card }

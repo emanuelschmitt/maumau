@@ -3,6 +3,22 @@ import { Action, State } from './reducer';
 type ActionType = Action['type'];
 type Rule = (state: State) => boolean;
 
+/**
+ * Rules
+ *
+ * Bube
+ * - PLAY_JACK kann immer ausgeführt werden
+ * - dabei wird das `nextSuite` gesetzt, welches dem nächsten spieler das Suit vorgibt
+ * - jedes mal wenn PLAY_REGULAR_CARD oder PLAY_JACK gespielt wird, wird das next suite zurueckgesetzt
+ *
+ * 8er
+ * - next player will miss turn
+ * - player index will be double incremented
+ *
+ * 7er
+ * - next player has to chose between PLAY_SEVEN and ACCEPT_PENDING_SEVENS;
+ */
+
 const rules: Record<ActionType, Rule> = {
   PLAY_REGULAR_CARD: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
     !pendingSevens &&

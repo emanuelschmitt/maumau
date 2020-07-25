@@ -1,12 +1,11 @@
-import { initalizeGame } from '../game/game';
-import { reducer } from '../game/reducer';
+import GameState from '../game/game-state';
 import { getPlayerRules } from '../game/rules';
 
 import { tryParseAndValidateMessage } from './parser';
 import WebSocketServer from './websocket-server';
 
 async function main() {
-  let gameState = initalizeGame(2);
+  const gameState = new GameState({ amountPlayers: 2 });
 
   const server = new WebSocketServer({
     host: '0.0.0.0',
@@ -18,10 +17,10 @@ async function main() {
       }
 
       // check if eligable to do action
-      const playerRules = getPlayerRules(gameState);
+      const playerRules = getPlayerRules(gameState.getState());
       if (playerRules[validatedMessage.playerId].includes(validatedMessage.action.type)) {
         console.log('action allowed, performing...', validatedMessage.action.type);
-        gameState = reducer(gameState, validatedMessage.action);
+        gameState.dispatch(validatedMessage.action);
       }
     },
   });
@@ -34,8 +33,8 @@ async function main() {
     server.broadcast((client) => {
       client.send(
         JSON.stringify({
-          state: gameState,
-          possibleActions: getPlayerRules(gameState),
+          state: gameState.getState(),
+          possibleActions: getPlayerRules(gameState.getState()),
         }),
       );
     });
