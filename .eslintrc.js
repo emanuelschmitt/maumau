@@ -6,13 +6,23 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
+    'plugin:react/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
     sourceType: 'module', // Allows for the use of imports
+    ecmaFeatures: {
+      jsx: true,
+    },
   },
-  plugins: ['import', '@typescript-eslint'],
+  plugins: ['import', '@typescript-eslint', 'unused-imports'],
+  settings: {
+    react: {
+      pragma: 'React', // Pragma to use, default to "React"
+      version: 'detect', // React version. "detect" automatically picks the version you have installed.
+    },
+  },
   rules: {
     'import/order': [
       'error',
@@ -24,6 +34,14 @@ module.exports = {
         },
       },
     ],
+    '@typescript-eslint/no-unused-vars': 'off',
+    'unused-imports/no-unused-imports-ts': 'error',
+    'unused-imports/no-unused-vars-ts': [
+      'warn',
+      { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
+    ],
+    'react/jsx-uses-react': 'error',
+    'react/jsx-uses-vars': 'error',
   },
   ignorePatterns: ['**/*.js'],
 };

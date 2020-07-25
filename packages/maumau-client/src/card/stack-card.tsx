@@ -16,16 +16,21 @@ const Frame = styled.div<{ url: string; disabled?: boolean }>(({ url, disabled =
 
 function StackCard() {
   const { sendAction, state, possibleActions } = useConnectionContext();
-  const currentPlayer = state.players[state.playersTurnIndex];
-  const canDraw = possibleActions[currentPlayer.id].includes(ActionType.KANNET_AND_DRAW);
+  const currentPlayer = state && state.players[state.playersTurnIndex];
+  const canDraw =
+    possibleActions && currentPlayer && possibleActions[currentPlayer.id].includes(ActionType.KANNET_AND_DRAW);
 
-  const onClick = () =>
+  const onClick = () => {
+    if (!currentPlayer) {
+      return;
+    }
     sendAction({
       playerId: currentPlayer.id,
       action: {
         type: ActionType.KANNET_AND_DRAW,
       },
     });
+  };
 
   return <Frame url={getCardAssetForStackCard()} onClick={onClick} disabled={!canDraw} />;
 }
