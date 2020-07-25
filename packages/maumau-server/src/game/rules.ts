@@ -7,16 +7,17 @@ const rules: Record<ActionType, Rule> = {
   PLAY_REGULAR_CARD: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
     !pendingSevens &&
     players[playersTurnIndex].hasCard(
-      (card) => card.isRegular() && card.doesMatch(stack[stack.length - 1]) && card.matchesNextSuit(nextSuit),
+      (card) =>
+        card.isRegular() && (nextSuit ? card.matchesNextSuit(nextSuit) : card.doesMatch(stack[stack.length - 1])),
     ),
   PLAY_EIGHT: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
     !pendingSevens &&
     players[playersTurnIndex].hasCard(
-      (card) => card.isEight() && card.doesMatch(stack[stack.length - 1]) && card.matchesNextSuit(nextSuit),
+      (card) => card.isEight() && (nextSuit ? card.matchesNextSuit(nextSuit) : card.doesMatch(stack[stack.length - 1])),
     ),
   PLAY_SEVEN: ({ players, playersTurnIndex, stack, nextSuit }) =>
     players[playersTurnIndex].hasCard(
-      (card) => card.isSeven() && card.doesMatch(stack[stack.length - 1]) && card.matchesNextSuit(nextSuit),
+      (card) => card.isSeven() && (nextSuit ? card.matchesNextSuit(nextSuit) : card.doesMatch(stack[stack.length - 1])),
     ),
   PLAY_JACK: ({ players, playersTurnIndex, pendingSevens }) =>
     !pendingSevens && players[playersTurnIndex].hasCard((card) => card.isJack()),
