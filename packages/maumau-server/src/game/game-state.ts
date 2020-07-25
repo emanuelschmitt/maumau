@@ -4,6 +4,7 @@ import { allRanks } from '../models/rank';
 import { allSuits } from '../models/suit';
 import shuffle from '../utils/shuffle';
 
+import { hasGameEnded } from './listeners/hasGameEnded';
 import { reducer, State, Action } from './reducer';
 
 const AMOUNT_OF_CARD_PER_PLAYER = 7;
@@ -11,22 +12,50 @@ const AMOUNT_OF_CARD_PER_PLAYER = 7;
 type Options = {
   amountPlayers: number;
 };
+type Dispatch = (action: Action) => State;
+export type ListenerFunction = (state: State, dispatch: Dispatch) => void;
 
 export default class GameState {
   private state: State;
+  private listeners: Array<ListenerFunction>;
+  private isDispatching: boolean;
 
   constructor(options: Options) {
+    this.isDispatching = false;
+    this.listeners = [];
+
     this.validateOptions(options);
     this.initializeGame(options);
+    this.registerListeners();
   }
 
   public getState(): State {
+    if (this.isDispatching) {
+      throw new Error('cannot retrieve state while dispatching.');
+    }
     return this.state;
   }
 
   public dispatch(action: Action): State {
-    this.state = reducer(this.state, action);
+    this.isDispatching = false;
+
+    try {
+      this.isDispatching = true;
+      this.state = reducer(this.state, action);
+    } finally {
+      this.isDispatching = false;
+    }
+
+    for (const listener of this.listeners) {
+      listener(this.getState(), this.dispatch.bind(this));
+    }
+
     return this.state;
+  }
+
+  public registerListeners() {
+    const listeners: ListenerFunction[] = [hasGameEnded];
+    this.listeners.push(...listeners);
   }
 
   private validateOptions({ amountPlayers }: Options): void {
@@ -49,6 +78,7 @@ export default class GameState {
       nextSuit: null,
       pendingSevens: null,
       playersTurnIndex: 0,
+      gameEnded: false,
     };
   }
 

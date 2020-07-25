@@ -19,7 +19,8 @@ type Rule = (state: State) => boolean;
  * - next player has to chose between PLAY_SEVEN and ACCEPT_PENDING_SEVENS;
  */
 
-const rules: Record<ActionType, Rule> = {
+type ActionableActionTypes = Exclude<ActionType, 'END_GAME'>;
+const rules: Record<ActionableActionTypes, Rule> = {
   PLAY_REGULAR_CARD: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
     !pendingSevens &&
     players[playersTurnIndex].hasCard(
