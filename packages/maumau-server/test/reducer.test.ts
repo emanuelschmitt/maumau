@@ -28,11 +28,7 @@ describe('reducer', () => {
   });
 
   describe('when ACCEPT_PENDING_SEVENS action', () => {
-<<<<<<< HEAD
-    let state = initalizeGame(2);
-=======
     let state = new GameState({ amountPlayers: 2 }).getState();
->>>>>>> 5417c3c... refactor: refactor game state
     const cardsCount = state.players[1].hand.length;
     state = reducer(state, {
       type: ActionType.PLAY_SEVEN,
