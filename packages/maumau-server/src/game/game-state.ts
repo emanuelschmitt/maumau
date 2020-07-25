@@ -4,7 +4,9 @@ import { allRanks } from '../models/rank';
 import { allSuits } from '../models/suit';
 import shuffle from '../utils/shuffle';
 
-import { hasGameEnded } from './listeners/hasGameEnded';
+import { autoAcceptSevens } from './listeners/auto-accept-seven';
+import { doKannetIfOnlyOption } from './listeners/do-kannet-if-only-option';
+import { hasGameEnded } from './listeners/has-game-ended';
 import { reducer, State, Action } from './reducer';
 
 const AMOUNT_OF_CARD_PER_PLAYER = 7;
@@ -54,7 +56,7 @@ export default class GameState {
   }
 
   public registerListeners() {
-    const listeners: ListenerFunction[] = [hasGameEnded];
+    const listeners: ListenerFunction[] = [hasGameEnded, doKannetIfOnlyOption, autoAcceptSevens];
     this.listeners.push(...listeners);
   }
 
@@ -109,5 +111,16 @@ export default class GameState {
         }
       }
     }
+  }
+
+  /**
+   * FOR TESTING, DO NOT CALL.
+   * @param state state
+   */
+  public setPartialState(state: Partial<State>) {
+    this.state = {
+      ...this.state,
+      ...state,
+    };
   }
 }

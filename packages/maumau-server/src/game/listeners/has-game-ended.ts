@@ -18,7 +18,6 @@ function hasOnePlayerGotZeroCards(state: State) {
 
 export const hasGameEnded: ListenerFunction = (state, dispatch) => {
   if (!state.gameEnded && hasOnePlayerGotZeroCards(state)) {
-    console.log('listener firing... END_GAME');
     dispatch({
       type: ActionType.END_GAME,
     });

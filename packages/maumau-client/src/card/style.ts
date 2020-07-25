@@ -1,4 +1,6 @@
-export const cardStyle = {
+import { CSSObject } from 'styled-components';
+
+export const cardStyle: CSSObject = {
   height: 100,
   width: 55,
   borderRadius: 4,
