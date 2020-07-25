@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Actions from './actions';
 import PlayableCard from './card/playable-card';
 import StackCard from './card/stack-card';
 import TopCard from './card/top-card';
@@ -19,6 +20,7 @@ function Board() {
   return (
     <Grid.Container>
       <Grid.One>
+        <Actions player={players[0]} />
         <Deck>
           {players[0].hand.map((card) => (
             <PlayableCard card={card} player={players[0]} />
@@ -37,6 +39,7 @@ function Board() {
             <PlayableCard card={card} player={players[1]} />
           ))}
         </Deck>
+        <Actions player={players[1]} />
       </Grid.Four>
     </Grid.Container>
   );

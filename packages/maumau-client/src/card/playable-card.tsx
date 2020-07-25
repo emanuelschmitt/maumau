@@ -1,5 +1,5 @@
 import { Action } from 'maumau-server/src/game/reducer';
-import { Card as TCard, ActionType, Rank, Player, IncomingMessage, Suit } from 'maumau-server/src/types';
+import { Card as TCard, ActionType, Rank, Player, Suit } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -18,13 +18,17 @@ function isMatch(cardA: TCard, cardB: TCard): boolean {
   return cardA.rank === cardB.rank || cardA.suit === cardB.suit;
 }
 
+function matchesSuit(card: TCard, suit: Suit): boolean {
+  return card.suit === suit;
+}
+
 function canPlayCard(card: TCard, topCard: TCard, possibleActions: ActionType[]): boolean {
   switch (card.rank) {
     case Rank.SEVEN: {
-      return possibleActions.includes(ActionType.PLAY_SEVEN);
+      return possibleActions.includes(ActionType.PLAY_SEVEN) && isMatch(card, topCard);
     }
     case Rank.EIGHT: {
-      return possibleActions.includes(ActionType.PLAY_EIGHT);
+      return possibleActions.includes(ActionType.PLAY_EIGHT) && isMatch(card, topCard);
     }
     case Rank.JACK: {
       return possibleActions.includes(ActionType.PLAY_JACK);
@@ -74,7 +78,10 @@ const Frame = styled.div<{ url: string; disabled?: boolean }>(({ url, disabled =
 
 function Card({ card, player, children }: Props) {
   const { state, possibleActions, sendAction } = useConnectionContext();
-  const isEnabled = canPlayCard(card, state.stack[state.stack.length - 1], possibleActions[player.id]);
+
+  const isEnabled = state.nextSuit
+    ? matchesSuit(card, state.nextSuit)
+    : canPlayCard(card, state.stack[state.stack.length - 1], possibleActions[player.id]);
 
   const onClick = () => {
     if (!isEnabled) {

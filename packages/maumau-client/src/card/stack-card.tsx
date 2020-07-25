@@ -23,7 +23,7 @@ function StackCard() {
     sendAction({
       playerId: currentPlayer.id,
       action: {
-        type: state.hasDrawnCard ? ActionType.KANNET : ActionType.KANNET_AND_DRAW,
+        type: ActionType.KANNET_AND_DRAW,
       },
     });
 

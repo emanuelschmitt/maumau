@@ -5,7 +5,7 @@ const Container = styled.div({
   gridTemplateColumns: 'repeat(4, 1fr)',
   gridGap: 4,
   gridAutoRows: 'auto',
-  height: 700,
+  width: '100%',
 });
 
 const One = styled.div({
@@ -19,6 +19,7 @@ const Two = styled.div({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'center',
+  margin: '16px 0',
 });
 
 const Three = styled.div({
@@ -27,6 +28,7 @@ const Three = styled.div({
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'center',
+  margin: '16px 0',
 });
 
 const Four = styled.div({
