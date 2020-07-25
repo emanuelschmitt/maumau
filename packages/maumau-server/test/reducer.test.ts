@@ -1,4 +1,4 @@
-import { initalizeGame } from '../src/game/game';
+import GameState from '../src/game/game-state';
 import { reducer } from '../src/game/reducer';
 import { ActionType } from '../src/models/action';
 import Card from '../src/models/card';
@@ -7,7 +7,7 @@ import { Suit } from '../src/models/suit';
 
 describe('reducer', () => {
   describe('when PLAY_REGULAR_CARD action', () => {
-    const state = initalizeGame(2);
+    const state = new GameState({ amountPlayers: 2 }).getState();
     const cardToPlay = state.players[0].hand[0];
     const newState = reducer(state, {
       type: ActionType.PLAY_REGULAR_CARD,
@@ -28,7 +28,11 @@ describe('reducer', () => {
   });
 
   describe('when ACCEPT_PENDING_SEVENS action', () => {
+<<<<<<< HEAD
     let state = initalizeGame(2);
+=======
+    let state = new GameState({ amountPlayers: 2 }).getState();
+>>>>>>> 5417c3c... refactor: refactor game state
     const cardsCount = state.players[1].hand.length;
     state = reducer(state, {
       type: ActionType.PLAY_SEVEN,

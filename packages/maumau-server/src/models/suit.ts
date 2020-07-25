@@ -4,3 +4,5 @@ export enum Suit {
   CLUBS = 'CLUBS',
   DIAMONDS = 'DIAMONDS',
 }
+
+export const allSuits: Suit[] = [Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES];
