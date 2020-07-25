@@ -1,5 +1,3 @@
-import { Card, Player } from 'maumau-server/src/types';
-import React from 'react';
 import styled from 'styled-components';
 
 export default styled.div({

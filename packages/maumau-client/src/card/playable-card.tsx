@@ -79,9 +79,12 @@ const Frame = styled.div<{ url: string; disabled?: boolean }>(({ url, disabled =
 function Card({ card, player, children }: Props) {
   const { state, possibleActions, sendAction } = useConnectionContext();
 
-  const isEnabled = state.nextSuit
-    ? matchesSuit(card, state.nextSuit)
-    : canPlayCard(card, state.stack[state.stack.length - 1], possibleActions[player.id]);
+  const isEnabled =
+    state &&
+    possibleActions &&
+    (state.nextSuit
+      ? matchesSuit(card, state.nextSuit)
+      : canPlayCard(card, state.stack[state.stack.length - 1], possibleActions[player.id]));
 
   const onClick = () => {
     if (!isEnabled) {

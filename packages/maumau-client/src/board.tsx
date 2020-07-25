@@ -23,7 +23,7 @@ function Board() {
         <Actions player={players[0]} />
         <Deck>
           {players[0].hand.map((card) => (
-            <PlayableCard card={card} player={players[0]} />
+            <PlayableCard card={card} player={players[0]} key={JSON.stringify(card)} />
           ))}
         </Deck>
       </Grid.One>
@@ -36,7 +36,7 @@ function Board() {
       <Grid.Four>
         <Deck>
           {players[1].hand.map((card) => (
-            <PlayableCard card={card} player={players[1]} />
+            <PlayableCard card={card} player={players[1]} key={JSON.stringify(card)} />
           ))}
         </Deck>
         <Actions player={players[1]} />
