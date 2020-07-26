@@ -12,7 +12,7 @@ const Frame = styled(Button)<{ url: string; disabled?: boolean }>(({ url, disabl
   ...cardStyle,
   background: `url('${url}')`,
   backgroundSize: 'cover',
-  opacity: disabled ? '0.3' : '1',
+  opacity: disabled ? '0.6' : '1',
 }));
 
 function StackCard() {

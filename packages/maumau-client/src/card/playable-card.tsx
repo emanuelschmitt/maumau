@@ -72,7 +72,7 @@ function getAction(card: TCard): Action {
 const Frame = styled(Button)<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
   ...cardStyle,
   background: `url('${url}')`,
-  opacity: disabled ? '0.3' : '1',
+  opacity: disabled ? '0.6' : '1',
   cursor: disabled ? 'unset' : 'pointer',
   backgroundSize: 'cover',
 }));
