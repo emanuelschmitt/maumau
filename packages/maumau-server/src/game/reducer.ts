@@ -2,6 +2,7 @@ import { ActionType } from '../models/action';
 import Card from '../models/card';
 import Player from '../models/player';
 import { Suit } from '../models/suit';
+import { logger } from '../server/logger';
 
 export type State = {
   players: Player[];
@@ -25,6 +26,8 @@ export type Action =
 
 export function reducer(state: State, action: Action): State {
   const { players, playersTurnIndex, stack } = state;
+
+  logger.debug(`Reducer: Emiting action ${action.type}`);
 
   switch (action.type) {
     case ActionType.PLAY_REGULAR_CARD: {
