@@ -6,10 +6,13 @@ const reset: CSSObject = {
   padding: 0,
   width: 'auto',
   overflow: 'visible',
-
   color: 'inherit',
   font: 'inherit',
   lineHeight: 'normal',
+};
+
+export default styled.button({
+  ...reset,
   '&:disabled': {
     cursor: 'unset',
     opacity: 0.6,
@@ -25,8 +28,4 @@ const reset: CSSObject = {
     opacity: '0.6',
     cursor: 'unset',
   },
-};
-
-export default styled.button({
-  ...reset,
 });
