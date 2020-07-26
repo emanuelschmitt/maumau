@@ -62,4 +62,24 @@ describe('parser', () => {
     const validated = await tryParseAndValidateMessage(raw);
     expect(validated).not.toBeDefined();
   });
+
+  test('should parse incoming card object to class instances', async () => {
+    const action = {
+      type: ActionType.PLAY_REGULAR_CARD,
+      payload: { suit: Suit.CLUBS, rank: Rank.KING },
+    };
+    const message = {
+      playerId: 0,
+      action: action,
+    };
+    const raw = JSON.stringify(message);
+    const validated = await tryParseAndValidateMessage(raw);
+    expect(validated).toBeDefined();
+
+    if (validated?.action.type !== ActionType.PLAY_REGULAR_CARD) {
+      fail('invalid state');
+    }
+
+    expect(validated.action.payload).toBeInstanceOf(Card);
+  });
 });
