@@ -2,13 +2,13 @@ import { ActionType } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
-import Button from '../button';
+import BaseButton from '../base-button';
 import { useConnectionContext } from '../connection-context';
 
 import { cardStyle } from './style';
 import { getCardAssetForStackCard } from './utils';
 
-const Frame = styled(Button)<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
+const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
   ...cardStyle,
   background: `url('${url}')`,
   backgroundSize: 'cover',
