@@ -3,6 +3,7 @@ import { Card as TCard, ActionType, Rank, Player, Suit } from 'maumau-server/src
 import React from 'react';
 import styled from 'styled-components';
 
+import Button from '../button';
 import { useConnectionContext } from '../connection-context';
 
 import { cardStyle } from './style';
@@ -68,7 +69,7 @@ function getAction(card: TCard): Action {
   }
 }
 
-const Frame = styled.div<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
+const Frame = styled(Button)<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
   ...cardStyle,
   background: `url('${url}')`,
   opacity: disabled ? '0.3' : '1',
