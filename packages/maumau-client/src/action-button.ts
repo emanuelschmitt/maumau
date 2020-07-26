@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import BaseButton from './base-button';
+import BaseButton from './ui/base-button';
 
 export default styled(BaseButton)({
   padding: '8px 16px',

@@ -6,8 +6,8 @@ import StackCard from './card/stack-card';
 import TopCard from './card/top-card';
 import { useConnectionContext } from './connection-context';
 import Deck from './deck';
-import Grid from './grid';
-import JumboTron from './jumbotron';
+import Grid from './ui/grid';
+import JumboTron from './ui/jumbotron';
 
 function Board() {
   const { state } = useConnectionContext();

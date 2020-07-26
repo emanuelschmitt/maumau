@@ -3,8 +3,8 @@ import { Card as TCard, ActionType, Rank, Player, Suit } from 'maumau-server/src
 import React from 'react';
 import styled from 'styled-components';
 
-import BaseButton from '../base-button';
 import { useConnectionContext } from '../connection-context';
+import BaseButton from '../ui/base-button';
 
 import { cardStyle } from './style';
 import { getCardAssetUrlByCard } from './utils';
