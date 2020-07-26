@@ -7,6 +7,7 @@ import TopCard from './card/top-card';
 import { useConnectionContext } from './connection-context';
 import Deck from './deck';
 import Grid from './grid';
+import JumboTron from './jumbotron';
 
 function Board() {
   const { state } = useConnectionContext();
@@ -15,7 +16,15 @@ function Board() {
     return null;
   }
 
-  const { players } = state;
+  const { players, gameEnded } = state;
+
+  if (gameEnded) {
+    return (
+      <JumboTron>
+        <h1>Game Ended</h1>
+      </JumboTron>
+    );
+  }
 
   return (
     <Grid.Container>

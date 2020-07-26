@@ -84,7 +84,7 @@ function Card({ card, player, children }: Props) {
     state &&
     possibleActions &&
     (state.nextSuit
-      ? matchesSuit(card, state.nextSuit)
+      ? matchesSuit(card, state.nextSuit) || card.rank === Rank.JACK
       : canPlayCard(card, state.stack[state.stack.length - 1], possibleActions[player.id]));
 
   const onClick = () => {

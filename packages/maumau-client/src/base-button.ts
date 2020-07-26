@@ -10,7 +10,10 @@ const reset: CSSObject = {
   color: 'inherit',
   font: 'inherit',
   lineHeight: 'normal',
-
+  '&:disabled': {
+    cursor: 'unset',
+    opacity: 0.6,
+  },
   '&:focus, &:active': {
     border: '1px solid #eee',
   },
