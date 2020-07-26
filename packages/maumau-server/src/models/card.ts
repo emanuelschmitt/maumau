@@ -27,4 +27,7 @@ export default class Card {
     }
     return this.suit === suit;
   }
+  public static fromObject({ suit, rank }: { rank: string; suit: string }): Card {
+    return new Card(suit as Suit, rank as Rank);
+  }
 }
