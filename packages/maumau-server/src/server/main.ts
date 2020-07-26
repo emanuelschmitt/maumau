@@ -1,6 +1,7 @@
 import GameState from '../game/game-state';
 import { getPlayerRules } from '../game/rules';
 
+import { logger } from './logger';
 import { tryParseAndValidateMessage } from './parser';
 import WebSocketServer from './websocket-server';
 
@@ -19,7 +20,7 @@ async function main() {
       // check if eligable to do action
       const playerRules = getPlayerRules(gameState.getState());
       if (playerRules[validatedMessage.playerId].includes(validatedMessage.action.type)) {
-        console.log('action allowed, performing...', validatedMessage.action.type);
+        logger.debug('action allowed, performing...', validatedMessage.action.type);
         gameState.dispatch(validatedMessage.action);
       }
     },
@@ -40,7 +41,7 @@ async function main() {
     });
   }, 200);
 
-  console.log('Server started at 0.0.0.0:8080');
+  logger.info('Server started at 0.0.0.0:8080');
 }
 
 main().catch((err) => console.error(err));
