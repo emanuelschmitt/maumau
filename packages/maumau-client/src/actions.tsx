@@ -2,6 +2,7 @@ import { Player, ActionType } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
+import ActionButton from './action-button';
 import { useConnectionContext } from './connection-context';
 
 const Wrapper = styled.div({
@@ -20,7 +21,7 @@ function Actions({ player }: Props) {
     possibleActions && possibleActions![player.id].includes(ActionType.ACCEPT_PENDING_SEVENS);
   return (
     <Wrapper>
-      <button
+      <ActionButton
         onClick={() =>
           sendAction({
             playerId: player.id,
@@ -32,8 +33,8 @@ function Actions({ player }: Props) {
         disabled={!canAcceptPendingSeven}
       >
         Accept Pending Sevens
-      </button>
-      <button
+      </ActionButton>
+      <ActionButton
         onClick={() =>
           sendAction({
             playerId: player.id,
@@ -45,7 +46,7 @@ function Actions({ player }: Props) {
         disabled={!canPerformKannet}
       >
         Kannet
-      </button>
+      </ActionButton>
     </Wrapper>
   );
 }

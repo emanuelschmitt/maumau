@@ -10,6 +10,18 @@ const reset: CSSObject = {
   color: 'inherit',
   font: 'inherit',
   lineHeight: 'normal',
+
+  '&:focus, &:active': {
+    border: '1px solid #eee',
+  },
+  '&:hover': {
+    opacity: 0.9,
+    cursor: 'pointer',
+  },
+  '&:hover:disabled': {
+    opacity: '0.6',
+    cursor: 'unset',
+  },
 };
 
 export default styled.button({
