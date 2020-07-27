@@ -12,7 +12,6 @@ const Bar = styled.div<{ connected: boolean }>((props) => ({
   background: props.connected ? '#20bf6b' : '#eb3b5a',
   color: 'white',
   padding: '16px 32px',
-  transition: 'all 1s ease',
   height: 40,
   display: 'flex',
   alignItems: 'center',
@@ -24,7 +23,7 @@ const Bar = styled.div<{ connected: boolean }>((props) => ({
 function WebSocketStatusBar() {
   const { readyState } = useConnectionContext();
   const isConnected = readyState === ReadyState.OPEN;
-  return <Bar connected={isConnected}>{isConnected ? 'WS Connected' : 'Disconnected'}</Bar>;
+  return <Bar connected={isConnected}>{isConnected ? 'Connected' : 'Disconnected'}</Bar>;
 }
 
 export default WebSocketStatusBar;

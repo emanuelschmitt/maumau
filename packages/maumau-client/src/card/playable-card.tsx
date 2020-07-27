@@ -31,9 +31,6 @@ function canPlayCard(card: TCard, topCard: TCard, possibleActions: ActionType[])
     case Rank.EIGHT: {
       return possibleActions.includes(ActionType.PLAY_EIGHT) && isMatch(card, topCard);
     }
-    case Rank.JACK: {
-      return possibleActions.includes(ActionType.PLAY_JACK);
-    }
     default: {
       return possibleActions.includes(ActionType.PLAY_REGULAR_CARD) && isMatch(card, topCard);
     }
@@ -54,12 +51,6 @@ function getAction(card: TCard): Action {
         payload: card,
       };
     }
-    case Rank.JACK: {
-      return {
-        type: ActionType.PLAY_JACK,
-        payload: { card, suit: Suit.CLUBS },
-      };
-    }
     default: {
       return {
         type: ActionType.PLAY_REGULAR_CARD,
@@ -69,7 +60,7 @@ function getAction(card: TCard): Action {
   }
 }
 
-const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
+export const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
   ...cardStyle,
   background: `url('${url}')`,
   opacity: disabled ? '0.6' : '1',
@@ -84,7 +75,7 @@ function Card({ card, player, children }: Props) {
     state &&
     possibleActions &&
     (state.nextSuit
-      ? matchesSuit(card, state.nextSuit) || card.rank === Rank.JACK
+      ? matchesSuit(card, state.nextSuit)
       : canPlayCard(card, state.stack[state.stack.length - 1], possibleActions[player.id]));
 
   const onClick = () => {
@@ -104,4 +95,4 @@ function Card({ card, player, children }: Props) {
   );
 }
 
-export default Card;
+export default React.memo(Card);

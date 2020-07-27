@@ -1,6 +1,8 @@
+import { Rank } from 'maumau-server/src/types';
 import React from 'react';
 
 import Actions from './actions';
+import JackCard from './card/jack-card';
 import PlayableCard from './card/playable-card';
 import StackCard from './card/stack-card';
 import TopCard from './card/top-card';
@@ -31,9 +33,13 @@ function Board() {
       <Grid.One>
         <Actions player={players[0]} />
         <Deck>
-          {players[0].hand.map((card) => (
-            <PlayableCard card={card} player={players[0]} key={JSON.stringify(card)} />
-          ))}
+          {players[0].hand.map((card) =>
+            card.rank === Rank.JACK ? (
+              <JackCard card={card} player={players[0]} key={JSON.stringify(card)} />
+            ) : (
+              <PlayableCard card={card} player={players[0]} key={JSON.stringify(card)} />
+            ),
+          )}
         </Deck>
       </Grid.One>
       <Grid.Two>
@@ -44,9 +50,13 @@ function Board() {
       </Grid.Three>
       <Grid.Four>
         <Deck>
-          {players[1].hand.map((card) => (
-            <PlayableCard card={card} player={players[1]} key={JSON.stringify(card)} />
-          ))}
+          {players[1].hand.map((card) =>
+            card.rank === Rank.JACK ? (
+              <JackCard card={card} player={players[1]} key={JSON.stringify(card)} />
+            ) : (
+              <PlayableCard card={card} player={players[1]} key={JSON.stringify(card)} />
+            ),
+          )}
         </Deck>
         <Actions player={players[1]} />
       </Grid.Four>
