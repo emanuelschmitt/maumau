@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import ActionButton from './action-button';
+import useClickSound from './common/use-click-sound';
 import { useConnectionContext } from './connection-context';
 
 const Wrapper = styled.div({
@@ -15,6 +16,7 @@ type Props = {
 };
 
 function Actions({ player }: Props) {
+  const [playSound] = useClickSound();
   const { sendAction, possibleActions } = useConnectionContext();
   const canPerformKannet = possibleActions && possibleActions![player.id].includes(ActionType.KANNET);
   const canAcceptPendingSeven =
@@ -22,27 +24,29 @@ function Actions({ player }: Props) {
   return (
     <Wrapper>
       <ActionButton
-        onClick={() =>
+        onClick={() => {
           sendAction({
             playerId: player.id,
             action: {
               type: ActionType.ACCEPT_PENDING_SEVENS,
             },
-          })
-        }
+          });
+          playSound();
+        }}
         disabled={!canAcceptPendingSeven}
       >
         Accept Pending Sevens
       </ActionButton>
       <ActionButton
-        onClick={() =>
+        onClick={() => {
           sendAction({
             playerId: player.id,
             action: {
               type: ActionType.KANNET,
             },
-          })
-        }
+          });
+          playSound();
+        }}
         disabled={!canPerformKannet}
       >
         Kannet

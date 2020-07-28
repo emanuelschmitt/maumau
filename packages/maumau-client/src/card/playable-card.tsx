@@ -3,6 +3,7 @@ import { Card as TCard, ActionType, Rank, Player, Suit } from 'maumau-server/src
 import React from 'react';
 import styled from 'styled-components';
 
+import useClickSound from '../common/use-click-sound';
 import { useConnectionContext } from '../connection-context';
 import BaseButton from '../ui/base-button';
 
@@ -70,6 +71,7 @@ export const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ 
 
 function Card({ card, player, children }: Props) {
   const { state, possibleActions, sendAction } = useConnectionContext();
+  const [playSound] = useClickSound();
 
   const isEnabled =
     state &&
@@ -86,6 +88,7 @@ function Card({ card, player, children }: Props) {
       playerId: player.id,
       action: getAction(card),
     });
+    playSound();
   };
 
   return (

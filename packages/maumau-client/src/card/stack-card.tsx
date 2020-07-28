@@ -2,6 +2,7 @@ import { ActionType } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
+import useClickSound from '../common/use-click-sound';
 import { useConnectionContext } from '../connection-context';
 import BaseButton from '../ui/base-button';
 
@@ -16,6 +17,7 @@ const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ url, di
 }));
 
 function StackCard() {
+  const [playSound] = useClickSound();
   const { sendAction, state, possibleActions } = useConnectionContext();
   const currentPlayer = state && state.players[state.playersTurnIndex];
   const canDraw =
@@ -31,6 +33,7 @@ function StackCard() {
         type: ActionType.KANNET_AND_DRAW,
       },
     });
+    playSound();
   };
 
   return <Frame url={getCardAssetForStackCard()} onClick={onClick} disabled={!canDraw} />;

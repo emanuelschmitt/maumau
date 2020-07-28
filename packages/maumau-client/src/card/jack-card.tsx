@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import ActionButton from '../action-button';
+import useClickSound from '../common/use-click-sound';
 import { useConnectionContext } from '../connection-context';
 import Dialog from '../ui/dialog';
 
@@ -29,6 +30,7 @@ function JackCard({ card, player, children }: Props) {
   }
 
   const { state, possibleActions, sendAction } = useConnectionContext();
+  const [playSound] = useClickSound();
 
   const [showDialog, setShowDialog] = React.useState(false);
   const openDialog = () => setShowDialog(true);
@@ -47,6 +49,7 @@ function JackCard({ card, player, children }: Props) {
         },
       },
     });
+    playSound();
     hideDialog();
   };
 
