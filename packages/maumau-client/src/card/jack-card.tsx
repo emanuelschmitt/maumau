@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import ActionButton from '../action-button';
 import useClickSound from '../common/use-click-sound';
+import useSuitSelectSound from '../common/use-suit-select-sound';
 import { useConnectionContext } from '../connection-context';
 import Dialog from '../ui/dialog';
 
@@ -30,10 +31,14 @@ function JackCard({ card, player, children }: Props) {
   }
 
   const { state, possibleActions, sendAction } = useConnectionContext();
-  const [playSound] = useClickSound();
+  const [playClick] = useClickSound();
+  const [playSuitSelect] = useSuitSelectSound();
 
   const [showDialog, setShowDialog] = React.useState(false);
-  const openDialog = () => setShowDialog(true);
+  const openDialog = () => {
+    setShowDialog(true);
+    playSuitSelect();
+  };
   const hideDialog = () => setShowDialog(false);
 
   const isEnabled = state && possibleActions && canPlayCard(possibleActions[player.id]);
@@ -49,7 +54,7 @@ function JackCard({ card, player, children }: Props) {
         },
       },
     });
-    playSound();
+    playClick();
     hideDialog();
   };
 
