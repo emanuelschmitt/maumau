@@ -2,6 +2,8 @@ import { Player, ActionType } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
+import ActionButton from './action-button';
+import useClickSound from './common/use-click-sound';
 import { useConnectionContext } from './connection-context';
 
 const Wrapper = styled.div({
@@ -14,38 +16,41 @@ type Props = {
 };
 
 function Actions({ player }: Props) {
+  const [playSound] = useClickSound();
   const { sendAction, possibleActions } = useConnectionContext();
   const canPerformKannet = possibleActions && possibleActions![player.id].includes(ActionType.KANNET);
   const canAcceptPendingSeven =
     possibleActions && possibleActions![player.id].includes(ActionType.ACCEPT_PENDING_SEVENS);
   return (
     <Wrapper>
-      <button
-        onClick={() =>
+      <ActionButton
+        onClick={() => {
           sendAction({
             playerId: player.id,
             action: {
               type: ActionType.ACCEPT_PENDING_SEVENS,
             },
-          })
-        }
+          });
+          playSound();
+        }}
         disabled={!canAcceptPendingSeven}
       >
         Accept Pending Sevens
-      </button>
-      <button
-        onClick={() =>
+      </ActionButton>
+      <ActionButton
+        onClick={() => {
           sendAction({
             playerId: player.id,
             action: {
               type: ActionType.KANNET,
             },
-          })
-        }
+          });
+          playSound();
+        }}
         disabled={!canPerformKannet}
       >
         Kannet
-      </button>
+      </ActionButton>
     </Wrapper>
   );
 }

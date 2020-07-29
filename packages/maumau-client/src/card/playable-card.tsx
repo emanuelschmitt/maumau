@@ -3,7 +3,9 @@ import { Card as TCard, ActionType, Rank, Player, Suit } from 'maumau-server/src
 import React from 'react';
 import styled from 'styled-components';
 
+import useClickSound from '../common/use-click-sound';
 import { useConnectionContext } from '../connection-context';
+import BaseButton from '../ui/base-button';
 
 import { cardStyle } from './style';
 import { getCardAssetUrlByCard } from './utils';
@@ -30,9 +32,6 @@ function canPlayCard(card: TCard, topCard: TCard, possibleActions: ActionType[])
     case Rank.EIGHT: {
       return possibleActions.includes(ActionType.PLAY_EIGHT) && isMatch(card, topCard);
     }
-    case Rank.JACK: {
-      return possibleActions.includes(ActionType.PLAY_JACK);
-    }
     default: {
       return possibleActions.includes(ActionType.PLAY_REGULAR_CARD) && isMatch(card, topCard);
     }
@@ -53,12 +52,6 @@ function getAction(card: TCard): Action {
         payload: card,
       };
     }
-    case Rank.JACK: {
-      return {
-        type: ActionType.PLAY_JACK,
-        payload: { card, suit: Suit.CLUBS },
-      };
-    }
     default: {
       return {
         type: ActionType.PLAY_REGULAR_CARD,
@@ -68,16 +61,17 @@ function getAction(card: TCard): Action {
   }
 }
 
-const Frame = styled.div<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
+export const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ url, disabled = false }) => ({
   ...cardStyle,
   background: `url('${url}')`,
-  opacity: disabled ? '0.3' : '1',
+  opacity: disabled ? '0.6' : '1',
   cursor: disabled ? 'unset' : 'pointer',
   backgroundSize: 'cover',
 }));
 
 function Card({ card, player, children }: Props) {
   const { state, possibleActions, sendAction } = useConnectionContext();
+  const [playSound] = useClickSound();
 
   const isEnabled =
     state &&
@@ -94,6 +88,7 @@ function Card({ card, player, children }: Props) {
       playerId: player.id,
       action: getAction(card),
     });
+    playSound();
   };
 
   return (
@@ -103,4 +98,4 @@ function Card({ card, player, children }: Props) {
   );
 }
 
-export default Card;
+export default React.memo(Card);

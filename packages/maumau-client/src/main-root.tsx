@@ -8,7 +8,7 @@ import WebSockerStatusBar from './websocket-status-bar';
 
 const Frame = styled.div({
   position: 'relative',
-  background: '#40407a',
+  background: '#2c2c54',
   height: '100vh',
   width: '100%',
   display: 'flex',

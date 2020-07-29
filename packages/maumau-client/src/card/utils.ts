@@ -19,9 +19,9 @@ const suitMap: Record<Suit, string> = {
 };
 
 export function getCardAssetUrlByCard(card: TCard) {
-  return `/static/${rankMap[card.rank]}${suitMap[card.suit]}.png`;
+  return `/static/images/${rankMap[card.rank]}${suitMap[card.suit]}.png`;
 }
 
 export function getCardAssetForStackCard() {
-  return `/static/purple_back.png`;
+  return `/static/images/purple_back.png`;
 }
