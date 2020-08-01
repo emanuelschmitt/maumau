@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import { getClientStatics } from 'maumau-client';
 import MainRoot from 'maumau-client/src/main-root';
 import React from 'react';
@@ -42,4 +42,12 @@ export function ssrHandler(request: Request, response: Response) {
   });
 
   return response.send('<!DOCTYPE html>' + ReactDOM.renderToStaticMarkup(staticElement));
+}
+
+export function createSSRRouter() {
+  return express
+    .Router()
+    .get('/', ssrHandler)
+    .use('/static', express.static(statics.publicDirectory))
+    .use('/bundle', express.static(statics.bundleDirectory));
 }

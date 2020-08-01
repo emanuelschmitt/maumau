@@ -1,25 +1,17 @@
-import Express from 'express';
-import { getClientStatics } from 'maumau-client';
+import express from 'express';
 
 import GameState from '../game/game-state';
 import { getPlayerRules } from '../game/rules';
 
 import { logger } from './logger';
 import { tryParseAndValidateMessage } from './parser';
-import { ssrHandler } from './ssr';
+import { createSSRRouter } from './ssr-router';
 import WebSocketServer from './websocket-server';
-
-const statics = getClientStatics();
 
 async function main() {
   const port = 8080;
 
-  const express = Express();
-  express.use('/static', Express.static(statics.publicDirectory));
-  express.use('/bundle', Express.static(statics.bundleDirectory));
-  express.get('/', ssrHandler);
-
-  const server = express.listen(port);
+  const server = express().use('/', createSSRRouter()).listen(port);
 
   const gameState = new GameState({ amountPlayers: 2 });
   const wss = new WebSocketServer({
