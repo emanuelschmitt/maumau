@@ -7,22 +7,39 @@ import { ServerStyleSheet } from 'styled-components';
 
 import StaticRoot from '../views/static-root';
 
+import { logger } from './logger';
+
 const statics = getClientStatics();
 
-export function ssrHandler(request: Request, response: Response) {
+/**
+ * Render React element to html and css markup.
+ */
+function renderHTMLandCSS(): { html: string; css: React.ReactNode } {
   const rootElement = React.createElement(MainRoot);
-
   const sheet = new ServerStyleSheet();
-  const html = ReactDOM.renderToString(sheet.collectStyles(rootElement));
-  const css = sheet.getStyleElement();
+
+  try {
+    const html = ReactDOM.renderToString(sheet.collectStyles(rootElement));
+    const css = sheet.getStyleElement();
+    return { html, css };
+  } catch (err) {
+    logger.error(err);
+    throw err;
+  } finally {
+    sheet.seal();
+  }
+}
+
+export function ssrHandler(request: Request, response: Response) {
+  const { html, css } = renderHTMLandCSS();
 
   const staticElement = React.createElement(StaticRoot, {
     html,
     css,
-    scripts: [{ file: `bundle/${statics.bundle.filePath}` }],
+    scripts: statics.bundles.map((bundle) => ({
+      file: `bundle/${bundle.filePath}`,
+    })),
   });
-
-  sheet.seal();
 
   return response.send('<!DOCTYPE html>' + ReactDOM.renderToStaticMarkup(staticElement));
 }

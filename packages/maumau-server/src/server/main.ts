@@ -13,8 +13,8 @@ const statics = getClientStatics();
 
 async function main() {
   const port = 8080;
-  const express = Express();
 
+  const express = Express();
   express.use('/static', Express.static(statics.publicDirectory));
   express.use('/bundle', Express.static(statics.bundleDirectory));
   express.get('/', ssrHandler);
