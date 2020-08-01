@@ -3,7 +3,7 @@ import useWebsocket from 'react-use-websocket';
 
 function tryParseMessage(message?: string): OutgoingMessage | null {
   try {
-    return JSON.parse(message);
+    return JSON.parse(message || '');
   } catch (err) {
     return null;
   }

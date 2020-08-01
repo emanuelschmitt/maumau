@@ -1,16 +1,29 @@
+import Express from 'express';
+import { getClientStatics } from 'maumau-client';
+
 import GameState from '../game/game-state';
 import { getPlayerRules } from '../game/rules';
 
 import { logger } from './logger';
 import { tryParseAndValidateMessage } from './parser';
+import { ssrHandler } from './ssr';
 import WebSocketServer from './websocket-server';
 
-async function main() {
-  const gameState = new GameState({ amountPlayers: 2 });
+const statics = getClientStatics();
 
-  const server = new WebSocketServer({
-    host: '0.0.0.0',
-    port: 8080,
+async function main() {
+  const port = 8080;
+  const express = Express();
+
+  express.use('/static', Express.static(statics.publicDirectory));
+  express.use('/bundle', Express.static(statics.bundleDirectory));
+  express.get('/', ssrHandler);
+
+  const server = express.listen(port);
+
+  const gameState = new GameState({ amountPlayers: 2 });
+  const wss = new WebSocketServer({
+    server,
     onMessage: async (message) => {
       const validatedMessage = await tryParseAndValidateMessage(message.toString());
       if (!validatedMessage) {
@@ -27,11 +40,11 @@ async function main() {
   });
 
   // apply all the connection handlers.
-  server.start();
+  wss.start();
 
   // Send state to clients.
   setInterval(() => {
-    server.broadcast((client) => {
+    wss.broadcast((client) => {
       client.send(
         JSON.stringify({
           state: gameState.getState(),
