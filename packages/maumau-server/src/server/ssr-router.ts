@@ -44,10 +44,8 @@ export function ssrHandler(request: Request, response: Response) {
   return response.send('<!DOCTYPE html>' + ReactDOM.renderToStaticMarkup(staticElement));
 }
 
-export function createSSRRouter() {
-  return express
-    .Router()
-    .get('/', ssrHandler)
-    .use('/static', express.static(statics.publicDirectory))
-    .use('/bundle', express.static(statics.bundleDirectory));
-}
+export const router = express
+  .Router()
+  .get('/', ssrHandler)
+  .use('/static', express.static(statics.publicDirectory))
+  .use('/bundle', express.static(statics.bundleDirectory));

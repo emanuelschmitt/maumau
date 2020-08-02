@@ -1,8 +1,8 @@
-import GameState from '../src/game/game-state';
-import { getActionTypesForPlayer } from '../src/game/rules';
-import Card from '../src/models/card';
-import { Rank } from '../src/models/rank';
-import { Suit } from '../src/models/suit';
+import GameState from '../../src/game/game-state';
+import { getActionTypesForPlayer } from '../../src/game/rules';
+import Card from '../../src/models/card';
+import { Rank } from '../../src/models/rank';
+import { Suit } from '../../src/models/suit';
 
 describe('rules', () => {
   // Need to override stack and player's hand to be able to

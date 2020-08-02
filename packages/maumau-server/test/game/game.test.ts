@@ -1,7 +1,7 @@
-import GameState from '../src/game/game-state';
-import Card from '../src/models/card';
-import Player from '../src/models/player';
-import { Suit, Rank, ActionType } from '../src/types';
+import GameState from '../../src/game/game-state';
+import Card from '../../src/models/card';
+import Player from '../../src/models/player';
+import { Suit, Rank, ActionType } from '../../src/types';
 
 describe('game', () => {
   test('initalize should give players 7 cards', () => {

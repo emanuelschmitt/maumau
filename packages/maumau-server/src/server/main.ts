@@ -1,17 +1,18 @@
-import express from 'express';
-
 import GameState from '../game/game-state';
 import { getPlayerRules } from '../game/rules';
 
+import { createServer } from './express-server';
 import { logger } from './logger';
 import { tryParseAndValidateMessage } from './parser';
-import { createSSRRouter } from './ssr-router';
 import WebSocketServer from './websocket-server';
 
 async function main() {
   const port = 8080;
 
-  const server = express().use('/', createSSRRouter()).listen(port);
+  const app = createServer();
+  const server = app.listen(port, () => {
+    logger.info(`Express server listening on port ${port}`);
+  });
 
   const gameState = new GameState({ amountPlayers: 2 });
   const wss = new WebSocketServer({
@@ -46,7 +47,7 @@ async function main() {
     });
   }, 200);
 
-  logger.info('Server started at 0.0.0.0:8080');
+  logger.info(`Server started at 0.0.0.0:${port}`);
 }
 
 main().catch((err) => console.error(err));

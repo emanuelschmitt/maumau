@@ -1,9 +1,9 @@
-import GameState from '../src/game/game-state';
-import { reducer } from '../src/game/reducer';
-import { ActionType } from '../src/models/action';
-import Card from '../src/models/card';
-import { Rank } from '../src/models/rank';
-import { Suit } from '../src/models/suit';
+import GameState from '../../src/game/game-state';
+import { reducer } from '../../src/game/reducer';
+import { ActionType } from '../../src/models/action';
+import Card from '../../src/models/card';
+import { Rank } from '../../src/models/rank';
+import { Suit } from '../../src/models/suit';
 
 describe('reducer', () => {
   describe('when PLAY_REGULAR_CARD action', () => {
