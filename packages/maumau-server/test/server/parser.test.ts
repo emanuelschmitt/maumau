@@ -1,5 +1,5 @@
 import { Action } from '../../src/game/reducer';
-import { ActionType } from '../../src/models/action';
+import { ActionType } from '../../src/models/action-type';
 import Card from '../../src/models/card';
 import { Rank } from '../../src/models/rank';
 import { Suit } from '../../src/models/suit';

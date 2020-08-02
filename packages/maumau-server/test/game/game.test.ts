@@ -24,7 +24,7 @@ describe('game', () => {
     gameState = new GameState({ amountPlayers: 3 });
     expect(gameState.getState().stack).toHaveLength(11);
     gameState = new GameState({ amountPlayers: 4 });
-    expect(gameState.getState().stack).toHaveLength(4);
+    expect(gameState.getState().stack).toHaveLength(8);
   });
 
   test('initialize game should throw when number of players is not between 2 and 4', () => {

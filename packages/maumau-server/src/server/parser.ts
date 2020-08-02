@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 
 import { Action } from '../game/reducer';
-import { ActionType } from '../models/action';
+import { ActionType } from '../models/action-type';
 import { Card } from '../types';
 
 const cardSchema = Joi.object({

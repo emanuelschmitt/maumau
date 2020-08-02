@@ -6,10 +6,12 @@ import shuffle from '../utils/shuffle';
 
 import { autoAcceptSevens } from './listeners/auto-accept-seven';
 import { doKannetIfOnlyOption } from './listeners/do-kannet-if-only-option';
-import { hasGameEnded } from './listeners/has-game-ended';
 import { reducer, State, Action } from './reducer';
 
-const AMOUNT_OF_CARD_PER_PLAYER = 7;
+let AMOUNT_OF_CARD_PER_PLAYER: number[] = [];
+AMOUNT_OF_CARD_PER_PLAYER[2] = 7;
+AMOUNT_OF_CARD_PER_PLAYER[3] = 7;
+AMOUNT_OF_CARD_PER_PLAYER[4] = 6;
 
 type Options = {
   amountPlayers: number;
@@ -56,7 +58,7 @@ export default class GameState {
   }
 
   public registerListeners() {
-    const listeners: ListenerFunction[] = [hasGameEnded, doKannetIfOnlyOption, autoAcceptSevens];
+    const listeners: ListenerFunction[] = [doKannetIfOnlyOption, autoAcceptSevens];
     this.listeners.push(...listeners);
   }
 
@@ -103,7 +105,8 @@ export default class GameState {
   }
 
   private dealCards(players: Player[], cardStack: Card[]) {
-    for (let i = 0; i < AMOUNT_OF_CARD_PER_PLAYER; i++) {
+    const numberOfCards = AMOUNT_OF_CARD_PER_PLAYER[players.length];
+    for (let i = 0; i < numberOfCards; i++) {
       for (const player of players) {
         const card = cardStack.pop();
         if (card) {

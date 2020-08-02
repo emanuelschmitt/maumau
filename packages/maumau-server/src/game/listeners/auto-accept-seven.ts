@@ -1,4 +1,4 @@
-import { ActionType } from '../../models/action';
+import { ActionType } from '../../models/action-type';
 import { ListenerFunction } from '../game-state';
 import { getActionTypesForPlayer } from '../rules';
 

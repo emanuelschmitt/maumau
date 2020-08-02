@@ -1,6 +1,6 @@
-import { Action, State } from './reducer';
+import { State } from './reducer';
+import { ActionType } from '../types';
 
-type ActionType = Action['type'];
 type Rule = (state: State) => boolean;
 
 /**
@@ -19,8 +19,7 @@ type Rule = (state: State) => boolean;
  * - next player has to chose between PLAY_SEVEN and ACCEPT_PENDING_SEVENS;
  */
 
-type ActionableActionTypes = Exclude<ActionType, 'END_GAME'>;
-const rules: Record<ActionableActionTypes, Rule> = {
+const rules: Record<ActionType, Rule> = {
   PLAY_REGULAR_CARD: ({ players, playersTurnIndex, pendingSevens, stack, nextSuit }) =>
     !pendingSevens &&
     players[playersTurnIndex].hasCard(
