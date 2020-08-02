@@ -1,16 +1,22 @@
 import GameState from '../game/game-state';
 import { getPlayerRules } from '../game/rules';
 
+import { createServer } from './express-server';
 import { logger } from './logger';
 import { tryParseAndValidateMessage } from './parser';
 import WebSocketServer from './websocket-server';
 
 async function main() {
-  const gameState = new GameState({ amountPlayers: 2 });
+  const port = 8080;
 
-  const server = new WebSocketServer({
-    host: '0.0.0.0',
-    port: 8080,
+  const app = createServer();
+  const server = app.listen(port, () => {
+    logger.info(`Express server listening on port ${port}`);
+  });
+
+  const gameState = new GameState({ amountPlayers: 2 });
+  const wss = new WebSocketServer({
+    server,
     onMessage: async (message) => {
       const validatedMessage = await tryParseAndValidateMessage(message.toString());
       if (!validatedMessage) {
@@ -27,11 +33,11 @@ async function main() {
   });
 
   // apply all the connection handlers.
-  server.start();
+  wss.start();
 
   // Send state to clients.
   setInterval(() => {
-    server.broadcast((client) => {
+    wss.broadcast((client) => {
       client.send(
         JSON.stringify({
           state: gameState.getState(),
@@ -41,7 +47,7 @@ async function main() {
     });
   }, 200);
 
-  logger.info('Server started at 0.0.0.0:8080');
+  logger.info(`Server started at 0.0.0.0:${port}`);
 }
 
 main().catch((err) => console.error(err));

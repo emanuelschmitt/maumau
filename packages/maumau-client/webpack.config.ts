@@ -48,7 +48,11 @@ export default (): webpack.Configuration => {
                   '@babel/preset-react',
                   '@babel/preset-typescript',
                 ],
-                plugins: ['@babel/proposal-class-properties', '@babel/proposal-object-rest-spread'],
+                plugins: [
+                  '@babel/proposal-class-properties',
+                  '@babel/proposal-object-rest-spread',
+                  'babel-plugin-styled-components',
+                ],
               },
             },
           ],
