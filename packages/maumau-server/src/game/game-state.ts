@@ -8,10 +8,11 @@ import { autoAcceptSevens } from './listeners/auto-accept-seven';
 import { doKannetIfOnlyOption } from './listeners/do-kannet-if-only-option';
 import { reducer, State, Action } from './reducer';
 
-let AMOUNT_OF_CARD_PER_PLAYER: number[] = [];
-AMOUNT_OF_CARD_PER_PLAYER[2] = 7;
-AMOUNT_OF_CARD_PER_PLAYER[3] = 7;
-AMOUNT_OF_CARD_PER_PLAYER[4] = 6;
+const AMOUNT_OF_CARD_PER_PLAYER: Record<number, number> = {
+  2: 7,
+  3: 7,
+  4: 6,
+};
 
 type Options = {
   amountPlayers: number;
