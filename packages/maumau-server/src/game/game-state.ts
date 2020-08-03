@@ -107,6 +107,9 @@ export default class GameState {
 
   private dealCards(players: Player[], cardStack: Card[]) {
     const numberOfCards = AMOUNT_OF_CARD_PER_PLAYER[players.length];
+    if (!numberOfCards) {
+      throw new Error('amount of cards per player undefined.');
+    }
     for (let i = 0; i < numberOfCards; i++) {
       for (const player of players) {
         const card = cardStack.pop();
