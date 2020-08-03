@@ -1,6 +1,6 @@
+import { ActionType } from '../../src/game/action-type';
 import GameState from '../../src/game/game-state';
 import { reducer } from '../../src/game/reducer';
-import { ActionType } from '../../src/models/action-type';
 import Card from '../../src/models/card';
 import { Rank } from '../../src/models/rank';
 import { Suit } from '../../src/models/suit';
@@ -40,7 +40,7 @@ describe('reducer', () => {
     });
     test('stack should have 2 less cards', () => {
       expect(state.stack).toHaveLength(stackCount - 2);
-    })
+    });
     test('should not set next player', () => {
       expect(state.playersTurnIndex).toEqual(1);
     });
@@ -74,7 +74,7 @@ describe('reducer', () => {
     });
     test('stack should have 8 less cards', () => {
       expect(state.stack).toHaveLength(stackCount - 8);
-    })
+    });
     test('should not set next player', () => {
       expect(state.playersTurnIndex).toEqual(0);
     });
@@ -82,49 +82,49 @@ describe('reducer', () => {
 
   describe('when PLAY_REGULAR_CARD with last card', () => {
     let state = new GameState({ amountPlayers: 2 }).getState();
-    const card = new Card(Suit.CLUBS, Rank.NINE)
+    const card = new Card(Suit.CLUBS, Rank.NINE);
     state.players[0].hand = [card];
-    state.stack = [ new Card(Suit.CLUBS, Rank.KING) ]
+    state.stack = [new Card(Suit.CLUBS, Rank.KING)];
     state = reducer(state, {
       type: ActionType.PLAY_REGULAR_CARD,
       payload: card,
     });
     test('that game has ended', () => {
-      expect(state.gameEnded).toBeTruthy()
-    })
-  })
+      expect(state.gameEnded).toBeTruthy();
+    });
+  });
 
   describe('when PLAY_EIGHT with last card and two players', () => {
     let state = new GameState({ amountPlayers: 2 }).getState();
-    const card = new Card(Suit.CLUBS, Rank.EIGHT)
+    const card = new Card(Suit.CLUBS, Rank.EIGHT);
     state.players[0].hand = [card];
-    state.stack = [ new Card(Suit.CLUBS, Rank.KING) ]
+    state.stack = [new Card(Suit.CLUBS, Rank.KING)];
     state = reducer(state, {
       type: ActionType.PLAY_EIGHT,
       payload: card,
     });
     test('that game has not ended', () => {
-      expect(state.gameEnded).toBeFalsy()
-    })
-  })
+      expect(state.gameEnded).toBeFalsy();
+    });
+  });
 
   describe('when PLAY_EIGHT with last card and three players', () => {
     let state = new GameState({ amountPlayers: 3 }).getState();
-    const card = new Card(Suit.CLUBS, Rank.EIGHT)
+    const card = new Card(Suit.CLUBS, Rank.EIGHT);
     state.players[0].hand = [card];
-    state.stack = [ new Card(Suit.CLUBS, Rank.KING) ]
+    state.stack = [new Card(Suit.CLUBS, Rank.KING)];
     state = reducer(state, {
       type: ActionType.PLAY_EIGHT,
       payload: card,
     });
     test('that game has ended', () => {
-      expect(state.gameEnded).toBeTruthy()
-    })
-  })
+      expect(state.gameEnded).toBeTruthy();
+    });
+  });
 
   describe('when PLAY_JACK action', () => {
     let state = new GameState({ amountPlayers: 2 }).getState();
-    const card = new Card(Suit.CLUBS, Rank.JACK)
+    const card = new Card(Suit.CLUBS, Rank.JACK);
     state.players[0].hand.push(card);
     state = reducer(state, {
       type: ActionType.PLAY_JACK,
@@ -132,18 +132,18 @@ describe('reducer', () => {
     });
     test('card has been added to the stack', () => {
       expect(state.stack[state.stack.length - 1]).toBe(card);
-    })
+    });
     test('card has been removed from players hand', () => {
       expect(state.players[0].hand).not.toContain(card);
-    })
+    });
     test('next suit is set', () => {
       expect(state.nextSuit).toBe(Suit.HEARTS);
-    })
+    });
     test('next player index is set', () => {
       expect(state.playersTurnIndex).toEqual(1);
-    })
+    });
     test('that game has ended', () => {
-      expect(state.gameEnded).toBeFalsy()
-    })
-  })
+      expect(state.gameEnded).toBeFalsy();
+    });
+  });
 });

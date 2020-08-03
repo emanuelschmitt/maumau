@@ -1,5 +1,5 @@
+import { ActionType } from './action-type';
 import { State } from './reducer';
-import { ActionType } from '../types';
 
 type Rule = (state: State) => boolean;
 

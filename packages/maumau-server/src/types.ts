@@ -1,7 +1,7 @@
+import { ActionType } from './game/action-type';
 import { State, Action } from './game/reducer';
-import { ActionType } from './models/action-type';
 
-export { ActionType } from './models/action-type';
+export { ActionType } from './game/action-type';
 export { default as Card } from './models/card';
 export { default as Player } from './models/player';
 export { Suit } from './models/suit';

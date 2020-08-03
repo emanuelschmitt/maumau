@@ -1,8 +1,9 @@
-import { ActionType } from '../models/action-type';
 import Card from '../models/card';
 import Player from '../models/player';
 import { Suit } from '../models/suit';
 import { logger } from '../server/logger';
+
+import { ActionType } from './action-type';
 
 export type State = {
   players: Player[];
@@ -41,7 +42,7 @@ export function reducer(state: State, action: Action): State {
         hasDrawnCard: false,
         nextSuit: null,
         pendingSevens: null,
-        gameEnded: (newHand.length == 0),
+        gameEnded: newHand.length === 0,
       };
     }
 
@@ -60,7 +61,7 @@ export function reducer(state: State, action: Action): State {
         playersTurnIndex: (playersTurnIndex + 2) % players.length,
         hasDrawnCard: false,
         nextSuit: null,
-        gameEnded: (newHand.length == 0 && nextPlayer != player)
+        gameEnded: newHand.length === 0 && nextPlayer.id !== player.id,
       };
     }
 
@@ -76,7 +77,7 @@ export function reducer(state: State, action: Action): State {
         pendingSevens: (state?.pendingSevens ?? 0) + 1,
         hasDrawnCard: false,
         nextSuit: null,
-        gameEnded: (newHand.length == 0),
+        gameEnded: newHand.length === 0,
       };
     }
 
@@ -92,7 +93,7 @@ export function reducer(state: State, action: Action): State {
         pendingSevens: null,
         hasDrawnCard: false,
         nextSuit: action.payload.suit,
-        gameEnded: (newHand.length == 0),
+        gameEnded: newHand.length === 0,
       };
     }
 
