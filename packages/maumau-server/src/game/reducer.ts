@@ -51,9 +51,6 @@ export function reducer(state: State, action: Action): State {
       const newHand = player.hand.filter((card) => !card.isEqual(action.payload));
       players[playersTurnIndex].hand = newHand;
 
-      const nextPlayerIndex = (playersTurnIndex + 2) % players.length;
-      const nextPlayer = players[nextPlayerIndex];
-
       return {
         ...state,
         players,
@@ -61,7 +58,7 @@ export function reducer(state: State, action: Action): State {
         playersTurnIndex: (playersTurnIndex + 2) % players.length,
         hasDrawnCard: false,
         nextSuit: null,
-        gameEnded: newHand.length === 0 && nextPlayer.id !== player.id,
+        gameEnded: newHand.length === 0,
       };
     }
 

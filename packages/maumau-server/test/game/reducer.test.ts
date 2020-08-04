@@ -143,7 +143,7 @@ describe('reducer', () => {
       expect(state.playersTurnIndex).toEqual(1);
     });
     test('that game has ended', () => {
-      expect(state.gameEnded).toBeFalsy();
+      expect(state.gameEnded).toBeTruthy();
     });
   });
 });
