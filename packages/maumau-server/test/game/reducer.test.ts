@@ -48,7 +48,6 @@ describe('reducer', () => {
 
   describe('when ACCEPT_PENDING_SEVENS action with 4 cards and 4 players', () => {
     let state = new GameState({ amountPlayers: 4 }).getState();
-    const cardsCount = state.players[0].hand.length;
     state = reducer(state, {
       type: ActionType.PLAY_SEVEN,
       payload: new Card(Suit.CLUBS, Rank.SEVEN),
@@ -65,6 +64,7 @@ describe('reducer', () => {
       type: ActionType.PLAY_SEVEN,
       payload: new Card(Suit.SPADES, Rank.SEVEN),
     });
+    const cardsCount = state.players[0].hand.length;
     const stackCount = state.stack.length;
     state = reducer(state, {
       type: ActionType.ACCEPT_PENDING_SEVENS,
@@ -143,7 +143,7 @@ describe('reducer', () => {
       expect(state.playersTurnIndex).toEqual(1);
     });
     test('that game has ended', () => {
-      expect(state.gameEnded).toBeTruthy();
+      expect(state.gameEnded).toBeFalsy();
     });
   });
 });
