@@ -103,8 +103,8 @@ describe('reducer', () => {
       type: ActionType.PLAY_EIGHT,
       payload: card,
     });
-    test('that game has not ended', () => {
-      expect(state.gameEnded).toBeFalsy();
+    test('that game has ended', () => {
+      expect(state.gameEnded).toBeTruthy();
     });
   });
 
