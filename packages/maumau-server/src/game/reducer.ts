@@ -1,8 +1,9 @@
-import { ActionType } from '../models/action';
 import Card from '../models/card';
 import Player from '../models/player';
 import { Suit } from '../models/suit';
 import { logger } from '../server/logger';
+
+import { ActionType } from './action-type';
 
 export type State = {
   players: Player[];
@@ -21,8 +22,7 @@ export type Action =
   | { type: ActionType.PLAY_JACK; payload: { card: Card; suit: Suit } }
   | { type: ActionType.KANNET_AND_DRAW }
   | { type: ActionType.KANNET }
-  | { type: ActionType.ACCEPT_PENDING_SEVENS }
-  | { type: ActionType.END_GAME };
+  | { type: ActionType.ACCEPT_PENDING_SEVENS };
 
 export function reducer(state: State, action: Action): State {
   const { players, playersTurnIndex, stack } = state;
@@ -42,7 +42,7 @@ export function reducer(state: State, action: Action): State {
         hasDrawnCard: false,
         nextSuit: null,
         pendingSevens: null,
-        gameEnded: false,
+        gameEnded: newHand.length === 0,
       };
     }
 
@@ -57,6 +57,8 @@ export function reducer(state: State, action: Action): State {
         stack: [...stack, action.payload],
         playersTurnIndex: (playersTurnIndex + 2) % players.length,
         hasDrawnCard: false,
+        nextSuit: null,
+        gameEnded: newHand.length === 0,
       };
     }
 
@@ -72,7 +74,7 @@ export function reducer(state: State, action: Action): State {
         pendingSevens: (state?.pendingSevens ?? 0) + 1,
         hasDrawnCard: false,
         nextSuit: null,
-        gameEnded: false,
+        gameEnded: newHand.length === 0,
       };
     }
 
@@ -88,7 +90,7 @@ export function reducer(state: State, action: Action): State {
         pendingSevens: null,
         hasDrawnCard: false,
         nextSuit: action.payload.suit,
-        gameEnded: false,
+        gameEnded: newHand.length === 0,
       };
     }
 
@@ -140,13 +142,6 @@ export function reducer(state: State, action: Action): State {
         pendingSevens: null,
         playersTurnIndex,
         gameEnded: false,
-      };
-    }
-
-    case ActionType.END_GAME: {
-      return {
-        ...state,
-        gameEnded: true,
       };
     }
 
