@@ -1,52 +1,72 @@
-type Player = {
-  name: string;
-  joinedAt: number; // timestamp when joined
+import chunk from 'lodash.chunk';
+import { v4 as uuidv4 } from 'uuid';
+
+/**
+ * Why no Websockets?
+ * - https://samsaffron.com/archive/2015/12/29/websockets-caution-required
+ * - HTTP/2 is coming and then we can migrate to server push....
+
+ * PUT pool/join/
+  - endpoint to join the pool of players
+  - send { name: string, id: string }, id is uuid
+  - sends back a 204.
+
+ * PUT pool/leave/:id 
+  - endpoint to leave the pool of players
+  - sends back a 204
+  - 404 if id is not found.
+
+ * GET  pool/status/:id
+  - url param id = the id of the user
+  - endpoint for a user to see his status.
+ 
+ * matchmake <---- build groups of x players depending on last joined. (internal)
+
+ * GET game/:uuid/ <- returns game state. { gameState, possibleActions }
+ * POST game/:uuid/ <- send action to endpoint. { action, userId: uuid }
+ */
+
+type Pool = {
+  [userId: string]: { name: string; joinedAt: number; sessionId?: string };
 };
 
-type Session = {
-  id: string; // uuid
-  players: Player[];
-};
-
-const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
+export const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
+const AMOUNT_OF_PLAYERS = 2;
 
 export default class Matchmaker {
-  private pool: Player[];
-  private sessions: Session[];
-
+  private pool: Pool;
   private interval: number;
 
   constructor() {
-    this.pool = [];
-    this.sessions = [];
-    console.log('init');
+    this.pool = {};
   }
 
-  public joinPool({ name }: { name: string }): void {
-    console.log('joining');
-    this.pool.push({ name, joinedAt: Date.now() });
+  public joinPool({ id, name }: { id: string; name: string }): void {
+    this.pool[id] = { name, joinedAt: Date.now() };
   }
 
-  public leavePool({ name }: { name: string }): void {
-    this.pool = this.pool.filter((p) => p.name === name);
+  public leavePool({ id }: { id: string }): void {
+    delete this.pool[id];
+  }
+
+  public getSessionIdByUserId(userId: string): string | undefined {
+    return this.pool[userId]?.sessionId;
   }
 
   private matchmake() {
-    const playersToRemove: Player[] = [];
+    const entriesWithoutSession = Object.entries(this.pool)
+      .filter(([_, entry]) => !Boolean(entry.sessionId))
+      .sort(([_, a], [__, b]) => a.joinedAt - b.joinedAt);
 
-    for (let i = 0; i < this.pool.length - 1; i = i + 2) {
-      const playerA = this.pool[i];
-      const playerB = this.pool[i + 1];
+    const groups = chunk(entriesWithoutSession, AMOUNT_OF_PLAYERS);
+    const groupsWithLength = groups.filter((g) => g.length === AMOUNT_OF_PLAYERS);
 
-      if (playerA && playerB) {
-        this.sessions.push({ id: String(Date.now()), players: [playerA, playerB] });
-        playersToRemove.push(playerA);
-        playersToRemove.push(playerB);
+    for (const group of groupsWithLength) {
+      const sessionId = uuidv4();
+      for (const [userId, entry] of group) {
+        this.pool[userId] = { ...entry, sessionId };
       }
     }
-
-    const playerNamesToRemove = playersToRemove.map((p) => p.name);
-    this.pool = this.pool.filter((p) => !playerNamesToRemove.includes(p.name));
   }
 
   public start(): void {
@@ -55,5 +75,9 @@ export default class Matchmaker {
 
   public stop(): void {
     clearInterval(this.interval);
+  }
+
+  public getPool(): Pool {
+    return this.pool;
   }
 }
