@@ -44,21 +44,25 @@ export default class PoolController {
     );
   }
 
-  public join = (request: Request<{}, {}, { id: string; name: string }>, response: Response) => {
+  private join = (request: Request<{}, {}, { id: string; name: string }>, response: Response) => {
     const { id, name } = request.body;
     this.matchmakerService.joinPool({ id, name });
     response.status(204).send();
   };
 
-  public leave = (request: Request<{}, {}, { id: string }>, response: Response) => {
+  private leave = (request: Request<{}, {}, { id: string }>, response: Response) => {
     const { id } = request.body;
     this.matchmakerService.leavePool({ id });
     response.status(204).send();
   };
 
-  public status = (request: Request<{ id: string }>, response: Response) => {
+  private status = (request: Request<{ id: string }>, response: Response) => {
     const { id } = request.params;
     const sessionId = this.matchmakerService.getSessionIdByUserId(id);
     response.status(200).send({ sessionId: sessionId ? sessionId : 'none' });
   };
+
+  public getRouter() {
+    return this.router;
+  }
 }

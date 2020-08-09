@@ -2,9 +2,8 @@ import bodyParser from 'body-parser';
 import express from 'express';
 
 import PoolController from '../controllers/pool';
+import ServerSideRenderController from '../controllers/ssr';
 import MatchmakerService from '../service/matchmaker';
-
-import { router } from './ssr-router';
 
 type Services = {
   matchmakerService: MatchmakerService;
@@ -15,8 +14,8 @@ export function createServer({ services }: { services: Services }) {
 
   app.use(bodyParser.json());
 
-  app.use('/', router);
-  app.use(PoolController.basePath, new PoolController({ matchmakerService: services.matchmakerService }).router);
+  app.use(ServerSideRenderController.basePath, new ServerSideRenderController().getRouter());
+  app.use(PoolController.basePath, new PoolController({ matchmakerService: services.matchmakerService }).getRouter());
 
   return app;
 }
