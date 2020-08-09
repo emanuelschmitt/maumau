@@ -2,10 +2,10 @@ import { Card as TCard, ActionType, Rank, Player, Suit } from 'maumau-server/src
 import React from 'react';
 import styled from 'styled-components';
 
-import ActionButton from '../action-button';
 import useClickSound from '../common/use-click-sound';
 import useSuitSelectSound from '../common/use-suit-select-sound';
 import { useConnectionContext } from '../connection-context';
+import ActionButton from '../ui/action-button';
 import Dialog from '../ui/dialog';
 
 import { Frame } from './playable-card';

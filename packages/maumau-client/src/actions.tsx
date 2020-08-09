@@ -2,9 +2,9 @@ import { Player, ActionType } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
-import ActionButton from './action-button';
 import useClickSound from './common/use-click-sound';
 import { useConnectionContext } from './connection-context';
+import ActionButton from './ui/action-button';
 
 const Wrapper = styled.div({
   padding: '16px 32px',

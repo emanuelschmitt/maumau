@@ -2,9 +2,10 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Board from './board';
 import { ConnectionContextProvider } from './connection-context';
+import Game from './game';
 import NotFoundPage from './not-found-page';
+import PoolPage from './pool-page';
 import GlobalStyle from './styles';
 import WebSockerStatusBar from './websocket-status-bar';
 
@@ -25,8 +26,11 @@ function MainRoot() {
       <Frame>
         <Switch>
           <Route path="/" exact>
+            <PoolPage />
+          </Route>
+          <Route path="/game" exact>
             <WebSockerStatusBar />
-            <Board />
+            <Game />
           </Route>
           <Route
             render={({ staticContext }: any) => {

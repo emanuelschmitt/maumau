@@ -10,7 +10,6 @@ import { StaticRouter } from 'react-router-dom';
  */
 export default function withStaticRouter(args: { location: string; routerContext: object }) {
   return <P extends {}>(WrappedComponent: React.ComponentType<P>): React.StatelessComponent<P> => (props) => {
-    console.log('rendering static router');
     return (
       <StaticRouter location={args.location} context={args.routerContext}>
         <WrappedComponent {...props} />

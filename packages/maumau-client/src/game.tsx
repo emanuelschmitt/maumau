@@ -11,7 +11,7 @@ import Deck from './deck';
 import Grid from './ui/grid';
 import JumboTron from './ui/jumbotron';
 
-function Board() {
+function Game() {
   const { state } = useConnectionContext();
 
   if (!state) {
@@ -64,4 +64,4 @@ function Board() {
   );
 }
 
-export default Board;
+export default Game;

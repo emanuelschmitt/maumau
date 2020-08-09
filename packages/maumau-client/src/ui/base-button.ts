@@ -15,13 +15,13 @@ export default styled.button({
   ...reset,
   '&:disabled': {
     cursor: 'unset',
-    opacity: 0.6,
+    opacity: 0.7,
   },
   '&:focus, &:active': {
-    border: '1px solid #eee',
+    outline: 'none',
   },
   '&:hover': {
-    opacity: 0.9,
+    opacity: 0.7,
     cursor: 'pointer',
   },
   '&:hover:disabled': {
