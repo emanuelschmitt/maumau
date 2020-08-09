@@ -7,6 +7,7 @@ import { ServerStyleSheet } from 'styled-components';
 
 import { logger } from '../server/logger';
 import StaticRoot from '../views/static-root';
+import withStaticRouter from '../views/with-static-router';
 
 export default class ServerSideRenderController {
   public router = express.Router();
@@ -18,13 +19,16 @@ export default class ServerSideRenderController {
   }
 
   private initializeRoutes() {
-    this.router.get('/', this.clientHandler);
-    this.router.use('/static', express.static(ServerSideRenderController.statics.publicDirectory));
-    this.router.use('/bundle', express.static(ServerSideRenderController.statics.bundleDirectory));
+    this.router.use('^/static', express.static(ServerSideRenderController.statics.publicDirectory));
+    this.router.use('^/bundle', express.static(ServerSideRenderController.statics.bundleDirectory));
+    this.router.get('^/*', this.clientHandler);
   }
 
   private clientHandler = (request: Request, response: Response) => {
-    const { html, css } = this.renderHTMLandCSS();
+    const routerContext: { url?: string; status?: number } = {};
+    const Main = withStaticRouter({ location: request.url, routerContext })(MainRoot);
+
+    const { html, css } = this.renderHTMLandCSS(Main);
 
     const staticElement = React.createElement(StaticRoot, {
       html,
@@ -34,11 +38,19 @@ export default class ServerSideRenderController {
       })),
     });
 
+    if (routerContext.url) {
+      response.redirect(routerContext.url);
+    }
+
+    if (routerContext.status === 404) {
+      response.status(routerContext.status);
+    }
+
     return response.send('<!DOCTYPE html>' + ReactDOM.renderToStaticMarkup(staticElement));
   };
 
-  private renderHTMLandCSS(): { html: string; css: React.ReactNode } {
-    const rootElement = React.createElement(MainRoot);
+  private renderHTMLandCSS<P>(component: React.FunctionComponent<P>): { html: string; css: React.ReactNode } {
+    const rootElement = React.createElement(component);
     const sheet = new ServerStyleSheet();
 
     try {

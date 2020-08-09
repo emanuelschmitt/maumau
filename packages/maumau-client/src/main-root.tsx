@@ -1,8 +1,10 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Board from './board';
 import { ConnectionContextProvider } from './connection-context';
+import NotFoundPage from './not-found-page';
 import GlobalStyle from './styles';
 import WebSockerStatusBar from './websocket-status-bar';
 
@@ -21,8 +23,20 @@ function MainRoot() {
     <ConnectionContextProvider url="ws://0.0.0.0:8080">
       <GlobalStyle />
       <Frame>
-        <WebSockerStatusBar />
-        <Board />
+        <Switch>
+          <Route path="/" exact>
+            <WebSockerStatusBar />
+            <Board />
+          </Route>
+          <Route
+            render={({ staticContext }: any) => {
+              if (staticContext) {
+                staticContext.status = 404;
+              }
+              return <NotFoundPage />;
+            }}
+          ></Route>
+        </Switch>
       </Frame>
     </ConnectionContextProvider>
   );
