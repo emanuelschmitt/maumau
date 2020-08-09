@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Board from './board';
@@ -18,13 +19,15 @@ const Frame = styled.div({
 
 function MainRoot() {
   return (
-    <ConnectionContextProvider url="ws://0.0.0.0:8080">
-      <GlobalStyle />
-      <Frame>
-        <WebSockerStatusBar />
-        <Board />
-      </Frame>
-    </ConnectionContextProvider>
+    <BrowserRouter>
+      <ConnectionContextProvider url="ws://0.0.0.0:8080">
+        <GlobalStyle />
+        <Frame>
+          <WebSockerStatusBar />
+          <Board />
+        </Frame>
+      </ConnectionContextProvider>
+    </BrowserRouter>
   );
 }
 
