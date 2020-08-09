@@ -33,7 +33,7 @@ type Pool = {
 export const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
 const AMOUNT_OF_PLAYERS = 2;
 
-export default class Matchmaker {
+export default class MatchmakerService {
   private pool: Pool;
   private interval: number;
 
