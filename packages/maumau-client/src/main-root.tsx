@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Board from './board';
 import { ConnectionContextProvider } from './connection-context';
+import NotFoundPage from './not-found-page';
 import GlobalStyle from './styles';
 import WebSockerStatusBar from './websocket-status-bar';
 
@@ -19,15 +20,25 @@ const Frame = styled.div({
 
 function MainRoot() {
   return (
-    <BrowserRouter>
-      <ConnectionContextProvider url="ws://0.0.0.0:8080">
-        <GlobalStyle />
-        <Frame>
-          <WebSockerStatusBar />
-          <Board />
-        </Frame>
-      </ConnectionContextProvider>
-    </BrowserRouter>
+    <ConnectionContextProvider url="ws://0.0.0.0:8080">
+      <GlobalStyle />
+      <Frame>
+        <Switch>
+          <Route path="/" exact>
+            <WebSockerStatusBar />
+            <Board />
+          </Route>
+          <Route
+            render={({ staticContext }: any) => {
+              if (staticContext) {
+                staticContext.status = 404;
+              }
+              return <NotFoundPage />;
+            }}
+          ></Route>
+        </Switch>
+      </Frame>
+    </ConnectionContextProvider>
   );
 }
 
