@@ -23,7 +23,7 @@ export default class ServerSideRenderController {
     this.router.use('/bundle', express.static(ServerSideRenderController.statics.bundleDirectory));
   }
 
-  clientHandler = (request: Request, response: Response) => {
+  private clientHandler = (request: Request, response: Response) => {
     const { html, css } = this.renderHTMLandCSS();
 
     const staticElement = React.createElement(StaticRoot, {
@@ -51,5 +51,9 @@ export default class ServerSideRenderController {
     } finally {
       sheet.seal();
     }
+  }
+
+  public getRouter() {
+    return this.router;
   }
 }

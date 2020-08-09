@@ -14,8 +14,8 @@ export function createServer({ services }: { services: Services }) {
 
   app.use(bodyParser.json());
 
-  app.use(ServerSideRenderController.basePath, new ServerSideRenderController().router);
-  app.use(PoolController.basePath, new PoolController({ matchmakerService: services.matchmakerService }).router);
+  app.use(ServerSideRenderController.basePath, new ServerSideRenderController().getRouter());
+  app.use(PoolController.basePath, new PoolController({ matchmakerService: services.matchmakerService }).getRouter());
 
   return app;
 }
