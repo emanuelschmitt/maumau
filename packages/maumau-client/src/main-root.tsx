@@ -4,9 +4,11 @@ import styled from 'styled-components';
 
 import { ConnectionContextProvider } from './connection-context';
 import Game from './game';
+import PoolJoinPage from './join-page';
+import PoolLoadingPage from './loading-page';
 import NotFoundPage from './not-found-page';
-import PoolPage from './pool-page';
-import GlobalStyle from './styles';
+import { SessionStateProvider } from './state/session-state-context';
+import GlobalStyle from './styles/styles';
 import WebSockerStatusBar from './websocket-status-bar';
 
 const Frame = styled.div({
@@ -21,28 +23,33 @@ const Frame = styled.div({
 
 function MainRoot() {
   return (
-    <ConnectionContextProvider url="ws://0.0.0.0:8080">
-      <GlobalStyle />
-      <Frame>
-        <Switch>
-          <Route path="/" exact>
-            <PoolPage />
-          </Route>
-          <Route path="/game" exact>
-            <WebSockerStatusBar />
-            <Game />
-          </Route>
-          <Route
-            render={({ staticContext }: any) => {
-              if (staticContext) {
-                staticContext.status = 404;
-              }
-              return <NotFoundPage />;
-            }}
-          ></Route>
-        </Switch>
-      </Frame>
-    </ConnectionContextProvider>
+    <SessionStateProvider>
+      <ConnectionContextProvider url="ws://0.0.0.0:8080">
+        <GlobalStyle />
+        <Frame>
+          <Switch>
+            <Route path="/" exact>
+              <PoolJoinPage />
+            </Route>
+            <Route path="/loading">
+              <PoolLoadingPage />
+            </Route>
+            <Route path="/game" exact>
+              <WebSockerStatusBar />
+              <Game />
+            </Route>
+            <Route
+              render={({ staticContext }: any) => {
+                if (staticContext) {
+                  staticContext.status = 404;
+                }
+                return <NotFoundPage />;
+              }}
+            ></Route>
+          </Switch>
+        </Frame>
+      </ConnectionContextProvider>
+    </SessionStateProvider>
   );
 }
 

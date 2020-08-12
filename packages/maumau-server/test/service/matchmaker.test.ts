@@ -24,9 +24,9 @@ describe('matchmaker', () => {
 
     jest.runOnlyPendingTimers();
 
-    expect(matchmaker.getSessionIdByUserId(player1.id)).toBeTruthy();
-    expect(matchmaker.getSessionIdByUserId(player2.id)).toBeTruthy();
-    expect(matchmaker.getSessionIdByUserId(player1.id)).toBe(matchmaker.getSessionIdByUserId(player2.id));
+    expect(matchmaker.getStatusByUserId(player1.id).status).toBe('MATCHED');
+    expect(matchmaker.getStatusByUserId(player2.id).status).toBe('MATCHED');
+    expect(matchmaker.getStatusByUserId(player1.id).status).toBe(matchmaker.getStatusByUserId(player2.id).status);
   });
 
   test('should not matchmake when not enough people are available', () => {
@@ -47,7 +47,7 @@ describe('matchmaker', () => {
     jest.runOnlyPendingTimers();
 
     expect(Object.keys(matchmaker.getPool())).toHaveLength(1);
-    expect(matchmaker.getSessionIdByUserId(player1.id)).toBeUndefined();
+    expect(matchmaker.getStatusByUserId(player1.id)).toBeUndefined();
   });
 
   test('should matchmake available players to unique sessions', () => {

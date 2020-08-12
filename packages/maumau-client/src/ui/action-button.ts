@@ -8,4 +8,7 @@ export default styled(BaseButton)({
   margin: 4,
   border: '1px solid #262626',
   background: 'transparent',
+  '&:disabled': {
+    background: '#eeeeee',
+  },
 });

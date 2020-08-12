@@ -9,13 +9,23 @@ type Services = {
   matchmakerService: MatchmakerService;
 };
 
+function createAPIRouter({ services }: { services: Services }) {
+  const router = express.Router();
+  router.use(
+    PoolController.basePath,
+    new PoolController({ matchmakerService: services.matchmakerService }).getRouter(),
+  );
+
+  return router;
+}
+
 export function createServer({ services }: { services: Services }) {
   const app = express();
 
   app.use(bodyParser.json());
 
+  app.use('/api', createAPIRouter({ services }));
   app.use(ServerSideRenderController.basePath, new ServerSideRenderController().getRouter());
-  app.use(PoolController.basePath, new PoolController({ matchmakerService: services.matchmakerService }).getRouter());
 
   return app;
 }

@@ -21,6 +21,7 @@ function Actions({ player }: Props) {
   const canPerformKannet = possibleActions && possibleActions![player.id].includes(ActionType.KANNET);
   const canAcceptPendingSeven =
     possibleActions && possibleActions![player.id].includes(ActionType.ACCEPT_PENDING_SEVENS);
+
   return (
     <Wrapper>
       <ActionButton

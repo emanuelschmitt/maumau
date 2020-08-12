@@ -1,7 +1,7 @@
 import { celebrate, Joi } from 'celebrate';
 import express, { Request, Response } from 'express';
 
-import MatchmakerService from '../service/matchmaker';
+import MatchmakerService, { Status } from '../service/matchmaker';
 
 export default class PoolController {
   public router = express.Router();
@@ -44,22 +44,25 @@ export default class PoolController {
     );
   }
 
-  private join = (request: Request<{}, {}, { id: string; name: string }>, response: Response) => {
+  private join = (request: Request<{}, {}, { id: string; name: string }>, response: Response<{ status: Status }>) => {
     const { id, name } = request.body;
     this.matchmakerService.joinPool({ id, name });
-    response.status(204).send();
+    response.status(200).send({ status: 'JOINED' });
   };
 
-  private leave = (request: Request<{}, {}, { id: string }>, response: Response) => {
+  private leave = (request: Request<{}, {}, { id: string }>, response: Response<{ status: Status }>) => {
     const { id } = request.body;
     this.matchmakerService.leavePool({ id });
-    response.status(204).send();
+    response.status(200).send({ status: 'UNJOINED' });
   };
 
-  private status = (request: Request<{ id: string }>, response: Response) => {
+  private status = (
+    request: Request<{ id: string }>,
+    response: Response<{ status: Status; sessionId: string | null }>,
+  ) => {
     const { id } = request.params;
-    const sessionId = this.matchmakerService.getSessionIdByUserId(id);
-    response.status(200).send({ sessionId: sessionId ? sessionId : 'none' });
+    const status = this.matchmakerService.getStatusByUserId(id);
+    response.status(200).send(status);
   };
 
   public getRouter() {

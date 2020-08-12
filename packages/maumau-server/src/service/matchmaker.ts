@@ -29,6 +29,7 @@ import { v4 as uuidv4 } from 'uuid';
 type Pool = {
   [userId: string]: { name: string; joinedAt: number; sessionId?: string };
 };
+export type Status = 'UNJOINED' | 'JOINED' | 'MATCHED';
 
 export const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
 const AMOUNT_OF_PLAYERS = 2;
@@ -39,6 +40,7 @@ export default class MatchmakerService {
 
   constructor() {
     this.pool = {};
+    this.start();
   }
 
   public joinPool({ id, name }: { id: string; name: string }): void {
@@ -49,8 +51,10 @@ export default class MatchmakerService {
     delete this.pool[id];
   }
 
-  public getSessionIdByUserId(userId: string): string | undefined {
-    return this.pool[userId]?.sessionId;
+  public getStatusByUserId(userId: string): { sessionId: string | null; status: Status } {
+    const exists = Boolean(this.pool[userId]);
+    const sessionId = this.pool[userId]?.sessionId ?? null;
+    return { sessionId, status: exists && sessionId ? 'MATCHED' : exists ? 'JOINED' : 'UNJOINED' };
   }
 
   private matchmake() {
