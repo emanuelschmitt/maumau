@@ -5,12 +5,13 @@ import { Redirect } from 'react-router-dom';
 
 import LoadingIcon from './icons/loading';
 import { useSessionStateContext, ActionType } from './state/session-state-context';
+import Error from './ui/error';
 import Jumbotron from './ui/jumbotron';
 
 function PoolLoadingPage() {
   const [session, dispatch] = useSessionStateContext();
 
-  const { data } = useQuery(
+  const { data, isError } = useQuery(
     'status',
     async () => {
       const response = await axios.get(`/api/pool/status/${session.userId}`);
@@ -41,6 +42,7 @@ function PoolLoadingPage() {
       <h1>Loading...</h1>
       <LoadingIcon fontSize="4em" />
       <p>Waiting for other players.</p>
+      {isError && <Error>An error occured.</Error>}
     </Jumbotron>
   );
 }

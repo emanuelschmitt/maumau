@@ -37,9 +37,11 @@ const AMOUNT_OF_PLAYERS = 2;
 export default class MatchmakerService {
   private pool: Pool;
   private interval: number;
+  private onSessionCreate: (id: string) => void;
 
-  constructor() {
+  constructor(args: { onSessionCreate: (id: string) => void }) {
     this.pool = {};
+    this.onSessionCreate = args.onSessionCreate;
     this.start();
   }
 
@@ -69,6 +71,7 @@ export default class MatchmakerService {
       const sessionId = uuidv4();
       for (const [userId, entry] of group) {
         this.pool[userId] = { ...entry, sessionId };
+        this.onSessionCreate(sessionId);
       }
     }
   }

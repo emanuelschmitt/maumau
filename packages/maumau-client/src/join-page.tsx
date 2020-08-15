@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 import { useSessionStateContext, ActionType } from './state/session-state-context';
 import ActionButton from './ui/action-button';
+import Error from './ui/error';
 import Input from './ui/input';
 import Jumbotron from './ui/jumbotron';
 import Label from './ui/label';
@@ -13,13 +14,13 @@ import Label from './ui/label';
 const Column = styled.div({
   display: 'flex',
   flexDirection: 'column',
-  marginBottom: 16,
+  margin: '8px 0',
 });
 
 function PoolJoinPage() {
   const [session, dispatch] = useSessionStateContext();
 
-  const [mutation, { isLoading, data, isSuccess }] = useMutation(async () => {
+  const [mutation, { isLoading, data, isSuccess, isError }] = useMutation(async () => {
     const response = await axios.put('/api/pool/join', { name: session.name, id: session.userId });
     return response.data;
   });
@@ -44,10 +45,13 @@ function PoolJoinPage() {
             })
           }
         />
+        {isError && <Error>An error occured.</Error>}
       </Column>
-      <ActionButton disabled={!canProceed || isLoading} onClick={() => mutation()}>
-        Join Game
-      </ActionButton>
+      <Column>
+        <ActionButton disabled={!canProceed || isLoading} onClick={() => mutation()}>
+          Join Game
+        </ActionButton>
+      </Column>
     </Jumbotron>
   );
 }
