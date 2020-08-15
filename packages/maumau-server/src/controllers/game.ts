@@ -2,6 +2,7 @@ import { celebrate, Joi } from 'celebrate';
 import express, { Request, Response } from 'express';
 
 import { Action } from '../game/reducer';
+import { getPlayerRules } from '../game/rules';
 import { actionSchema } from '../game/validation';
 import GameSessionService, { Session } from '../service/game-session';
 
@@ -37,24 +38,28 @@ export default class GameController {
     );
   }
 
-  private get = (request: Request<{ id: string }>, response: Response<Session | { message: string }>) => {
+  private get = (request: Request<{ id: string }>, response: Response<any | { message: string }>) => {
     const { id } = request.params;
     const session = this.gameSessionService.get(id);
     if (!session) {
       return response.status(404).send({ message: 'session not found' });
     }
-    response.status(200).send(session);
+
+    response.status(200).send({
+      state: session.gameState.getState(),
+      possibleActions: getPlayerRules(session.gameState.getState()),
+    });
   };
 
   private send = (request: Request<{ id: string }, Action>, response: Response<Session | { message: string }>) => {
     const { id } = request.params;
     const session = this.gameSessionService.get(id);
+
     if (!session) {
       return response.status(404).send({ message: 'session not found' });
     }
 
     session.gameState.dispatch(request.body);
-
     response.status(200).send(session);
   };
 

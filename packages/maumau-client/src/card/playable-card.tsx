@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import useClickSound from '../common/use-click-sound';
-import { useConnectionContext } from '../connection-context';
+import { useGameContext } from '../state/game-context';
 import BaseButton from '../ui/base-button';
 
 import { cardStyle } from './style';
@@ -70,7 +70,7 @@ export const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ 
 }));
 
 function Card({ card, player, children }: Props) {
-  const { state, possibleActions, sendAction } = useConnectionContext();
+  const { state, possibleActions, sendAction } = useGameContext();
   const [playSound] = useClickSound();
 
   const isEnabled =
@@ -84,10 +84,7 @@ function Card({ card, player, children }: Props) {
     if (!isEnabled) {
       return;
     }
-    sendAction({
-      playerId: player.id,
-      action: getAction(card),
-    });
+    sendAction(getAction(card) as any);
     playSound();
   };
 

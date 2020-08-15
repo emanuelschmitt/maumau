@@ -2,14 +2,13 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { ConnectionContextProvider } from './connection-context';
-import Game from './game';
+import GamePage from './game-page';
 import PoolJoinPage from './join-page';
 import PoolLoadingPage from './loading-page';
 import NotFoundPage from './not-found-page';
-import { SessionStateProvider } from './state/session-state-context';
+import { GameProvider } from './state/game-context';
+import { SessionProvider } from './state/session-context';
 import GlobalStyle from './styles/styles';
-import WebSockerStatusBar from './websocket-status-bar';
 
 const Frame = styled.div({
   position: 'relative',
@@ -23,33 +22,32 @@ const Frame = styled.div({
 
 function MainRoot() {
   return (
-    <SessionStateProvider>
-      <ConnectionContextProvider url="ws://0.0.0.0:8080">
-        <GlobalStyle />
-        <Frame>
-          <Switch>
-            <Route path="/" exact>
-              <PoolJoinPage />
-            </Route>
-            <Route path="/loading">
-              <PoolLoadingPage />
-            </Route>
-            <Route path="/game" exact>
-              <WebSockerStatusBar />
-              <Game />
-            </Route>
-            <Route
-              render={({ staticContext }: any) => {
-                if (staticContext) {
-                  staticContext.status = 404;
-                }
-                return <NotFoundPage />;
-              }}
-            ></Route>
-          </Switch>
-        </Frame>
-      </ConnectionContextProvider>
-    </SessionStateProvider>
+    <SessionProvider>
+      <GlobalStyle />
+      <Frame>
+        <Switch>
+          <Route path="/" exact>
+            <PoolJoinPage />
+          </Route>
+          <Route path="/loading">
+            <PoolLoadingPage />
+          </Route>
+          <Route path="/game" exact>
+            <GameProvider>
+              <GamePage />
+            </GameProvider>
+          </Route>
+          <Route
+            render={({ staticContext }: any) => {
+              if (staticContext) {
+                staticContext.status = 404;
+              }
+              return <NotFoundPage />;
+            }}
+          ></Route>
+        </Switch>
+      </Frame>
+    </SessionProvider>
   );
 }
 

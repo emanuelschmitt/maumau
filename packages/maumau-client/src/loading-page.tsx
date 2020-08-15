@@ -4,12 +4,12 @@ import { useQuery } from 'react-query';
 import { Redirect } from 'react-router-dom';
 
 import LoadingIcon from './icons/loading';
-import { useSessionStateContext, ActionType } from './state/session-state-context';
+import { useSessionContext, ActionType } from './state/session-context';
 import Error from './ui/error';
 import Jumbotron from './ui/jumbotron';
 
 function PoolLoadingPage() {
-  const [session, dispatch] = useSessionStateContext();
+  const [session, dispatch] = useSessionContext();
 
   const { data, isError } = useQuery(
     'status',

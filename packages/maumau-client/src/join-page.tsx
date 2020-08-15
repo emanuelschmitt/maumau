@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { useSessionStateContext, ActionType } from './state/session-state-context';
+import { useSessionContext, ActionType } from './state/session-context';
 import ActionButton from './ui/action-button';
 import Error from './ui/error';
 import Input from './ui/input';
@@ -18,7 +18,7 @@ const Column = styled.div({
 });
 
 function PoolJoinPage() {
-  const [session, dispatch] = useSessionStateContext();
+  const [session, dispatch] = useSessionContext();
 
   const [mutation, { isLoading, data, isSuccess, isError }] = useMutation(async () => {
     const response = await axios.put('/api/pool/join', { name: session.name, id: session.userId });

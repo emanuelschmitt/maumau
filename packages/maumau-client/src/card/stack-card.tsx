@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import useClickSound from '../common/use-click-sound';
-import { useConnectionContext } from '../connection-context';
+import { useGameContext } from '../state/game-context';
 import BaseButton from '../ui/base-button';
 
 import { cardStyle } from './style';
@@ -18,7 +18,7 @@ const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ url, di
 
 function StackCard() {
   const [playSound] = useClickSound();
-  const { sendAction, state, possibleActions } = useConnectionContext();
+  const { sendAction, state, possibleActions } = useGameContext();
   const currentPlayer = state && state.players[state.playersTurnIndex];
   const canDraw =
     possibleActions && currentPlayer && possibleActions[currentPlayer.id].includes(ActionType.KANNET_AND_DRAW);
@@ -28,11 +28,8 @@ function StackCard() {
       return;
     }
     sendAction({
-      playerId: currentPlayer.id,
-      action: {
-        type: ActionType.KANNET_AND_DRAW,
-      },
-    });
+      type: ActionType.KANNET_AND_DRAW,
+    } as any);
     playSound();
   };
 

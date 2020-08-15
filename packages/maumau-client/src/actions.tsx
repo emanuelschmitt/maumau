@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import useClickSound from './common/use-click-sound';
-import { useConnectionContext } from './connection-context';
+import { useGameContext } from './state/game-context';
 import ActionButton from './ui/action-button';
 
 const Wrapper = styled.div({
@@ -17,7 +17,7 @@ type Props = {
 
 function Actions({ player }: Props) {
   const [playSound] = useClickSound();
-  const { sendAction, possibleActions } = useConnectionContext();
+  const { possibleActions, sendAction } = useGameContext();
   const canPerformKannet = possibleActions && possibleActions![player.id].includes(ActionType.KANNET);
   const canAcceptPendingSeven =
     possibleActions && possibleActions![player.id].includes(ActionType.ACCEPT_PENDING_SEVENS);
@@ -27,11 +27,8 @@ function Actions({ player }: Props) {
       <ActionButton
         onClick={() => {
           sendAction({
-            playerId: player.id,
-            action: {
-              type: ActionType.ACCEPT_PENDING_SEVENS,
-            },
-          });
+            type: ActionType.ACCEPT_PENDING_SEVENS,
+          } as any);
           playSound();
         }}
         disabled={!canAcceptPendingSeven}
@@ -41,11 +38,8 @@ function Actions({ player }: Props) {
       <ActionButton
         onClick={() => {
           sendAction({
-            playerId: player.id,
-            action: {
-              type: ActionType.KANNET,
-            },
-          });
+            type: ActionType.KANNET,
+          } as any);
           playSound();
         }}
         disabled={!canPerformKannet}

@@ -30,13 +30,13 @@ function reducer(state: State, action: Action) {
       return { ...state, name: action.payload.name };
     }
     case ActionType.SET_SESSION_ID: {
-      return { ...state, name: action.payload.sessionId };
+      return { ...state, sessionId: action.payload.sessionId };
     }
     default:
       throw Error('invalid state');
   }
 }
 
-export default function useSessionState() {
+export default function useSession() {
   return React.useReducer(reducer, { userId: uuidV4(), name: '' });
 }

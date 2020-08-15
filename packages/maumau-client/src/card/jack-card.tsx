@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import useClickSound from '../common/use-click-sound';
 import useSuitSelectSound from '../common/use-suit-select-sound';
-import { useConnectionContext } from '../connection-context';
+import { useGameContext } from '../state/game-context';
 import ActionButton from '../ui/action-button';
 import Dialog from '../ui/dialog';
 
@@ -30,7 +30,7 @@ function JackCard({ card, player, children }: Props) {
     throw new Error('invalid render of jack card');
   }
 
-  const { state, possibleActions, sendAction } = useConnectionContext();
+  const { state, possibleActions, sendAction } = useGameContext();
   const [playClick] = useClickSound();
   const [playSuitSelect] = useSuitSelectSound();
 
@@ -45,15 +45,12 @@ function JackCard({ card, player, children }: Props) {
 
   const onSelectSuit = (suit: Suit) => {
     sendAction({
-      playerId: player.id,
-      action: {
-        type: ActionType.PLAY_JACK,
-        payload: {
-          suit,
-          card,
-        },
+      type: ActionType.PLAY_JACK,
+      payload: {
+        suit,
+        card,
       },
-    });
+    } as any);
     playClick();
     hideDialog();
   };
