@@ -2,7 +2,7 @@ import bodyParser from 'body-parser';
 import { errors } from 'celebrate';
 import express, { Express } from 'express';
 import request from 'supertest';
-import { verify, deepEqual, reset } from 'ts-mockito';
+import { verify, deepEqual, reset, when } from 'ts-mockito';
 import { v4 as uuidV4 } from 'uuid';
 
 import PoolController from '../../src/controllers/pool';
@@ -94,9 +94,14 @@ describe('PoolController', () => {
       });
 
       const payload = { id: uuidV4() };
-      const res = await request(app).put(`/pool/status/${payload.id}`);
+      when(services.matchmakerServiceMock.getStatusByUserId(payload.id)).thenReturn({
+        sessionId: '1',
+        status: 'JOINED',
+      });
+
+      const res = await request(app).get(`/pool/status/${payload.id}`);
       expect(res.status).toBe(200);
-      verify(services.matchmakerServiceMock.getStatusByUserId(deepEqual(payload))).once();
+      verify(services.matchmakerServiceMock.getStatusByUserId(payload.id)).once();
     });
   });
 });
