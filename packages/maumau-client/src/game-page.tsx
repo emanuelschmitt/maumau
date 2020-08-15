@@ -7,9 +7,9 @@ import JackCard from './card/jack-card';
 import PlayableCard from './card/playable-card';
 import StackCard from './card/stack-card';
 import TopCard from './card/top-card';
+import { useGameContext } from './context/game-context';
+import { useSessionContext } from './context/session-context';
 import Deck from './deck';
-import { useGameContext } from './state/game-context';
-import { useSessionContext } from './state/session-context';
 import Grid from './ui/grid';
 import JumboTron from './ui/jumbotron';
 
@@ -25,7 +25,7 @@ function Game() {
     return null;
   }
 
-  const { players, gameEnded, stack } = game.state;
+  const { players, gameEnded, topCard } = game.state;
 
   if (gameEnded) {
     return (
@@ -50,7 +50,7 @@ function Game() {
         </Deck>
       </Grid.One>
       <Grid.Two>
-        <TopCard card={stack[stack.length - 1]} />
+        <TopCard card={topCard} />
       </Grid.Two>
       <Grid.Three>
         <StackCard />

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import useClickSound from '../common/use-click-sound';
 import useSuitSelectSound from '../common/use-suit-select-sound';
-import { useGameContext } from '../state/game-context';
+import { useGameContext } from '../context/game-context';
 import ActionButton from '../ui/action-button';
 import Dialog from '../ui/dialog';
 
@@ -50,7 +50,7 @@ function JackCard({ card, player, children }: Props) {
         suit,
         card,
       },
-    } as any);
+    });
     playClick();
     hideDialog();
   };

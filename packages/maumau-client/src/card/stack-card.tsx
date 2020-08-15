@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import useClickSound from '../common/use-click-sound';
-import { useGameContext } from '../state/game-context';
+import { useGameContext } from '../context/game-context';
 import BaseButton from '../ui/base-button';
 
 import { cardStyle } from './style';
@@ -29,7 +29,7 @@ function StackCard() {
     }
     sendAction({
       type: ActionType.KANNET_AND_DRAW,
-    } as any);
+    });
     playSound();
   };
 

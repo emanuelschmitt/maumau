@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { useSessionContext, ActionType } from './state/session-context';
+import { useSessionContext, ActionType } from './context/session-context';
 import ActionButton from './ui/action-button';
 import Error from './ui/error';
 import Input from './ui/input';

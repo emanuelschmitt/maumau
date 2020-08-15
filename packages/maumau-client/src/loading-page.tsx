@@ -3,8 +3,8 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import { Redirect } from 'react-router-dom';
 
+import { useSessionContext, ActionType } from './context/session-context';
 import LoadingIcon from './icons/loading';
-import { useSessionContext, ActionType } from './state/session-context';
 import Error from './ui/error';
 import Jumbotron from './ui/jumbotron';
 

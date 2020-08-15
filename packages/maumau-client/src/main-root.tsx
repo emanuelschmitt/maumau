@@ -2,12 +2,12 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { GameProvider } from './context/game-context';
+import { SessionProvider } from './context/session-context';
 import GamePage from './game-page';
 import PoolJoinPage from './join-page';
 import PoolLoadingPage from './loading-page';
 import NotFoundPage from './not-found-page';
-import { GameProvider } from './state/game-context';
-import { SessionProvider } from './state/session-context';
 import GlobalStyle from './styles/styles';
 
 const Frame = styled.div({
