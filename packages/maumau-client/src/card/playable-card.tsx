@@ -76,9 +76,7 @@ function Card({ card, player, children }: Props) {
   const isEnabled =
     state &&
     possibleActions &&
-    (state.nextSuit
-      ? matchesSuit(card, state.nextSuit)
-      : canPlayCard(card, state.stack[state.stack.length - 1], possibleActions[player.id]));
+    (state.nextSuit ? matchesSuit(card, state.nextSuit) : canPlayCard(card, state.topCard, possibleActions[player.id]));
 
   const onClick = () => {
     if (!isEnabled) {
