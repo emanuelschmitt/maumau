@@ -3,28 +3,31 @@ import React from 'react';
 import { useQuery, useMutation } from 'react-query';
 import { Redirect } from 'react-router-dom';
 
+import * as client from './api/client';
 import { useSessionContext, ActionType } from './context/session-context';
 import LoadingIcon from './icons/loading';
 import ActionButton from './ui/action-button';
 import Error from './ui/error';
 import Jumbotron from './ui/jumbotron';
 
-function PoolLoadingPage() {
-  const [session, dispatch] = useSessionContext();
+function useGetStatusQuery(userId: string) {
+  return useQuery('status', () => client.getStatusByUserId(userId), {
+    refetchInterval: 1000,
+    cacheTime: 0,
+  });
+}
 
-  const { data, isError } = useQuery(
-    'status',
-    async () => {
-      const response = await axios.get(`/api/pool/status/${session.userId}`);
-      return response.data;
-    },
-    { refetchInterval: 2000, cacheTime: 0 },
-  );
-
-  const [leave, { isSuccess: hasLeft }] = useMutation(async () => {
-    const response = await axios.put('/api/pool/leave', { id: session.userId });
+function useLeavePoolMutation(userId: string) {
+  return useMutation(async () => {
+    const response = await axios.put('/api/pool/leave', { id: userId });
     return response.data;
   });
+}
+
+function PoolLoadingPage() {
+  const [session, dispatch] = useSessionContext();
+  const { data, isError } = useGetStatusQuery(session.userId);
+  const [leave, { isSuccess: hasLeft }] = useLeavePoolMutation(session.userId);
 
   React.useEffect(() => {
     if (data?.status === 'MATCHED' && data?.sessionId) {
@@ -35,7 +38,7 @@ function PoolLoadingPage() {
     }
   }, [data]);
 
-  if (data?.status === 'UNJOINED' && hasLeft) {
+  if (data?.status === 'UNJOINED' || hasLeft) {
     return <Redirect to="/" />;
   }
 

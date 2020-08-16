@@ -11,3 +11,18 @@ export async function sendGameAction(id: string, action: Action) {
   const repsonse = await axios.put(`/api/game/${id}`, action);
   return repsonse.data;
 }
+
+export async function joinPool({ name, id }: { name: string; id: string }) {
+  const response = await axios.put('/api/pool/join', { name, id });
+  return response.data;
+}
+
+export async function leavePool(id: string) {
+  const response = await axios.put('/api/pool/leave', { id });
+  return response.data;
+}
+
+export async function getStatusByUserId(id: string) {
+  const response = await axios.get(`/api/pool/status/${id}`);
+  return response.data;
+}

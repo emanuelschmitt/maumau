@@ -1,9 +1,9 @@
-import axios from 'axios';
 import React from 'react';
 import { useMutation } from 'react-query';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 
+import * as client from './api/client';
 import { useSessionContext, ActionType } from './context/session-context';
 import ActionButton from './ui/action-button';
 import Error from './ui/error';
@@ -17,12 +17,15 @@ const Column = styled.div({
   margin: '8px 0',
 });
 
+function useJoinPoolMutation(args: { name: string; id: string }) {
+  return useMutation(() => client.joinPool(args));
+}
+
 function PoolJoinPage() {
   const [session, dispatch] = useSessionContext();
-
-  const [mutation, { isLoading, data, isSuccess, isError }] = useMutation(async () => {
-    const response = await axios.put('/api/pool/join', { name: session.name, id: session.userId });
-    return response.data;
+  const [mutation, { isLoading, data, isSuccess, isError }] = useJoinPoolMutation({
+    name: session.name,
+    id: session.userId,
   });
 
   const canProceed = session.name.trim().length !== 0;
