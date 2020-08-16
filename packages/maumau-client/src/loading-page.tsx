@@ -12,7 +12,7 @@ import Jumbotron from './ui/jumbotron';
 
 function useGetStatusQuery(userId: string) {
   return useQuery('status', () => client.getStatusByUserId(userId), {
-    refetchInterval: 1000,
+    refetchInterval: 500,
     cacheTime: 0,
   });
 }

@@ -35,7 +35,7 @@ export type Status = 'UNJOINED' | 'JOINED' | 'MATCHED';
 
 export const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
 const AMOUNT_OF_PLAYERS = 2;
-const CLEANUP_THRESHOLD_MS = 5000;
+const CLEANUP_THRESHOLD_MS = 10000;
 
 export default class MatchmakerService {
   private pool: Pool;
