@@ -21,7 +21,7 @@ export default class GameController {
       `/:id`,
       celebrate({
         params: Joi.object({
-          id: Joi.string().required(),
+          id: Joi.string().uuid().required(),
         }),
       }),
       this.get,
@@ -30,7 +30,7 @@ export default class GameController {
       `/:id`,
       celebrate({
         params: Joi.object({
-          id: Joi.string().required(),
+          id: Joi.string().uuid().required(),
         }),
         body: actionSchema,
       }),
