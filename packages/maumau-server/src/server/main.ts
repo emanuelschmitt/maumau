@@ -1,5 +1,6 @@
 import GameState from '../game/game-state';
 import { getPlayerRules } from '../game/rules';
+import GameSessionService from '../service/game-session';
 import MatchmakerService from '../service/matchmaker';
 
 import { createServer } from './express-server';
@@ -10,9 +11,14 @@ import WebSocketServer from './websocket-server';
 async function main() {
   const port = 8080;
 
-  const matchmakerService = new MatchmakerService();
+  const gameSessionService = new GameSessionService();
+  const matchmakerService = new MatchmakerService({
+    onSessionCreate: (id) => {
+      gameSessionService.add(id);
+    },
+  });
 
-  const app = createServer({ services: { matchmakerService } });
+  const app = createServer({ services: { matchmakerService, gameSessionService } });
 
   const server = app.listen(port, () => {
     logger.info(`Express server listening on port ${port}`);

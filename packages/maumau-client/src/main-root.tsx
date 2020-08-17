@@ -2,11 +2,13 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Board from './board';
-import { ConnectionContextProvider } from './connection-context';
+import { GameProvider } from './context/game-context';
+import { SessionProvider } from './context/session-context';
+import GamePage from './game-page';
+import PoolJoinPage from './join-page';
+import PoolLoadingPage from './loading-page';
 import NotFoundPage from './not-found-page';
-import GlobalStyle from './styles';
-import WebSockerStatusBar from './websocket-status-bar';
+import GlobalStyle from './styles/styles';
 
 const Frame = styled.div({
   position: 'relative',
@@ -20,13 +22,20 @@ const Frame = styled.div({
 
 function MainRoot() {
   return (
-    <ConnectionContextProvider url="ws://0.0.0.0:8080">
+    <SessionProvider>
       <GlobalStyle />
       <Frame>
         <Switch>
           <Route path="/" exact>
-            <WebSockerStatusBar />
-            <Board />
+            <PoolJoinPage />
+          </Route>
+          <Route path="/loading">
+            <PoolLoadingPage />
+          </Route>
+          <Route path="/game" exact>
+            <GameProvider>
+              <GamePage />
+            </GameProvider>
           </Route>
           <Route
             render={({ staticContext }: any) => {
@@ -38,7 +47,7 @@ function MainRoot() {
           ></Route>
         </Switch>
       </Frame>
-    </ConnectionContextProvider>
+    </SessionProvider>
   );
 }
 

@@ -77,6 +77,9 @@ export default (): webpack.Configuration => {
       contentBasePublicPath: '/static',
       port: 9000,
       historyApiFallback: true,
+      proxy: {
+        '/api': 'http://0.0.0.0:8080',
+      },
     },
   };
 };

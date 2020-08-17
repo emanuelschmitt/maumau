@@ -8,4 +8,6 @@ export default styled.div({
   alignItems: 'center',
   background: 'white',
   borderRadius: 16,
+  flexDirection: 'column',
+  padding: 32,
 });

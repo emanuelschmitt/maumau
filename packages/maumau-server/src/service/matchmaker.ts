@@ -1,6 +1,8 @@
 import chunk from 'lodash.chunk';
 import { v4 as uuidv4 } from 'uuid';
 
+import { logger } from '../server/logger';
+
 /**
  * Why no Websockets?
  * - https://samsaffron.com/archive/2015/12/29/websockets-caution-required
@@ -27,30 +29,51 @@ import { v4 as uuidv4 } from 'uuid';
  */
 
 type Pool = {
-  [userId: string]: { name: string; joinedAt: number; sessionId?: string };
+  [userId: string]: { name: string; joinedAt: number; sessionId?: string; lastSeen: number };
 };
+export type Status = 'UNJOINED' | 'JOINED' | 'MATCHED';
 
 export const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
 const AMOUNT_OF_PLAYERS = 2;
+const CLEANUP_THRESHOLD_MS = 10000;
 
 export default class MatchmakerService {
   private pool: Pool;
-  private interval: number;
+  private matchMakeInterval: number;
+  private cleanupInterval: number;
+  private onSessionCreate: (id: string) => void;
 
-  constructor() {
+  constructor(args: { onSessionCreate: (id: string) => void }) {
     this.pool = {};
+    this.onSessionCreate = args.onSessionCreate;
+    this.start();
   }
 
   public joinPool({ id, name }: { id: string; name: string }): void {
-    this.pool[id] = { name, joinedAt: Date.now() };
+    logger.debug(`user ${id} joined`);
+    this.pool[id] = { name, joinedAt: Date.now(), lastSeen: Date.now() };
   }
 
   public leavePool({ id }: { id: string }): void {
+    logger.debug(`user ${id} left`);
     delete this.pool[id];
   }
 
-  public getSessionIdByUserId(userId: string): string | undefined {
-    return this.pool[userId]?.sessionId;
+  public getStatusByUserId(userId: string): { sessionId: string | null; status: Status } {
+    const exists = Boolean(this.pool[userId]);
+    const sessionId = this.pool[userId]?.sessionId ?? null;
+
+    if (!exists) {
+      return { status: 'UNJOINED', sessionId };
+    }
+
+    this.updateLastSeen(userId);
+    return { status: sessionId ? 'MATCHED' : 'JOINED', sessionId };
+  }
+
+  private updateLastSeen(userId: string): void {
+    const user = this.pool[userId];
+    this.pool[userId] = { ...user, lastSeen: Date.now() };
   }
 
   private matchmake() {
@@ -65,16 +88,29 @@ export default class MatchmakerService {
       const sessionId = uuidv4();
       for (const [userId, entry] of group) {
         this.pool[userId] = { ...entry, sessionId };
+        this.onSessionCreate(sessionId);
+      }
+    }
+  }
+
+  private cleanupPool() {
+    for (const [id, user] of Object.entries(this.pool)) {
+      const isTimedOut = Date.now() - user.lastSeen >= CLEANUP_THRESHOLD_MS;
+      if (isTimedOut) {
+        logger.debug(`cleaning up user ${id}`);
+        this.leavePool({ id });
       }
     }
   }
 
   public start(): void {
-    this.interval = setInterval(this.matchmake.bind(this), MATCHMAKER_REPEAT_INTERVAL_MS);
+    this.matchMakeInterval = setInterval(this.matchmake.bind(this), MATCHMAKER_REPEAT_INTERVAL_MS);
+    this.cleanupInterval = setInterval(this.cleanupPool.bind(this), MATCHMAKER_REPEAT_INTERVAL_MS);
   }
 
   public stop(): void {
-    clearInterval(this.interval);
+    clearInterval(this.matchMakeInterval);
+    clearInterval(this.cleanupInterval);
   }
 
   public getPool(): Pool {

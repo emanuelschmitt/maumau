@@ -6,7 +6,7 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <main id="main-root"></main>
+    <main id="main"></main>
     <% htmlWebpackPlugin.files.js.map((script) => { %>
     <script src="/<%= script %>" defer></script>
     <% }) %>

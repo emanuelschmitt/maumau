@@ -1,24 +1,31 @@
 import { Rank } from 'maumau-server/src/types';
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 import Actions from './actions';
 import JackCard from './card/jack-card';
 import PlayableCard from './card/playable-card';
 import StackCard from './card/stack-card';
 import TopCard from './card/top-card';
-import { useConnectionContext } from './connection-context';
+import { useGameContext } from './context/game-context';
+import { useSessionContext } from './context/session-context';
 import Deck from './deck';
 import Grid from './ui/grid';
 import JumboTron from './ui/jumbotron';
 
-function Board() {
-  const { state } = useConnectionContext();
+function Game() {
+  const [session] = useSessionContext();
+  const game = useGameContext();
 
-  if (!state) {
+  if (!session.sessionId) {
+    return <Redirect to="/" />;
+  }
+
+  if (!game?.state) {
     return null;
   }
 
-  const { players, gameEnded } = state;
+  const { players, gameEnded, topCard } = game.state;
 
   if (gameEnded) {
     return (
@@ -43,7 +50,7 @@ function Board() {
         </Deck>
       </Grid.One>
       <Grid.Two>
-        <TopCard card={state.stack[state.stack.length - 1]} />
+        <TopCard card={topCard} />
       </Grid.Two>
       <Grid.Three>
         <StackCard />
@@ -64,4 +71,4 @@ function Board() {
   );
 }
 
-export default Board;
+export default Game;

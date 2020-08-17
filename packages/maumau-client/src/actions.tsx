@@ -2,9 +2,9 @@ import { Player, ActionType } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
-import ActionButton from './action-button';
 import useClickSound from './common/use-click-sound';
-import { useConnectionContext } from './connection-context';
+import { useGameContext } from './context/game-context';
+import ActionButton from './ui/action-button';
 
 const Wrapper = styled.div({
   padding: '16px 32px',
@@ -17,19 +17,18 @@ type Props = {
 
 function Actions({ player }: Props) {
   const [playSound] = useClickSound();
-  const { sendAction, possibleActions } = useConnectionContext();
+  const { possibleActions, sendAction } = useGameContext();
+
   const canPerformKannet = possibleActions && possibleActions![player.id].includes(ActionType.KANNET);
   const canAcceptPendingSeven =
     possibleActions && possibleActions![player.id].includes(ActionType.ACCEPT_PENDING_SEVENS);
+
   return (
     <Wrapper>
       <ActionButton
         onClick={() => {
           sendAction({
-            playerId: player.id,
-            action: {
-              type: ActionType.ACCEPT_PENDING_SEVENS,
-            },
+            type: ActionType.ACCEPT_PENDING_SEVENS,
           });
           playSound();
         }}
@@ -40,10 +39,7 @@ function Actions({ player }: Props) {
       <ActionButton
         onClick={() => {
           sendAction({
-            playerId: player.id,
-            action: {
-              type: ActionType.KANNET,
-            },
+            type: ActionType.KANNET,
           });
           playSound();
         }}

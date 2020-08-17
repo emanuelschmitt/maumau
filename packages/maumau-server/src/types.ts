@@ -12,7 +12,7 @@ export type IncomingMessage = {
   action: Action;
 };
 
-export type OutgoingMessage = {
+export type GameState = {
   state: State;
   possibleActions: Record<number, ActionType[]>;
 };
