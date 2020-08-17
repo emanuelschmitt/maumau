@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import { createServer } from '../../src/server/express-server';
+import { createServer } from '../../src/server/server';
 import { createServiceMocks } from '../mock';
 
 const services = createServiceMocks();
