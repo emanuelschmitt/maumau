@@ -12,6 +12,7 @@
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix"
   },
   "dependencies": {
+    "maumau-client": "1.0.0",
     "@hapi/joi": "^17.1.1",
     "@types/supertest": "^2.0.10",
     "body-parser": "^1.19.0",
