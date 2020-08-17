@@ -1,10 +1,11 @@
 import { celebrate, Joi } from 'celebrate';
 import express, { Request, Response } from 'express';
 
-import { Action } from '../game/reducer';
+import { ActionType } from '../game/action-type';
+import { Action, State } from '../game/reducer';
 import { getPlayerRules } from '../game/rules';
 import { actionSchema } from '../game/validation';
-import GameSessionService, { Session } from '../service/game-session';
+import GameSessionService from '../service/game-session';
 
 export default class GameController {
   public router = express.Router();
@@ -38,7 +39,10 @@ export default class GameController {
     );
   }
 
-  private get = (request: Request<{ id: string }>, response: Response<any | { message: string }>) => {
+  private get = (
+    request: Request<{ id: string }>,
+    response: Response<{ state: State; possibleActions: Record<string, ActionType[]> } | { message: string }>,
+  ) => {
     const { id } = request.params;
     const session = this.gameSessionService.get(id);
     if (!session) {
@@ -51,7 +55,10 @@ export default class GameController {
     });
   };
 
-  private send = (request: Request<{ id: string }, Action>, response: Response<Session | { message: string }>) => {
+  private send = (
+    request: Request<{ id: string }, Action>,
+    response: Response<{ state: State; possibleActions: Record<string, ActionType[]> } | { message: string }>,
+  ) => {
     const { id } = request.params;
     const session = this.gameSessionService.get(id);
 
@@ -59,8 +66,11 @@ export default class GameController {
       return response.status(404).send({ message: 'session not found' });
     }
 
-    session.gameState.dispatch(request.body);
-    response.status(200).send(session);
+    const state = session.gameState.dispatch(request.body);
+    response.status(200).send({
+      state,
+      possibleActions: getPlayerRules(state),
+    });
   };
 
   public getRouter() {
