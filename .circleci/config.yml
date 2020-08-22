@@ -21,9 +21,9 @@ jobs:
       - heroku/release-docker-image
 workflows:
   version: 2
-    build_test_deploy:
-      jobs:
-        - build_and_test
-        - deploy
+  build_test_deploy:
+    jobs:
+      - build_and_test
+      - deploy
 orbs:
   heroku: circleci/heroku@1.2.2
