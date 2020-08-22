@@ -24,9 +24,11 @@ jobs:
           command: |
             heroku container:login
             heroku container:push -a $HEROKU_APP_NAME web
-      - heroku/release-docker-image:
-          app-name: $HEROKU_APP_NAME
-          process-types: web
+      - run:
+          name: Release docker container
+          description: Release container on Heroku
+          command: |
+            heroku container:release -a $HEROKU_APP_NAME web
 
 workflows:
   version: 2
