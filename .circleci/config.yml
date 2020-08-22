@@ -16,7 +16,7 @@ jobs:
     steps:
       - checkout
       - heroku/check-authentication
-      run: docker build -t maumau/app:$CIRCLE_BRANCH .
+      - run: docker build -t maumau/app:$CIRCLE_BRANCH .
       - heroku/push-docker-image:
           app-name: $HEROKU_APP_NAME
           process-types: web
