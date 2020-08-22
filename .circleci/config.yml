@@ -17,9 +17,12 @@ jobs:
       - checkout
       - heroku/check-authentication
       - run: docker build -t maumau/app:$CIRCLE_BRANCH .
-      - heroku/push-docker-image:
-          app-name: $HEROKU_APP_NAME
-          process-types: web
+      - run:
+          name: Build and push a docker image
+          description: Replacement of orb command heroku/push-docker-image because of its syntax error
+          command: |
+            heroku container:login
+            heroku container:push -a $HEROKU_APP_NAME web
       - heroku/release-docker-image:
           app-name: $HEROKU_APP_NAME
           process-types: web
