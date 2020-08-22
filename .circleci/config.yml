@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  build_and_test:
     docker:
       - image: circleci/node:12.18.2
     steps:
@@ -19,6 +19,10 @@ jobs:
       - docker build .
       - heroku/push-docker-image
       - heroku/release-docker-image
-
+workflows:
+  version: 2
+    build_test_deploy:
+      - build_and_test
+      - deploy
 orbs:
   heroku: circleci/heroku@1.2.2
