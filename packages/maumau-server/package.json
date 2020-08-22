@@ -12,13 +12,13 @@
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix"
   },
   "dependencies": {
-    "maumau-client": "1.0.0",
     "@hapi/joi": "^17.1.1",
     "@types/supertest": "^2.0.10",
     "body-parser": "^1.19.0",
     "celebrate": "^12.2.0",
     "express": "^4.17.1",
     "lodash.chunk": "^4.2.0",
+    "maumau-client": "1.0.0",
     "pino": "^6.5.1",
     "pino-pretty": "^4.1.0",
     "uuid": "^8.3.0"
