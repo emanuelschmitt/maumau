@@ -15,6 +15,7 @@ jobs:
       HEROKU_APP_NAME: 'maumau-io' # define env var $HEROKU_APP
     steps:
       - checkout
+      - heroku/install
       - heroku/check-authentication
       - run: docker build -t maumau/app:$CIRCLE_BRANCH .
       - run:
@@ -26,6 +27,7 @@ jobs:
       - heroku/release-docker-image:
           app-name: $HEROKU_APP_NAME
           process-types: web
+
 workflows:
   version: 2
   build_test_deploy:
