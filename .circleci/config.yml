@@ -16,11 +16,13 @@ jobs:
     steps:
       - checkout
       - heroku/check-authentication
-      - run: docker build -t maumau/app:$CIRCLE_BRANCH .
+      - setup_remote_docker
       - heroku/push-docker-image:
-        recursive: true
+        app-name: $HEROKU_APP_NAME
+        process-types: web
       - heroku/release-docker-image:
-        recursive: true
+        app-name: $HEROKU_APP_NAME
+        process-types: web
 workflows:
   version: 2
   build_test_deploy:
