@@ -12,7 +12,7 @@ jobs:
   deploy:
     machine: true
     environment:
-      HEROKU_APP: 'maumau-io' # define env var $HEROKU_APP
+      HEROKU_APP_NAME: 'maumau-io' # define env var $HEROKU_APP
     steps:
       - checkout
       - heroku/check-authentication
