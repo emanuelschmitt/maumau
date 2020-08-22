@@ -18,9 +18,9 @@ jobs:
       - heroku/check-authentication
       - run: docker build -t maumau/app:$CIRCLE_BRANCH .
       - heroku/push-docker-image:
-        process-types: web
+        recursive: true
       - heroku/release-docker-image:
-        process-types: web
+        recursive: true
 workflows:
   version: 2
   build_test_deploy:
