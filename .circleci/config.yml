@@ -10,7 +10,7 @@ jobs:
       - run: yarn build
       - run: yarn test
   deploy:
-    machine: true
+    executor: heroku/default
     environment:
       HEROKU_APP_NAME: 'maumau-io' # define env var $HEROKU_APP
     steps:
