@@ -9,3 +9,16 @@ jobs:
       - run: yarn lint
       - run: yarn build
       - run: yarn test
+  deploy:
+    machine: true
+    environment:
+      HEROKU_APP: 'maumau-io' # define env var $HEROKU_APP
+    steps:
+      - checkout
+      - heroku/check-authentication
+      - docker build .
+      - heroku/push-docker-image
+      - heroku/release-docker-image
+
+orbs:
+  heroku: circleci/heroku@1.2.2
