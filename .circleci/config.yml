@@ -16,6 +16,7 @@ jobs:
     steps:
       - checkout
       - heroku/install
+      - run: heroku --version
       - heroku/check-authentication
       - run: docker build -t maumau/app:$CIRCLE_BRANCH .
       - run:
@@ -28,7 +29,7 @@ jobs:
           name: Release docker container
           description: Release container on Heroku
           command: |
-            heroku container:release -a $HEROKU_APP_NAME web
+            heroku docker:release -a $HEROKU_APP_NAME web
 
 workflows:
   version: 2
