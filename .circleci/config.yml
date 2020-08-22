@@ -16,7 +16,7 @@ jobs:
     steps:
       - checkout
       - heroku/check-authentication
-      - docker build .
+      - run: docker build -t maumau/app:$CIRCLE_BRANCH .
       - heroku/push-docker-image
       - heroku/release-docker-image
 workflows:
