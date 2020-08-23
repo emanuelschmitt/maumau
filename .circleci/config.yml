@@ -9,6 +9,7 @@ jobs:
       - run: yarn lint
       - run: yarn build
       - run: yarn test
+
   docker_build_deploy:
     machine: true
     environment:
