@@ -40,7 +40,7 @@ workflows:
   build:
     jobs:
       - build_and_test
-      - docker_build_push_deploy:
+      - docker_build_deploy:
           name: master_auto_deploy
           requires:
             - build_and_test
