@@ -5,7 +5,7 @@ import { logger } from './logger';
 import { createServer } from './server';
 
 async function main() {
-  const port = 8080;
+  const port = process.env.PORT || 8080;
 
   const gameSessionService = new GameSessionService();
   const matchmakerService = new MatchmakerService({

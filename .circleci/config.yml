@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  build_and_test:
     docker:
       - image: circleci/node:12.18.2
     steps:
@@ -9,3 +9,45 @@ jobs:
       - run: yarn lint
       - run: yarn build
       - run: yarn test
+
+  docker_build_deploy:
+    machine: true
+    environment:
+      HEROKU_APP_NAME: 'maumau-io' # define env var $HEROKU_APP
+    steps:
+      - checkout
+      - run:
+          name: Install Heroku
+          command: curl https://cli-assets.heroku.com/install.sh | sh
+      - run:
+          name: Show Heroku version
+          command: heroku --version
+      - heroku/check-authentication
+      - run:
+          name: Build Docker container
+          command: docker build -t maumau/app:$CIRCLE_BRANCH .
+      - run:
+          name: Push a docker image
+          description: Replacement of orb command heroku/push-docker-image because of its syntax error
+          command: |
+            heroku container:login
+            heroku container:push -a $HEROKU_APP_NAME web
+      - heroku/release-docker-image:
+          app-name: $HEROKU_APP_NAME
+          process-types: web
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build_and_test
+      - docker_build_deploy:
+          name: master_auto_deploy
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only:
+                - master
+orbs:
+  heroku: circleci/heroku@1.2.2

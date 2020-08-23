@@ -42,6 +42,7 @@ module.exports = {
     ],
     'react/jsx-uses-react': 'error',
     'react/jsx-uses-vars': 'error',
+    'react/display-name': 0,
   },
   ignorePatterns: ['**/*.js'],
 };
