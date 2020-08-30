@@ -37,13 +37,15 @@ export const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
 const AMOUNT_OF_PLAYERS = 2;
 const CLEANUP_THRESHOLD_MS = 10000;
 
+type onSessionCreateFn = (id: string, players: { id: string; name: string }[]) => void;
+
 export default class MatchmakerService {
   private pool: Pool;
   private matchMakeInterval: number;
   private cleanupInterval: number;
-  private onSessionCreate: (id: string) => void;
+  private onSessionCreate: onSessionCreateFn;
 
-  constructor(args: { onSessionCreate: (id: string) => void }) {
+  constructor(args: { onSessionCreate: onSessionCreateFn }) {
     this.pool = {};
     this.onSessionCreate = args.onSessionCreate;
     this.start();
@@ -86,10 +88,12 @@ export default class MatchmakerService {
 
     for (const group of groupsWithLength) {
       const sessionId = uuidv4();
+      const players: { id: string; name: string }[] = [];
       for (const [userId, entry] of group) {
         this.pool[userId] = { ...entry, sessionId };
-        this.onSessionCreate(sessionId);
+        players.push({ id: userId, name: entry.name });
       }
+      this.onSessionCreate(sessionId, players);
     }
   }
 

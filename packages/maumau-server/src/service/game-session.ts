@@ -15,8 +15,8 @@ export default class GameSessionService {
     this.sessions = {};
   }
 
-  public add(id: string): Session {
-    const gameState = new GameState({ amountPlayers: 2 });
+  public add(id: string, players: { id: string; name: string }[]): Session {
+    const gameState = new GameState({ players });
     const session: Session = { gameState };
 
     this.sessions[id] = session;

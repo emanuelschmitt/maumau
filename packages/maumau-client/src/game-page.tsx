@@ -10,6 +10,7 @@ import TopCard from './card/top-card';
 import { useGameContext } from './context/game-context';
 import { useSessionContext } from './context/session-context';
 import Deck from './deck';
+import Opponent from './opponent';
 import Grid from './ui/grid';
 import JumboTron from './ui/jumbotron';
 
@@ -25,7 +26,7 @@ function Game() {
     return null;
   }
 
-  const { players, gameEnded, topCard } = game.state;
+  const { player, gameEnded, topCard, opponents } = game.state;
 
   if (gameEnded) {
     return (
@@ -38,16 +39,9 @@ function Game() {
   return (
     <Grid.Container>
       <Grid.One>
-        <Actions player={players[0]} />
-        <Deck>
-          {players[0].hand.map((card) =>
-            card.rank === Rank.JACK ? (
-              <JackCard card={card} player={players[0]} key={JSON.stringify(card)} />
-            ) : (
-              <PlayableCard card={card} player={players[0]} key={JSON.stringify(card)} />
-            ),
-          )}
-        </Deck>
+        {opponents.map((o) => (
+          <Opponent opponent={o} key={o.id} />
+        ))}
       </Grid.One>
       <Grid.Two>
         <TopCard card={topCard} />
@@ -57,15 +51,15 @@ function Game() {
       </Grid.Three>
       <Grid.Four>
         <Deck>
-          {players[1].hand.map((card) =>
+          {player.hand.map((card) =>
             card.rank === Rank.JACK ? (
-              <JackCard card={card} player={players[1]} key={JSON.stringify(card)} />
+              <JackCard card={card} player={player} key={JSON.stringify(card)} />
             ) : (
-              <PlayableCard card={card} player={players[1]} key={JSON.stringify(card)} />
+              <PlayableCard card={card} player={player} key={JSON.stringify(card)} />
             ),
           )}
         </Deck>
-        <Actions player={players[1]} />
+        <Actions player={player} />
       </Grid.Four>
     </Grid.Container>
   );

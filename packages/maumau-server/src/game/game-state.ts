@@ -4,9 +4,11 @@ import { allRanks } from '../models/rank';
 import { allSuits } from '../models/suit';
 import shuffle from '../utils/shuffle';
 
+import { getClientStateForPlayerId } from './client-state-adapter';
 import { autoAcceptSevens } from './listeners/auto-accept-seven';
 import { doKannetIfOnlyOption } from './listeners/do-kannet-if-only-option';
 import { reducer, State, Action } from './reducer';
+import { getActionTypesForPlayer } from './rules';
 
 const AMOUNT_OF_CARD_PER_PLAYER: Record<number, number> = {
   2: 7,
@@ -15,8 +17,9 @@ const AMOUNT_OF_CARD_PER_PLAYER: Record<number, number> = {
 };
 
 type Options = {
-  amountPlayers: number;
+  players: { id: string; name: string }[];
 };
+
 type Dispatch = (action: Action) => State;
 export type ListenerFunction = (state: State, dispatch: Dispatch) => void;
 
@@ -58,19 +61,45 @@ export default class GameState {
     return this.state;
   }
 
+  public dispatchForPlayer(id: string, action: Action): State {
+    const player = this.state.players.find(({ id: playerId }) => playerId === id);
+    if (!player) {
+      throw new Error('cannot dipatch because player is not found');
+    }
+
+    player.updateLastSeen();
+
+    const possibleActions = getActionTypesForPlayer(id, this.state);
+    if (!possibleActions.includes(action.type)) {
+      throw new Error('forbidden action');
+    }
+
+    return this.dispatch(action);
+  }
+
+  public getClientStateForPlayer(id: string) {
+    const player = this.state.players.find(({ id: playerId }) => playerId === id);
+    if (!player) {
+      throw new Error('cannot get client state. player does not exist.');
+    }
+
+    player.updateLastSeen();
+    return getClientStateForPlayerId(id, this.getState());
+  }
+
   public registerListeners() {
     const listeners: ListenerFunction[] = [doKannetIfOnlyOption, autoAcceptSevens];
     this.listeners.push(...listeners);
   }
 
-  private validateOptions({ amountPlayers }: Options): void {
-    if (amountPlayers < 2 || amountPlayers > 4) {
-      throw new Error('Cannot initialize game with ' + amountPlayers + ' players. Only 2-4 players allowed.');
+  private validateOptions({ players }: Options): void {
+    if (players.length < 2 || players.length > 4) {
+      throw new Error('Cannot initialize game with ' + players.length + ' players. Only 2-4 players allowed.');
     }
   }
 
   private initializeGame(options: Options): void {
-    const players = this.initializePlayers(options.amountPlayers);
+    const players = this.initializePlayers(options.players);
     const cards = this.initalizeCardStack();
 
     shuffle(cards);
@@ -87,10 +116,10 @@ export default class GameState {
     };
   }
 
-  private initializePlayers(n: number): Player[] {
+  private initializePlayers(options: { id: string; name: string }[]): Player[] {
     const players: Player[] = [];
-    for (let i = 0; i < n; i++) {
-      players.push(new Player(i, `P${i}`, []));
+    for (const { id, name } of options) {
+      players.push(new Player(id, name));
     }
     return players;
   }

@@ -1,14 +1,22 @@
 import axios from 'axios';
 import { Action } from 'maumau-server/src/game/reducer';
-import { GameState } from 'maumau-server/src/types';
+import { ClientState } from 'maumau-server/src/types';
 
-export async function getGameState(id: string): Promise<GameState> {
-  const response = await axios.get(`/api/game/${id}`);
+export async function getGameState(args: { gameId: string; userId: string }): Promise<ClientState> {
+  const response = await axios.get(`/api/game/${args.gameId}`, {
+    headers: {
+      'x-maumau-user-id': args.userId,
+    },
+  });
   return response.data;
 }
 
-export async function sendGameAction(id: string, action: Action) {
-  const repsonse = await axios.put(`/api/game/${id}`, action);
+export async function sendGameAction(args: { gameId: string; userId: string; action: Action }): Promise<void> {
+  const repsonse = await axios.put(`/api/game/${args.gameId}`, args.action, {
+    headers: {
+      'x-maumau-user-id': args.userId,
+    },
+  });
   return repsonse.data;
 }
 
