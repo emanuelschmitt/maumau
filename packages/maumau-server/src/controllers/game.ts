@@ -1,4 +1,4 @@
-import { celebrate, Joi } from 'celebrate';
+import { celebrate, Joi, Segments } from 'celebrate';
 import express, { Request, Response } from 'express';
 
 import { ClientState } from '../game/client-state-adapter';
@@ -20,7 +20,7 @@ export default class GameController {
     this.router.get(
       `/:id`,
       celebrate({
-        headers: Joi.object({
+        [Segments.HEADERS]: Joi.object({
           'x-maumau-user-id': Joi.string().uuid().required(),
         }).unknown(true),
         params: Joi.object({
@@ -32,7 +32,7 @@ export default class GameController {
     this.router.put(
       `/:id`,
       celebrate({
-        headers: Joi.object({
+        [Segments.HEADERS]: Joi.object({
           'x-maumau-user-id': Joi.string().uuid().required(),
         }).unknown(true),
         params: Joi.object({
