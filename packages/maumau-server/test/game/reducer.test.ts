@@ -7,7 +7,12 @@ import { Suit } from '../../src/models/suit';
 
 describe('reducer', () => {
   describe('when PLAY_REGULAR_CARD action', () => {
-    const state = new GameState({ amountPlayers: 2 }).getState();
+    const state = new GameState({
+      players: [
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
+      ],
+    }).getState();
     const cardToPlay = state.players[0].hand[0];
     const newState = reducer(state, {
       type: ActionType.PLAY_REGULAR_CARD,
@@ -25,7 +30,12 @@ describe('reducer', () => {
   });
 
   describe('when ACCEPT_PENDING_SEVENS action with 2 players', () => {
-    let state = new GameState({ amountPlayers: 2 }).getState();
+    let state = new GameState({
+      players: [
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
+      ],
+    }).getState();
     const cardsCount = state.players[1].hand.length;
     state = reducer(state, {
       type: ActionType.PLAY_SEVEN,
@@ -47,7 +57,14 @@ describe('reducer', () => {
   });
 
   describe('when ACCEPT_PENDING_SEVENS action with 4 cards and 4 players', () => {
-    let state = new GameState({ amountPlayers: 4 }).getState();
+    let state = new GameState({
+      players: [
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
+        { id: '3', name: 'Marc' },
+        { id: '4', name: 'John' },
+      ],
+    }).getState();
     state = reducer(state, {
       type: ActionType.PLAY_SEVEN,
       payload: new Card(Suit.CLUBS, Rank.SEVEN),
@@ -81,7 +98,12 @@ describe('reducer', () => {
   });
 
   describe('when PLAY_REGULAR_CARD with last card', () => {
-    let state = new GameState({ amountPlayers: 2 }).getState();
+    let state = new GameState({
+      players: [
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
+      ],
+    }).getState();
     const card = new Card(Suit.CLUBS, Rank.NINE);
     state.players[0].hand = [card];
     state.stack = [new Card(Suit.CLUBS, Rank.KING)];
@@ -95,7 +117,12 @@ describe('reducer', () => {
   });
 
   describe('when PLAY_EIGHT with last card and two players', () => {
-    let state = new GameState({ amountPlayers: 2 }).getState();
+    let state = new GameState({
+      players: [
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
+      ],
+    }).getState();
     const card = new Card(Suit.CLUBS, Rank.EIGHT);
     state.players[0].hand = [card];
     state.stack = [new Card(Suit.CLUBS, Rank.KING)];
@@ -109,7 +136,12 @@ describe('reducer', () => {
   });
 
   describe('when PLAY_EIGHT with last card and three players', () => {
-    let state = new GameState({ amountPlayers: 3 }).getState();
+    let state = new GameState({
+      players: [
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
+      ],
+    }).getState();
     const card = new Card(Suit.CLUBS, Rank.EIGHT);
     state.players[0].hand = [card];
     state.stack = [new Card(Suit.CLUBS, Rank.KING)];
@@ -123,7 +155,12 @@ describe('reducer', () => {
   });
 
   describe('when PLAY_JACK action', () => {
-    let state = new GameState({ amountPlayers: 2 }).getState();
+    let state = new GameState({
+      players: [
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
+      ],
+    }).getState();
     const card = new Card(Suit.CLUBS, Rank.JACK);
     state.players[0].hand.push(card);
     state = reducer(state, {

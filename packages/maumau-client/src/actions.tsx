@@ -17,11 +17,10 @@ type Props = {
 
 function Actions({ player }: Props) {
   const [playSound] = useClickSound();
-  const { possibleActions, sendAction } = useGameContext();
+  const { sendAction } = useGameContext();
 
-  const canPerformKannet = possibleActions && possibleActions![player.id].includes(ActionType.KANNET);
-  const canAcceptPendingSeven =
-    possibleActions && possibleActions![player.id].includes(ActionType.ACCEPT_PENDING_SEVENS);
+  const canPerformKannet = player.possibleActions.includes(ActionType.KANNET);
+  const canAcceptPendingSeven = player.possibleActions.includes(ActionType.ACCEPT_PENDING_SEVENS);
 
   return (
     <Wrapper>

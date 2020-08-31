@@ -42,7 +42,7 @@ const rules: Record<ActionType, Rule> = {
   ACCEPT_PENDING_SEVENS: ({ pendingSevens }) => Boolean(pendingSevens),
 };
 
-export function getActionTypesForPlayer(id: number, state: State): ActionType[] {
+export function getActionTypesForPlayer(id: string, state: State): ActionType[] {
   const { players, playersTurnIndex } = state;
 
   if (players[playersTurnIndex].id !== id) {
@@ -59,8 +59,8 @@ export function getActionTypesForPlayer(id: number, state: State): ActionType[] 
   return allowedActions;
 }
 
-export function getPlayerRules(state: State): Record<number, ActionType[]> {
-  const rules: Record<number, ActionType[]> = {};
+export function getPlayerRules(state: State): Record<string, ActionType[]> {
+  const rules: Record<string, ActionType[]> = {};
   for (const player of state.players) {
     rules[player.id] = getActionTypesForPlayer(player.id, state);
   }

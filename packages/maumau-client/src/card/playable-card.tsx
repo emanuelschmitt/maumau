@@ -1,5 +1,5 @@
 import { Action } from 'maumau-server/src/game/reducer';
-import { Card as TCard, ActionType, Rank, Player, Suit } from 'maumau-server/src/types';
+import { Card as TCard, Rank, Player, Suit, ActionType } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -70,13 +70,14 @@ export const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ 
 }));
 
 function Card({ card, player, children }: Props) {
-  const { state, possibleActions, sendAction } = useGameContext();
+  const { state, sendAction } = useGameContext();
+  const possibleActions = player.possibleActions;
   const [playSound] = useClickSound();
 
   const isEnabled =
     state &&
     possibleActions &&
-    (state.nextSuit ? matchesSuit(card, state.nextSuit) : canPlayCard(card, state.topCard, possibleActions[player.id]));
+    (state.nextSuit ? matchesSuit(card, state.nextSuit) : canPlayCard(card, state.topCard, possibleActions));
 
   const onClick = () => {
     if (!isEnabled) {

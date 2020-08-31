@@ -21,16 +21,13 @@ type Props = {
   children?: React.ReactNode;
 };
 
-function canPlayCard(possibleActions: ActionType[]): boolean {
-  return possibleActions.includes(ActionType.PLAY_JACK);
-}
-
 function JackCard({ card, player, children }: Props) {
   if (card.rank !== Rank.JACK) {
     throw new Error('invalid render of jack card');
   }
 
-  const { state, possibleActions, sendAction } = useGameContext();
+  const { sendAction } = useGameContext();
+
   const [playClick] = useClickSound();
   const [playSuitSelect] = useSuitSelectSound();
 
@@ -41,7 +38,8 @@ function JackCard({ card, player, children }: Props) {
   };
   const hideDialog = () => setShowDialog(false);
 
-  const isEnabled = state && possibleActions && canPlayCard(possibleActions[player.id]);
+  const possibleActions = player.possibleActions || [];
+  const isEnabled = possibleActions.includes(ActionType.PLAY_JACK);
 
   const onSelectSuit = (suit: Suit) => {
     sendAction({

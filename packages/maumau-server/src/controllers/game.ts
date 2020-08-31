@@ -1,9 +1,8 @@
-import { celebrate, Joi } from 'celebrate';
+import { celebrate, Joi, Segments } from 'celebrate';
 import express, { Request, Response } from 'express';
 
-import { ActionType } from '../game/action-type';
-import { Action, State } from '../game/reducer';
-import { getPlayerRules } from '../game/rules';
+import { ClientState } from '../game/client-state-adapter';
+import { Action } from '../game/reducer';
 import { actionSchema } from '../game/validation';
 import GameSessionService from '../service/game-session';
 
@@ -21,6 +20,9 @@ export default class GameController {
     this.router.get(
       `/:id`,
       celebrate({
+        [Segments.HEADERS]: Joi.object({
+          'x-maumau-user-id': Joi.string().uuid().required(),
+        }).unknown(true),
         params: Joi.object({
           id: Joi.string().uuid().required(),
         }),
@@ -30,6 +32,9 @@ export default class GameController {
     this.router.put(
       `/:id`,
       celebrate({
+        [Segments.HEADERS]: Joi.object({
+          'x-maumau-user-id': Joi.string().uuid().required(),
+        }).unknown(true),
         params: Joi.object({
           id: Joi.string().uuid().required(),
         }),
@@ -39,26 +44,18 @@ export default class GameController {
     );
   }
 
-  private get = (
-    request: Request<{ id: string }>,
-    response: Response<{ state: State; possibleActions: Record<string, ActionType[]> } | { message: string }>,
-  ) => {
+  private get = (request: Request<{ id: string }>, response: Response<ClientState | { message: string }>) => {
     const { id } = request.params;
     const session = this.gameSessionService.get(id);
     if (!session) {
       return response.status(404).send({ message: 'session not found' });
     }
-
-    response.status(200).send({
-      state: session.gameState.getState(),
-      possibleActions: getPlayerRules(session.gameState.getState()),
-    });
+    const userId = request.headers['x-maumau-user-id'] as string;
+    const state = session.gameState.getClientStateForPlayer(userId);
+    response.status(200).send(state);
   };
 
-  private send = (
-    request: Request<{ id: string }, Action>,
-    response: Response<{ state: State; possibleActions: Record<string, ActionType[]> } | { message: string }>,
-  ) => {
+  private send = (request: Request<{ id: string }, Action>, response: Response<{ message: string }>) => {
     const { id } = request.params;
     const session = this.gameSessionService.get(id);
 
@@ -66,11 +63,10 @@ export default class GameController {
       return response.status(404).send({ message: 'session not found' });
     }
 
-    const state = session.gameState.dispatch(request.body);
-    response.status(200).send({
-      state,
-      possibleActions: getPlayerRules(state),
-    });
+    const userId = request.headers['x-maumau-user-id'] as string;
+    session.gameState.dispatchForPlayer(userId, request.body);
+
+    response.status(200).send({ message: 'ok' });
   };
 
   public getRouter() {

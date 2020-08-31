@@ -9,8 +9,8 @@ async function main() {
 
   const gameSessionService = new GameSessionService();
   const matchmakerService = new MatchmakerService({
-    onSessionCreate: (id) => {
-      gameSessionService.add(id);
+    onSessionCreate: (id, players) => {
+      gameSessionService.add(id, players);
     },
   });
 

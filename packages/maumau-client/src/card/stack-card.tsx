@@ -18,10 +18,9 @@ const Frame = styled(BaseButton)<{ url: string; disabled?: boolean }>(({ url, di
 
 function StackCard() {
   const [playSound] = useClickSound();
-  const { sendAction, state, possibleActions } = useGameContext();
-  const currentPlayer = state && state.players[state.playersTurnIndex];
-  const canDraw =
-    possibleActions && currentPlayer && possibleActions[currentPlayer.id].includes(ActionType.KANNET_AND_DRAW);
+  const { sendAction, state } = useGameContext();
+  const currentPlayer = state && state.player;
+  const canDraw = currentPlayer?.possibleActions.includes(ActionType.KANNET_AND_DRAW) ?? false;
 
   const onClick = () => {
     if (!currentPlayer) {
