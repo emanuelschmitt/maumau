@@ -1,6 +1,6 @@
 import Card from './card';
 
-const DISCONNECT_THRESHOLD_MS = 30 * 1000;
+const DISCONNECT_THRESHOLD_MS = 10 * 1000;
 
 export default class Player {
   public id: string;
@@ -19,19 +19,16 @@ export default class Player {
     return Boolean(this.hand.find(predicate));
   }
 
-  giveCard(card: Card): void {
+  giveCard(card: Card): Player {
     this.hand.push(card);
-  }
-
-  getCardOptions(to: Card): Card[] {
-    return this.hand.filter((card) => card.doesMatch(to));
+    return this;
   }
 
   updateLastSeen(): void {
     this.lastSeen = Date.now();
   }
 
-  hasDisconnect(): boolean {
+  isDisconnected(): boolean {
     return Date.now() - this.lastSeen >= DISCONNECT_THRESHOLD_MS;
   }
 }

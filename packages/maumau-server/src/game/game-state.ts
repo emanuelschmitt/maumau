@@ -2,12 +2,15 @@ import Card from '../models/card';
 import Player from '../models/player';
 import { allRanks } from '../models/rank';
 import { allSuits } from '../models/suit';
+import { logger } from '../server/logger';
 import shuffle from '../utils/shuffle';
 
+import { ActionType } from './action-type';
 import { getClientStateForPlayerId } from './client-state-adapter';
 import { autoAcceptSevens } from './listeners/auto-accept-seven';
-import { doKannetIfOnlyOption } from './listeners/do-kannet-if-only-option';
-import { reducer, State, Action } from './reducer';
+import { autoEndGame } from './listeners/auto-end-game';
+import { autoKannet } from './listeners/auto-kannet';
+import { reducer, State, Action, GameEndReason } from './reducer';
 import { getActionTypesForPlayer } from './rules';
 
 const AMOUNT_OF_CARD_PER_PLAYER: Record<number, number> = {
@@ -27,6 +30,7 @@ export default class GameState {
   private state: State;
   private listeners: Array<ListenerFunction>;
   private isDispatching: boolean;
+  private interval: number;
 
   constructor(options: Options) {
     this.isDispatching = false;
@@ -35,6 +39,7 @@ export default class GameState {
     this.validateOptions(options);
     this.initializeGame(options);
     this.registerListeners();
+    this.startPlayerHeartBeats();
   }
 
   public getState(): State {
@@ -88,8 +93,37 @@ export default class GameState {
   }
 
   public registerListeners() {
-    const listeners: ListenerFunction[] = [doKannetIfOnlyOption, autoAcceptSevens];
+    const listeners: ListenerFunction[] = [autoEndGame, autoKannet, autoAcceptSevens];
     this.listeners.push(...listeners);
+  }
+
+  public startPlayerHeartBeats() {
+    this.interval = setInterval(this.checkForDisconnectedPlayer.bind(this), 1000);
+  }
+
+  public stopPlayerHeartBeats() {
+    clearInterval(this.interval);
+  }
+
+  public checkForDisconnectedPlayer() {
+    if (this.state.gameEnded) {
+      this.stopPlayerHeartBeats();
+    }
+
+    for (const player of this.state.players) {
+      if (player.isDisconnected()) {
+        this.dispatch({
+          type: ActionType.END_GAME,
+          payload: {
+            type: GameEndReason.DISCONNECT,
+            id: player.id,
+          },
+        });
+        logger.debug(`Game ended because player ${player.id} disconnected.`);
+        this.stopPlayerHeartBeats();
+        break;
+      }
+    }
   }
 
   private validateOptions({ players }: Options): void {
@@ -112,7 +146,7 @@ export default class GameState {
       nextSuit: null,
       pendingSevens: null,
       playersTurnIndex: 0,
-      gameEnded: false,
+      gameEnded: null,
     };
   }
 
