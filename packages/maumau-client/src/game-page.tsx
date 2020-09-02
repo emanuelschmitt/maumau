@@ -10,9 +10,9 @@ import TopCard from './card/top-card';
 import { useGameContext } from './context/game-context';
 import { useSessionContext } from './context/session-context';
 import Deck from './deck';
+import GameEnded from './game-ended';
 import Opponent from './opponent';
 import Grid from './ui/grid';
-import JumboTron from './ui/jumbotron';
 
 function Game() {
   const [session] = useSessionContext();
@@ -29,11 +29,7 @@ function Game() {
   const { player, gameEnded, topCard, opponents } = game.state;
 
   if (gameEnded) {
-    return (
-      <JumboTron>
-        <h1>Game Ended</h1>
-      </JumboTron>
-    );
+    return <GameEnded {...{ player, gameEnded, opponents }} />;
   }
 
   return (
