@@ -1,5 +1,6 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import { useTransition, animated, config } from 'react-spring';
+import styled from 'styled-components';
 
 import MauMauLogoIcon from '../icons/maumau-logo';
 import PlainButton from '../ui/plain-button';
@@ -28,19 +29,7 @@ const Container = styled(PlainButton)`
   }
 `;
 
-export const zoomIn = keyframes`
-  0% {
-    transform: scale(0);
-  }
-  60% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-`;
-
-const Badge = styled.div`
+const Badge = styled(animated.div)`
   background: red;
   color: white;
   padding: 7px 10px;
@@ -50,7 +39,8 @@ const Badge = styled.div`
   right: -25px;
   z-index: 1;
   border-radius: 8px;
-  animation: ${zoomIn} 0.25s ease 0s 1;
+  width: 20px;
+  height: 20px;
 `;
 
 type CardBackProps = {
@@ -59,9 +49,22 @@ type CardBackProps = {
 };
 
 function CardBack({ cardBadge, buttonProps }: CardBackProps) {
+  const badges = Boolean(cardBadge) ? [cardBadge] : [];
+
+  const transitions = useTransition(badges, (b) => b, {
+    from: { opacity: 0, transform: 'scale(0)' },
+    enter: { opacity: 1, transform: 'scale(1)' },
+    leave: { opacity: 0, transform: 'scale(0)' },
+    config: config.stiff,
+  });
+
   return (
     <Container {...(buttonProps as any)}>
-      {cardBadge && <Badge>{cardBadge}</Badge>}
+      {transitions.map((t) => (
+        <Badge style={t.props} key={t.key}>
+          {t.item}
+        </Badge>
+      ))}
       <MauMauLogoIcon />
     </Container>
   );

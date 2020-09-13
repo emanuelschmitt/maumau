@@ -15,6 +15,7 @@ const Container = styled.div`
   min-width: 250px;
   padding-right: 40px;
   user-select: none;
+  transform: scale(0.9);
 `;
 
 const Avatar = styled.div`
@@ -76,9 +77,10 @@ const PlayingStatus = styled.div`
 export type OpponentPanelProps = {
   name: string;
   cardAmount: number;
+  isPlaying: boolean;
 };
 
-function OpponentPanel({ name = '', cardAmount = 0 }: OpponentPanelProps) {
+function OpponentPanel({ name = '', cardAmount = 0, isPlaying = false }: OpponentPanelProps) {
   const stripAbbreviation = (name: string) => name.substr(0, 2);
   return (
     <Container>
@@ -89,7 +91,7 @@ function OpponentPanel({ name = '', cardAmount = 0 }: OpponentPanelProps) {
           <CardStatus>
             <CardStatusIcon /> {cardAmount}
           </CardStatus>
-          <PlayingStatus>playing</PlayingStatus>
+          {isPlaying && <PlayingStatus>playing</PlayingStatus>}
         </Status>
       </InformationContainer>
     </Container>

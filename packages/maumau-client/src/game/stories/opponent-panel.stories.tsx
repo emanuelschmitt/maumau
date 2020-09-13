@@ -7,4 +7,4 @@ export default {
   component: OpponentPanel,
 };
 
-export const Default: React.SFC<{}> = () => <OpponentPanel name="Lukas" cardAmount={7} />;
+export const Default: React.SFC<{}> = () => <OpponentPanel name="Lukas" cardAmount={7} isPlaying={true} />;

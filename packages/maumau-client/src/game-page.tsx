@@ -11,8 +11,8 @@ import { useGameContext } from './context/game-context';
 import { useSessionContext } from './context/session-context';
 import Deck from './deck';
 import GameEnded from './game-ended';
+import Grid from './game/grid';
 import Opponent from './opponent';
-import Grid from './ui/grid';
 
 function Game() {
   const [session] = useSessionContext();

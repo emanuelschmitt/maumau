@@ -2,16 +2,16 @@ import { Rank, Suit } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
-import ClubsIcon from '../icons/clubs';
-import DiamondsIcon from '../icons/diamonds';
-import HeartsIcon from '../icons/hearts';
-import SpadesIcon from '../icons/spades';
 import PlainButton from '../ui/plain-button';
+
+import SuitIcon from './suit-icon';
+import { getColorBySuit } from './utils/get-color-by-suit';
 
 const Container = styled(PlainButton)`
   position: relative;
   height: 160px;
   width: 104px;
+  min-width: 104px;
   background: white;
   box-shadow: 3px 9px 28px -2px rgba(0, 0, 0, 0.15);
   display: flex;
@@ -21,6 +21,7 @@ const Container = styled(PlainButton)`
   border-radius: 8px;
   user-select: none;
   transition: all 0.25s ease;
+  margin: 8px;
 
   &:hover {
     cursor: pointer;
@@ -62,23 +63,6 @@ type Props = {
   buttonProps?: React.HTMLProps<HTMLButtonElement>;
 };
 
-function ComponentIconBySuit(suit: Suit) {
-  switch (suit) {
-    case Suit.CLUBS: {
-      return ClubsIcon;
-    }
-    case Suit.HEARTS: {
-      return HeartsIcon;
-    }
-    case Suit.DIAMONDS: {
-      return DiamondsIcon;
-    }
-    case Suit.SPADES: {
-      return SpadesIcon;
-    }
-  }
-}
-
 function getTextByRank(rank: Rank): string {
   switch (rank) {
     case Rank.ACE:
@@ -100,19 +84,7 @@ function getTextByRank(rank: Rank): string {
   }
 }
 
-function getColorBySuit(suit: Suit) {
-  switch (suit) {
-    case Suit.CLUBS:
-    case Suit.SPADES:
-      return '#262626';
-    case Suit.DIAMONDS:
-    case Suit.HEARTS:
-      return 'red';
-  }
-}
-
 function Card({ rank, suit, buttonProps }: Props) {
-  const Suit = ComponentIconBySuit(suit);
   const color = getColorBySuit(suit);
   const rankText = getTextByRank(rank);
 
@@ -120,13 +92,13 @@ function Card({ rank, suit, buttonProps }: Props) {
     <Container style={{ color }} {...(buttonProps as any)}>
       <TopLeft>
         {rankText}
-        <Suit />
+        <SuitIcon suit={suit} />
       </TopLeft>
       <BottomRight>
-        <Suit />
+        <SuitIcon suit={suit} />
         {rankText}
       </BottomRight>
-      <Suit style={{ fontSize: '2em' }} />
+      <SuitIcon suit={suit} style={{ fontSize: '2em' }} />
     </Container>
   );
 }
