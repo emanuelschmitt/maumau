@@ -25,9 +25,9 @@ export type Props = {
 };
 
 function CardStack({ card, nextSuit }: Props) {
-  const badges = Boolean(nextSuit) ? [nextSuit] : [];
+  const hasBadge = Boolean(nextSuit);
 
-  const transitions = useTransition(badges, (b) => b as string, {
+  const transitions = useTransition(hasBadge, null, {
     from: { opacity: 0, transform: 'scale(0)' },
     enter: { opacity: 1, transform: 'scale(1)' },
     leave: { opacity: 0, transform: 'scale(0)' },
@@ -35,11 +35,14 @@ function CardStack({ card, nextSuit }: Props) {
 
   return (
     <Container>
-      {transitions.map((transition) => (
-        <Badge style={transition.props} key={transition.key}>
-          <SuitBadge suit={transition.item} />
-        </Badge>
-      ))}
+      {transitions.map(
+        (transition) =>
+          transition.item && (
+            <Badge style={transition.props} key={transition.key}>
+              {nextSuit && <SuitBadge suit={nextSuit} />}
+            </Badge>
+          ),
+      )}
       <Card rank={card.rank} suit={card.suit} />
     </Container>
   );

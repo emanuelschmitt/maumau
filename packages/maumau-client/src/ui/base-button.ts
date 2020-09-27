@@ -18,10 +18,10 @@ export default styled.button({
     cursor: 'unset',
     opacity: 0.7,
   },
-  '&:focus, &:active': {
+  '&:focus:enabled, &:active:enabled': {
     outline: 'none',
   },
-  '&:hover': {
+  '&:hover:enabled': {
     opacity: 0.7,
     cursor: 'pointer',
   },

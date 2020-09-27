@@ -5,6 +5,8 @@ import styled from 'styled-components';
 
 import PlayableCard from './playable-card';
 
+const MAX_WIDTH = 500;
+
 const Container = styled.div`
   display: flex;
   position: relative;
@@ -18,12 +20,7 @@ const CardContainer = styled(animated.div)`
   position: absolute;
 `;
 
-const HoverContainer = styled(animated.div)`
-  transition: transform 0.25s ease;
-  &:hover {
-    transform: translateY(-20px);
-  }
-`;
+const HoverContainer = styled(animated.div)``;
 
 export type Props = {
   hand: TCard[];
@@ -36,7 +33,7 @@ function PlayerHand({ hand, onPlayCard, onSelectJack, canPlayCard }: Props) {
   const transitions = useTransition(hand, (item) => `${item.rank}${item.suit}`, {
     from: (item) => {
       const index = hand.indexOf(item);
-      const width = Math.min(600 / hand.length, 80);
+      const width = Math.min(MAX_WIDTH / hand.length, 80);
       const x = index * width;
       const center = (hand.length * width) / 2 - 32;
 
@@ -49,7 +46,7 @@ function PlayerHand({ hand, onPlayCard, onSelectJack, canPlayCard }: Props) {
     },
     enter: (item) => {
       const index = hand.indexOf(item);
-      const width = Math.min(600 / hand.length, 70);
+      const width = Math.min(MAX_WIDTH / hand.length, 70);
       const x = index * width;
       const center = (hand.length * width) / 2 - 32;
 
@@ -62,7 +59,7 @@ function PlayerHand({ hand, onPlayCard, onSelectJack, canPlayCard }: Props) {
     },
     update: (item) => {
       const index = hand.indexOf(item);
-      const width = Math.min(600 / hand.length, 70);
+      const width = Math.min(MAX_WIDTH / hand.length, 70);
       const x = index * width;
       const center = (hand.length * width) / 2 - 32;
 

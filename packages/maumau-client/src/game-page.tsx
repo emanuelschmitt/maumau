@@ -97,7 +97,7 @@ function GamePage() {
       player={player}
       pendingSeven={pendingSevens}
       playingJack={jackCard}
-      nextSuit={nextSuit}
+      nextSuit={nextSuit ? nextSuit : undefined}
       onPlayCard={onPlayCard}
       onSelectJack={onSelectJack}
       onPlayJack={onPlayJack}

@@ -8,10 +8,14 @@ import Card from './card';
 
 const Button = styled(PlainButton)`
   border-radius: 8px;
-  transition: box-shadow 0.25s ease;
+  transition: all 0.25s ease;
+
+  &:hover:enabled {
+    cursor: pointer;
+  }
 
   &:hover {
-    cursor: pointer;
+    transform: translateY(-20px);
     box-shadow: 3px 9px 28px -2px rgba(0, 0, 0, 0.25);
   }
 `;

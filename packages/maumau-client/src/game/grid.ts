@@ -33,7 +33,7 @@ const Three = styled.div({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  margin: '16px 0',
+  marginRight: 32,
 });
 
 const Four = styled.div({

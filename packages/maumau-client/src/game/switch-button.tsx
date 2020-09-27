@@ -28,6 +28,7 @@ const Button = styled(PlainButton)`
 const Container = styled(animated.div)`
   display: inline-flex;
   transform-origin: center center;
+  border-radius: 50%;
 `;
 
 type SwitchButtonProps = { show: boolean } & React.HTMLProps<HTMLButtonElement>;
