@@ -8,6 +8,7 @@ import PlayerHand from './player-hand';
 import SuitSelectDialog from './suit-select-dialog';
 import SwitchButton from './switch-button';
 import TopCard from './top-card';
+import TurnIndicator from './turn-indicator';
 
 export type GameBoardProps = {
   opponents: Opponent[];
@@ -44,7 +45,8 @@ function GameBoard({
   onAcceptPendingSeven,
   onCancelJack,
 }: GameBoardProps) {
-  const showPendingSeven = opponents.filter((o) => o.isPlaying).length === 0 && Boolean(pendingSeven);
+  const isYourTurn = opponents.filter((o) => o.isPlaying).length === 0;
+  const showPendingSeven = isYourTurn && Boolean(pendingSeven);
   return (
     <>
       <Grid.Container>
@@ -74,6 +76,9 @@ function GameBoard({
             canPlayCard={canPlayCard}
           />
         </Grid.Four>
+        <Grid.Five>
+          <TurnIndicator show={isYourTurn} />
+        </Grid.Five>
       </Grid.Container>
       {Boolean(playingJack) && (
         <SuitSelectDialog

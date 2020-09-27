@@ -41,4 +41,13 @@ const Four = styled.div({
   gridRow: '3',
 });
 
-export default { Container, One, Two, Three, Four };
+const Five = styled.div({
+  gridColumn: '1 / 5',
+  gridRow: '4',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  minHeight: 70,
+});
+
+export default { Container, One, Two, Three, Four, Five };
