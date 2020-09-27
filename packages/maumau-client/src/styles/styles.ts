@@ -8,4 +8,9 @@ export default createGlobalStyle`
         padding: 0;
         font-family: 'Lato', sans-serif;
     }
+
+    button:focus {
+        outline: 1px solid lightblue;
+        outline-offset: 4px;
+    }
 `;

@@ -1,53 +1,73 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Outer = styled.div({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  height: '100%',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  background: 'rgba(0, 0, 0, 0.5)',
-});
+import CloseIcon from '../icons/close';
+import BaseButton from '../ui/base-button';
 
-const Inner = styled.div({
-  background: 'white',
-  minWidth: 400,
-  borderRadius: 8,
-  zIndex: 100,
-});
+const OuterContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  box-shadow: 3px 9px 28px -2px rgba(0, 0, 0, 0.25);
+`;
 
-const Content = styled.div<{ centered: boolean }>(({ centered }) => ({
-  padding: '32px 16px 16px 32px',
-  textAlign: centered ? 'center' : 'left',
-}));
+const Inner = styled.div`
+  position: relative;
+  background: white;
+  min-width: 400;
+  border-radius: 8px;
+  z-index: 1;
+`;
 
-const Footer = styled.div({
-  padding: '16px 16px 16px',
-  display: 'flex',
-  alignSelf: 'flex-end',
-  justifyContent: 'flex-end',
-});
+const CloseContainer = styled.div`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+`;
 
-type Props = {
+const Content = styled.div<{ centered: boolean }>`
+  padding: 32px 32px 16px 32px;
+  text-align: ${(props) => (props.centered ? 'center' : 'left')};
+`;
+
+const Footer = styled.div`
+  padding: 16px;
+  display: flex;
+  align-self: flex-end;
+  justify-content: flex-end;
+`;
+
+export type Props = {
   children?: React.ReactNode;
   footer?: React.ReactNode;
   centered?: boolean;
+  onClose?: () => void;
 };
 
-function Dialog({ children, footer, centered = false }: Props) {
+function Dialog({ children, footer, centered = false, onClose }: Props) {
   return (
-    <Outer role="dialog">
+    <OuterContainer role="dialog">
       <Inner>
+        {onClose && (
+          <CloseContainer>
+            <BaseButton>
+              <CloseIcon />
+            </BaseButton>
+          </CloseContainer>
+        )}
         <Content centered={centered}>{children}</Content>
         {footer && <Footer>{footer}</Footer>}
       </Inner>
-    </Outer>
+    </OuterContainer>
   );
 }
 

@@ -10,7 +10,9 @@
     "build:tsc": "tsc --build",
     "build": "yarn build:tsc && yarn build:webpack",
     "clean": "rimraf bundle/ node_modules/.cache/",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -20,6 +22,7 @@
     "react-dom": "16.13.1",
     "react-query": "^2.5.14",
     "react-router-dom": "^5.2.0",
+    "react-spring": "^8.0.27",
     "styled-components": "^5.1.1",
     "use-sound": "^1.0.2"
   },
@@ -31,6 +34,10 @@
     "@babel/preset-env": "7.11.0",
     "@babel/preset-react": "7.10.4",
     "@babel/preset-typescript": "7.10.4",
+    "@storybook/addon-actions": "^6.0.21",
+    "@storybook/addon-essentials": "^6.0.21",
+    "@storybook/addon-links": "^6.0.21",
+    "@storybook/react": "^6.0.21",
     "@types/friendly-errors-webpack-plugin": "0.1.2",
     "@types/node": "14.6.0",
     "@types/react-router-dom": "^5.1.5",
@@ -44,6 +51,7 @@
     "core-js": "3.6.5",
     "friendly-errors-webpack-plugin": "1.7.0",
     "html-webpack-plugin": "^4.3.0",
+    "react-is": "^16.13.1",
     "webpack": "4.44.1",
     "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.11.0",
