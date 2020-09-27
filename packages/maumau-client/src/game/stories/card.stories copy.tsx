@@ -4,7 +4,7 @@ import React from 'react';
 import Card from '../card';
 
 export default {
-  title: 'Game/Card - Front',
+  title: 'Game/Card',
   component: Card,
 };
 

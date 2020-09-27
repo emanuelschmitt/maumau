@@ -12,12 +12,12 @@ const Button = styled(PlainButton)`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  width: 40px;
-  font-size: 1em;
+  height: 60px;
+  width: 60px;
+  font-size: 1.2em;
   background: white;
   transition: background 0.25s ease;
-  margin: 4px;
+  margin: 8px;
   box-shadow: 3px 9px 28px -2px rgba(0, 0, 0, 0.15);
 
   &:hover {

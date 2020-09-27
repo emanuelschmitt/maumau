@@ -8,4 +8,3 @@ export default {
 };
 
 export const Default: React.SFC<{}> = () => <CardBack />;
-export const WithBadge: React.SFC<{}> = () => <CardBack cardBadge="+2" />;

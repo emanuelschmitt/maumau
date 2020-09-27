@@ -1,22 +1,51 @@
-import { Rank } from 'maumau-server/src/types';
+import { Card, Rank, Suit, ActionType, Action } from 'maumau-server/src/types';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import Actions from './actions';
-import JackCard from './card/jack-card';
-import PlayableCard from './card/playable-card';
-import StackCard from './card/stack-card';
-import TopCard from './card/top-card';
 import { useGameContext } from './context/game-context';
 import { useSessionContext } from './context/session-context';
-import Deck from './deck';
 import GameEnded from './game-ended';
-import Grid from './game/grid';
-import Opponent from './opponent';
+import GameBoard from './game/game-board';
+import { isCardJack, isCardMatch } from './game/utils/card-utils';
 
-function Game() {
+function getAction(card: Card): Action {
+  switch (card.rank) {
+    case Rank.SEVEN: {
+      return {
+        type: ActionType.PLAY_SEVEN,
+        payload: card,
+      };
+    }
+    case Rank.EIGHT: {
+      return {
+        type: ActionType.PLAY_EIGHT,
+        payload: card,
+      };
+    }
+    default: {
+      return {
+        type: ActionType.PLAY_REGULAR_CARD,
+        payload: card,
+      };
+    }
+  }
+}
+
+const rankActionMap: Record<Rank, ActionType> = {
+  [Rank.EIGHT]: ActionType.PLAY_EIGHT,
+  [Rank.JACK]: ActionType.PLAY_JACK,
+  [Rank.SEVEN]: ActionType.PLAY_SEVEN,
+  [Rank.ACE]: ActionType.PLAY_REGULAR_CARD,
+  [Rank.KING]: ActionType.PLAY_REGULAR_CARD,
+  [Rank.NINE]: ActionType.PLAY_REGULAR_CARD,
+  [Rank.QUEEN]: ActionType.PLAY_REGULAR_CARD,
+  [Rank.TEN]: ActionType.PLAY_REGULAR_CARD,
+};
+
+function GamePage() {
   const [session] = useSessionContext();
   const game = useGameContext();
+  const [jackCard, setJackCard] = React.useState<Card | null>(null);
 
   if (!session.sessionId) {
     return <Redirect to="/" />;
@@ -26,39 +55,60 @@ function Game() {
     return null;
   }
 
-  const { player, gameEnded, topCard, opponents } = game.state;
+  const { state, sendAction } = game;
+  const { player, gameEnded, topCard, opponents, pendingSevens, nextSuit } = state;
 
   if (gameEnded) {
     return <GameEnded {...{ player, gameEnded, opponents }} />;
   }
 
+  const onPlayCard = (card: Card) => sendAction(getAction(card));
+  const onSelectJack = (card: Card) => setJackCard(card);
+  const onCancelJack = () => setJackCard(null);
+  const onPlayJack = (card: Card, suit: Suit) => {
+    if (!jackCard) {
+      return;
+    }
+    sendAction({
+      type: ActionType.PLAY_JACK,
+      payload: {
+        card,
+        suit,
+      },
+    });
+    setJackCard(null);
+  };
+
+  const canDo = (action: ActionType) => player.possibleActions.includes(action);
+  const onDrawCard = () => sendAction({ type: ActionType.KANNET_AND_DRAW });
+  const onKannet = () => sendAction({ type: ActionType.KANNET });
+  const onAcceptPendingSeven = () => sendAction({ type: ActionType.ACCEPT_PENDING_SEVENS });
+  const canPlayCard = (card: Card): boolean => {
+    const neededPossibleAction = rankActionMap[card.rank];
+    const isActionPossible = player.possibleActions.includes(neededPossibleAction);
+    const canPlayCard = nextSuit ? nextSuit === card.suit : isCardMatch(card, topCard);
+    return isActionPossible && (canPlayCard || isCardJack(card));
+  };
+
   return (
-    <Grid.Container>
-      <Grid.One>
-        {opponents.map((o) => (
-          <Opponent opponent={o} key={o.id} />
-        ))}
-      </Grid.One>
-      <Grid.Two>
-        <TopCard card={topCard} />
-      </Grid.Two>
-      <Grid.Three>
-        <StackCard />
-      </Grid.Three>
-      <Grid.Four>
-        <Deck>
-          {player.hand.map((card) =>
-            card.rank === Rank.JACK ? (
-              <JackCard card={card} player={player} key={JSON.stringify(card)} />
-            ) : (
-              <PlayableCard card={card} player={player} key={JSON.stringify(card)} />
-            ),
-          )}
-        </Deck>
-        <Actions player={player} />
-      </Grid.Four>
-    </Grid.Container>
+    <GameBoard
+      opponents={opponents}
+      topCard={topCard}
+      player={player}
+      pendingSeven={pendingSevens}
+      playingJack={jackCard}
+      nextSuit={nextSuit}
+      onPlayCard={onPlayCard}
+      onSelectJack={onSelectJack}
+      onPlayJack={onPlayJack}
+      canDo={canDo}
+      canPlayCard={canPlayCard}
+      onDrawCard={onDrawCard}
+      onKannet={onKannet}
+      onAcceptPendingSeven={onAcceptPendingSeven}
+      onCancelJack={onCancelJack}
+    />
   );
 }
 
-export default Game;
+export default GamePage;

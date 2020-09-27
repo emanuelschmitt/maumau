@@ -9,6 +9,7 @@ const reset: CSSObject = {
   color: 'inherit',
   font: 'inherit',
   lineHeight: 'normal',
+  background: 'transparent',
 };
 
 export default styled.button({

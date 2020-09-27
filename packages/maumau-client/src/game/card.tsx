@@ -2,32 +2,9 @@ import { Rank, Suit } from 'maumau-server/src/types';
 import React from 'react';
 import styled from 'styled-components';
 
-import PlainButton from '../ui/plain-button';
-
+import PlainCard from './plain-card';
 import SuitIcon from './suit-icon';
 import { getColorBySuit } from './utils/get-color-by-suit';
-
-const Container = styled(PlainButton)`
-  position: relative;
-  height: 160px;
-  width: 104px;
-  min-width: 104px;
-  background: white;
-  box-shadow: 3px 9px 28px -2px rgba(0, 0, 0, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1em;
-  border-radius: 8px;
-  user-select: none;
-  transition: all 0.25s ease;
-  margin: 8px;
-
-  &:hover {
-    cursor: pointer;
-    box-shadow: 3px 9px 28px -2px rgba(0, 0, 0, 0.25);
-  }
-`;
 
 const TopLeft = styled.div`
   position: absolute;
@@ -60,7 +37,6 @@ const BottomRight = styled.div`
 type Props = {
   rank: Rank;
   suit: Suit;
-  buttonProps?: React.HTMLProps<HTMLButtonElement>;
 };
 
 function getTextByRank(rank: Rank): string {
@@ -84,12 +60,12 @@ function getTextByRank(rank: Rank): string {
   }
 }
 
-function Card({ rank, suit, buttonProps }: Props) {
+function Card({ rank, suit }: Props) {
   const color = getColorBySuit(suit);
   const rankText = getTextByRank(rank);
 
   return (
-    <Container style={{ color }} {...(buttonProps as any)}>
+    <PlainCard style={{ color }}>
       <TopLeft>
         {rankText}
         <SuitIcon suit={suit} />
@@ -99,7 +75,7 @@ function Card({ rank, suit, buttonProps }: Props) {
         {rankText}
       </BottomRight>
       <SuitIcon suit={suit} style={{ fontSize: '2em' }} />
-    </Container>
+    </PlainCard>
   );
 }
 

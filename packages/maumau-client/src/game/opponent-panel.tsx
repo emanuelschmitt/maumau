@@ -15,7 +15,7 @@ const Container = styled.div`
   min-width: 250px;
   padding-right: 40px;
   user-select: none;
-  transform: scale(0.9);
+  margin: 8px;
 `;
 
 const Avatar = styled.div`

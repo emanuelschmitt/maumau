@@ -8,13 +8,15 @@ export default {
   component: GameBoard,
 };
 
+const noOp = () => null;
+
 const props: GameBoardProps = {
   opponents: [
     {
       id: '1',
       name: 'Lukas',
       handCount: 3,
-      isPlaying: true,
+      isPlaying: false,
     },
     {
       id: '2',
@@ -45,29 +47,20 @@ const props: GameBoardProps = {
     rank: Rank.JACK,
     suit: Suit.SPADES,
   } as Card,
-  pendingSeven: 2,
+  pendingSeven: 1,
+  playingJack: null,
+  nextSuit: Suit.DIAMONDS,
+  canDo: () => true,
+  onDrawCard: noOp,
+  onKannet: noOp,
+  canPlayCard: () => true,
+  onPlayCard: noOp,
+  onPlayJack: noOp,
+  onSelectJack: noOp,
+  onCancelJack: noOp,
+  onAcceptPendingSeven: noOp,
 };
 
 export const Default: React.SFC<{}> = () => {
-  const [state, setState] = React.useState(props);
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setState({
-        ...state,
-        player: {
-          ...state.player,
-          hand: [
-            ...state.player.hand.slice(0, 1),
-            {
-              rank: Rank.ACE,
-              suit: Suit.HEARTS,
-            } as Card,
-          ],
-        },
-      });
-    }, 3000);
-  }, [setState, state]);
-
-  return <GameBoard {...state} />;
+  return <GameBoard {...props} />;
 };

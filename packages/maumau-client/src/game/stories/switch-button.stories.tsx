@@ -7,4 +7,5 @@ export default {
   component: SwitchButton,
 };
 
-export const Default: React.SFC<{}> = () => <SwitchButton onClick={() => null} />;
+export const Default: React.SFC<{}> = () => <SwitchButton onClick={() => null} show={true} />;
+export const Hide: React.SFC<{}> = () => <SwitchButton onClick={() => null} show={false} />;

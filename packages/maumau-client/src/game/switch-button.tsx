@@ -1,5 +1,6 @@
 import { darken } from 'polished';
 import React from 'react';
+import { useTransition, animated } from 'react-spring';
 import styled from 'styled-components';
 
 import SwitchIcon from '../icons/switch';
@@ -24,13 +25,38 @@ const Button = styled(PlainButton)`
   }
 `;
 
-type SwitchButtonProps = React.HTMLProps<HTMLButtonElement>;
+const Container = styled(animated.div)`
+  display: inline-flex;
+  transform-origin: center center;
+`;
+
+type SwitchButtonProps = { show: boolean } & React.HTMLProps<HTMLButtonElement>;
 
 function SwitchButton(props: SwitchButtonProps) {
+  const transitions = useTransition(props.show, null, {
+    from: {
+      transform: 'scale(0) rotate(0deg)',
+    },
+    enter: {
+      transform: 'scale(1) rotate(360deg)',
+    },
+    leave: {
+      transform: 'scale(0) rotate(0deg)',
+    },
+  });
   return (
-    <Button {...(props as any)}>
-      <SwitchIcon />
-    </Button>
+    <>
+      {transitions.map(
+        ({ key, props: style, item }) =>
+          item && (
+            <Container style={style} key={key}>
+              <Button {...(props as any)}>
+                <SwitchIcon />
+              </Button>
+            </Container>
+          ),
+      )}
+    </>
   );
 }
 
