@@ -10,6 +10,7 @@ import PoolLoadingPage from './loading-page';
 import NotFoundPage from './not-found-page';
 import SEO from './seo';
 import GlobalStyle from './styles/styles';
+import Tracking from './tracking';
 
 const Frame = styled.div({
   position: 'relative',
@@ -25,6 +26,7 @@ function MainRoot() {
   return (
     <>
       <SEO />
+      <Tracking />
       <SessionProvider>
         <GlobalStyle />
         <Frame>
