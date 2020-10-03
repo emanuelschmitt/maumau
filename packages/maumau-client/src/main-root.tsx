@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import { GameProvider } from './context/game-context';
 import { SessionProvider } from './context/session-context';
 import GamePage from './game-page';
+import Head from './head';
 import PoolJoinPage from './join-page';
 import PoolLoadingPage from './loading-page';
 import NotFoundPage from './not-found-page';
-import SEO from './seo';
 import GlobalStyle from './styles/styles';
 import Tracking from './tracking';
 
@@ -25,7 +25,7 @@ const Frame = styled.div({
 function MainRoot() {
   return (
     <>
-      <SEO />
+      <Head />
       <Tracking />
       <SessionProvider>
         <GlobalStyle />

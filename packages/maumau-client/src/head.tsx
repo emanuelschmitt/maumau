@@ -1,7 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
-function SEO() {
+function Head() {
   return (
     <Helmet>
       <meta charSet="utf-8" />
@@ -12,8 +12,9 @@ function SEO() {
         name="keywords"
         content="maumau, spiel, mau-mau spiel, maumau online, online, gratis, kostenlos, crazy eights, mau-mau"
       />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
     </Helmet>
   );
 }
 
-export default SEO;
+export default Head;
