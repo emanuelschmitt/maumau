@@ -18,6 +18,7 @@
     "polished": "^3.6.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-helmet": "^6.1.0",
     "react-query": "^2.5.14",
     "react-router-dom": "^5.2.0",
     "styled-components": "^5.1.1",
