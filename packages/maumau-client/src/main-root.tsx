@@ -8,6 +8,7 @@ import GamePage from './game-page';
 import PoolJoinPage from './join-page';
 import PoolLoadingPage from './loading-page';
 import NotFoundPage from './not-found-page';
+import SEO from './seo';
 import GlobalStyle from './styles/styles';
 
 const Frame = styled.div({
@@ -22,32 +23,35 @@ const Frame = styled.div({
 
 function MainRoot() {
   return (
-    <SessionProvider>
-      <GlobalStyle />
-      <Frame>
-        <Switch>
-          <Route path="/" exact>
-            <PoolJoinPage />
-          </Route>
-          <Route path="/loading">
-            <PoolLoadingPage />
-          </Route>
-          <Route path="/game" exact>
-            <GameProvider>
-              <GamePage />
-            </GameProvider>
-          </Route>
-          <Route
-            render={({ staticContext }: any) => {
-              if (staticContext) {
-                staticContext.status = 404;
-              }
-              return <NotFoundPage />;
-            }}
-          ></Route>
-        </Switch>
-      </Frame>
-    </SessionProvider>
+    <>
+      <SEO />
+      <SessionProvider>
+        <GlobalStyle />
+        <Frame>
+          <Switch>
+            <Route path="/" exact>
+              <PoolJoinPage />
+            </Route>
+            <Route path="/loading">
+              <PoolLoadingPage />
+            </Route>
+            <Route path="/game" exact>
+              <GameProvider>
+                <GamePage />
+              </GameProvider>
+            </Route>
+            <Route
+              render={({ staticContext }: any) => {
+                if (staticContext) {
+                  staticContext.status = 404;
+                }
+                return <NotFoundPage />;
+              }}
+            ></Route>
+          </Switch>
+        </Frame>
+      </SessionProvider>
+    </>
   );
 }
 

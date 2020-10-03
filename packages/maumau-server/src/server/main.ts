@@ -20,7 +20,7 @@ async function main() {
     logger.info(`Express server listening on port ${port}`);
   });
 
-  logger.info(`Server started at 0.0.0.0:${port}`);
+  logger.info(`Server started at http://0.0.0.0:${port}`);
 }
 
 main().catch((err) => console.error(err));
