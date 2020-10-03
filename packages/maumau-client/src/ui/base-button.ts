@@ -9,6 +9,7 @@ const reset: CSSObject = {
   color: 'inherit',
   font: 'inherit',
   lineHeight: 'normal',
+  background: 'transparent',
 };
 
 export default styled.button({
@@ -17,10 +18,10 @@ export default styled.button({
     cursor: 'unset',
     opacity: 0.7,
   },
-  '&:focus, &:active': {
+  '&:focus:enabled, &:active:enabled': {
     outline: 'none',
   },
-  '&:hover': {
+  '&:hover:enabled': {
     opacity: 0.7,
     cursor: 'pointer',
   },
