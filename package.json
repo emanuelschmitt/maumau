@@ -31,5 +31,8 @@
   },
   "resolutions": {
     "joi": "17.1.1"
+  },
+  "dependencies": {
+    "@types/react-helmet": "^6.1.0"
   }
 }

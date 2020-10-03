@@ -5,10 +5,12 @@ import styled from 'styled-components';
 import { GameProvider } from './context/game-context';
 import { SessionProvider } from './context/session-context';
 import GamePage from './game-page';
+import Head from './head';
 import PoolJoinPage from './join-page';
 import PoolLoadingPage from './loading-page';
 import NotFoundPage from './not-found-page';
 import GlobalStyle from './styles/styles';
+import Tracking from './tracking';
 
 const Frame = styled.div({
   position: 'relative',
@@ -22,32 +24,36 @@ const Frame = styled.div({
 
 function MainRoot() {
   return (
-    <SessionProvider>
-      <GlobalStyle />
-      <Frame>
-        <Switch>
-          <Route path="/" exact>
-            <PoolJoinPage />
-          </Route>
-          <Route path="/loading">
-            <PoolLoadingPage />
-          </Route>
-          <Route path="/game" exact>
-            <GameProvider>
-              <GamePage />
-            </GameProvider>
-          </Route>
-          <Route
-            render={({ staticContext }: any) => {
-              if (staticContext) {
-                staticContext.status = 404;
-              }
-              return <NotFoundPage />;
-            }}
-          ></Route>
-        </Switch>
-      </Frame>
-    </SessionProvider>
+    <>
+      <Head />
+      <Tracking />
+      <SessionProvider>
+        <GlobalStyle />
+        <Frame>
+          <Switch>
+            <Route path="/" exact>
+              <PoolJoinPage />
+            </Route>
+            <Route path="/loading">
+              <PoolLoadingPage />
+            </Route>
+            <Route path="/game" exact>
+              <GameProvider>
+                <GamePage />
+              </GameProvider>
+            </Route>
+            <Route
+              render={({ staticContext }: any) => {
+                if (staticContext) {
+                  staticContext.status = 404;
+                }
+                return <NotFoundPage />;
+              }}
+            ></Route>
+          </Switch>
+        </Frame>
+      </SessionProvider>
+    </>
   );
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import useClickOutside from '../hooks/use-on-click-outside';
 import CloseIcon from '../icons/close';
 import BaseButton from '../ui/base-button';
 
@@ -50,20 +51,23 @@ export type Props = {
   children?: React.ReactNode;
   footer?: React.ReactNode;
   centered?: boolean;
-  onClose?: () => void;
+  onClose: () => void;
 };
 
 function Dialog({ children, footer, centered = false, onClose }: Props) {
+  const ref = React.useRef<any>();
+  useClickOutside(ref, () => {
+    onClose();
+  });
+
   return (
-    <OuterContainer role="dialog">
-      <Inner>
-        {onClose && (
-          <CloseContainer>
-            <BaseButton>
-              <CloseIcon />
-            </BaseButton>
-          </CloseContainer>
-        )}
+    <OuterContainer>
+      <Inner ref={ref} role="dialog">
+        <CloseContainer>
+          <BaseButton onClick={onClose}>
+            <CloseIcon />
+          </BaseButton>
+        </CloseContainer>
         <Content centered={centered}>{children}</Content>
         {footer && <Footer>{footer}</Footer>}
       </Inner>

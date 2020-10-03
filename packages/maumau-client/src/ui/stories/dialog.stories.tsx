@@ -14,5 +14,4 @@ const Content = (
   </div>
 );
 
-export const Default: React.FunctionComponent<{}> = () => <Dialog>{Content}</Dialog>;
-export const WithClose: React.FunctionComponent<{}> = () => <Dialog onClose={() => null}>{Content}</Dialog>;
+export const Default: React.FunctionComponent<{}> = () => <Dialog onClose={() => null}>{Content}</Dialog>;
