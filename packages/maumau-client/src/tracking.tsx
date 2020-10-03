@@ -10,7 +10,7 @@ function Tracking() {
   const history = useHistory();
 
   React.useEffect(() => {
-    // sent the initial page view to tracking
+    // send the initial page view to tracking
     ReactGA.set({ page: location.pathname });
     ReactGA.pageview(location.pathname);
 
