@@ -15,7 +15,6 @@ function useGameStateQuery(args: { gameId?: string; userId: string }) {
       }),
     {
       refetchInterval: 500,
-      cacheTime: 0,
       enabled: Boolean(args.gameId),
     },
   );
