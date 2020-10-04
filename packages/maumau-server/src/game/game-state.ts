@@ -1,23 +1,13 @@
-import Card from '../models/card';
-import Player from '../models/player';
-import { allRanks } from '../models/rank';
-import { allSuits } from '../models/suit';
 import { logger } from '../server/logger';
-import shuffle from '../utils/shuffle';
 
 import { ActionType } from './action-type';
 import { getClientStateForPlayerId } from './client-state-adapter';
+import GameStateBuilder from './game-state-builder';
 import { autoAcceptSevens } from './listeners/auto-accept-seven';
 import { autoEndGame } from './listeners/auto-end-game';
 import { autoKannet } from './listeners/auto-kannet';
 import { reducer, State, Action, GameEndReason } from './reducer';
 import { getActionTypesForPlayer } from './rules';
-
-const AMOUNT_OF_CARD_PER_PLAYER: Record<number, number> = {
-  2: 7,
-  3: 7,
-  4: 6,
-};
 
 type Options = {
   players: { id: string; name: string }[];
@@ -133,54 +123,7 @@ export default class GameState {
   }
 
   private initializeGame(options: Options): void {
-    const players = this.initializePlayers(options.players);
-    const cards = this.initalizeCardStack();
-
-    shuffle(cards);
-    this.dealCards(players, cards);
-
-    this.state = {
-      stack: cards,
-      players,
-      hasDrawnCard: false,
-      nextSuit: null,
-      pendingSevens: null,
-      playersTurnIndex: 0,
-      gameEnded: null,
-    };
-  }
-
-  private initializePlayers(options: { id: string; name: string }[]): Player[] {
-    const players: Player[] = [];
-    for (const { id, name } of options) {
-      players.push(new Player(id, name));
-    }
-    return players;
-  }
-
-  private initalizeCardStack(): Card[] {
-    const stack: Card[] = [];
-    for (const suit of allSuits) {
-      for (const rank of allRanks) {
-        stack.push(new Card(suit, rank));
-      }
-    }
-    return stack;
-  }
-
-  private dealCards(players: Player[], cardStack: Card[]) {
-    const numberOfCards = AMOUNT_OF_CARD_PER_PLAYER[players.length];
-    if (!numberOfCards) {
-      throw new Error('amount of cards per player undefined.');
-    }
-    for (let i = 0; i < numberOfCards; i++) {
-      for (const player of players) {
-        const card = cardStack.pop();
-        if (card) {
-          player.giveCard(card);
-        }
-      }
-    }
+    this.state = new GameStateBuilder().withPlayers(options.players).withCardStack().withDealtCards().build();
   }
 
   /**
