@@ -20,7 +20,7 @@ const AMOUNT_OF_CARD_PER_PLAYER: Record<number, number> = {
 };
 
 type Options = {
-  players: { id: string; name: string }[];
+  players: { id: string; name: string, isBot: boolean }[];
 };
 
 type Dispatch = (action: Action) => State;
@@ -111,7 +111,7 @@ export default class GameState {
     }
 
     for (const player of this.state.players) {
-      if (player.isDisconnected()) {
+      if (player.isBot == false && player.isDisconnected()) {
         this.dispatch({
           type: ActionType.END_GAME,
           payload: {
@@ -150,10 +150,10 @@ export default class GameState {
     };
   }
 
-  private initializePlayers(options: { id: string; name: string }[]): Player[] {
+  private initializePlayers(options: { id: string; name: string, isBot: boolean }[]): Player[] {
     const players: Player[] = [];
-    for (const { id, name } of options) {
-      players.push(new Player(id, name));
+    for (const { id, name, isBot } of options) {
+      players.push(new Player(id, name, isBot));
     }
     return players;
   }

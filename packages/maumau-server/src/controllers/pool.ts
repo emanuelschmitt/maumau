@@ -46,7 +46,8 @@ export default class PoolController {
 
   private join = (request: Request<{}, {}, { id: string; name: string }>, response: Response<{ status: Status }>) => {
     const { id, name } = request.body;
-    this.matchmakerService.joinPool({ id, name });
+    const playAgainstBot = true; // TODO: Update client to pass this inside the request body.
+    this.matchmakerService.joinPool({ id, name, playAgainstBot: playAgainstBot });
     response.status(200).send({ status: 'JOINED' });
   };
 
