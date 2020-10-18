@@ -1,6 +1,7 @@
 import GameState from '../game/game-state';
 
 export type Session = {
+  id: string,
   gameState: GameState;
 };
 
@@ -17,7 +18,7 @@ export default class GameSessionService {
 
   public add(id: string, players: { id: string; name: string, isBot: boolean }[]): Session {
     const gameState = new GameState({ players });
-    const session: Session = { gameState };
+    const session: Session = { id, gameState };
 
     this.sessions[id] = session;
 

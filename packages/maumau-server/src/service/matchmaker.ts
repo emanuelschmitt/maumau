@@ -2,7 +2,7 @@ import chunk from 'lodash.chunk';
 import { v4 as uuidv4 } from 'uuid';
 
 import { logger } from '../server/logger';
-import BotNameGenerator from '../utils/bot-name';
+import randomBotName from '../utils/bot-name';
 
 /**
  * Why no Websockets?
@@ -57,7 +57,7 @@ export default class MatchmakerService {
     this.pool[id] = { name, joinedAt: Date.now(), lastSeen: Date.now(), isBot: false };
     if (playAgainstBot) {
       const botId = uuidv4();
-      const botName = new BotNameGenerator().randomName()
+      const botName = randomBotName();
       this.pool[botId] = { name: botName, joinedAt: Date.now(), lastSeen: Date.now(), isBot: true };
     }
   }
@@ -74,6 +74,7 @@ export default class MatchmakerService {
     if (!exists) {
       return { status: 'UNJOINED', sessionId };
     }
+    console.log("pulse for " + this.pool[userId].name);
 
     this.updateLastSeen(userId);
     return { status: sessionId ? 'MATCHED' : 'JOINED', sessionId };
@@ -106,7 +107,7 @@ export default class MatchmakerService {
 
   private unjoinNonBotPlayersIfTimedOut() {
     for (const [id, user] of Object.entries(this.pool)) {
-      if (user.isBot) { continue }
+      if (user.isBot) { continue; }
       const isTimedOut = Date.now() - user.lastSeen >= CLEANUP_THRESHOLD_MS;
       if (isTimedOut) {
         logger.debug(`Matchmaking: Remove user ${id} from pool.`);

@@ -76,7 +76,7 @@ export default class GameState {
 
     const possibleActions = getActionTypesForPlayer(id, this.state);
     if (!possibleActions.includes(action.type)) {
-      throw new Error('forbidden action');
+      throw new Error('forbidden action: ' + action.type);
     }
 
     return this.dispatch(action);
@@ -119,7 +119,7 @@ export default class GameState {
             id: player.id,
           },
         });
-        logger.debug(`Game ended because player ${player.id} disconnected.`);
+        logger.debug(`Game ended because player ${player.name} disconnected.`);
         this.stopPlayerHeartBeats();
         break;
       }
