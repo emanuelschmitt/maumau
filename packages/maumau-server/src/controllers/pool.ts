@@ -44,10 +44,14 @@ export default class PoolController {
     );
   }
 
-  private join = (request: Request<{}, {}, { id: string; name: string }>, response: Response<{ status: Status }>) => {
-    const { id, name } = request.body;
-    const playAgainstBot = true; // TODO: Update client to pass this inside the request body.
-    this.matchmakerService.joinPool({ id, name, playAgainstBot: playAgainstBot });
+  private join = (request: Request<{}, {}, { id: string; name: string, playAgainstBot: boolean | undefined }>, response: Response<{ status: Status }>) => {
+    const { id, name, playAgainstBot } = request.body;
+
+    // Compatibilty with old clients:
+    let willPlayAgainstBot = playAgainstBot;
+    if (willPlayAgainstBot == undefined) { willPlayAgainstBot = true; }
+    
+    this.matchmakerService.joinPool({ id, name, playAgainstBot: willPlayAgainstBot });
     response.status(200).send({ status: 'JOINED' });
   };
 

@@ -10,8 +10,8 @@ describe('reducer', () => {
   describe('when PLAY_REGULAR_CARD action', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Johnny' },
-        { id: '2', name: 'Hugh' },
+        { id: '1', name: 'Johnny', isBot: false },
+        { id: '2', name: 'Hugh', isBot: false },
       ],
     }).getState();
     const cardToPlay = state.players[0].hand[0];
@@ -36,8 +36,8 @@ describe('reducer', () => {
   describe('when ACCEPT_PENDING_SEVENS action with 2 players', () => {
     let state = new GameState({
       players: [
-        { id: '1', name: 'Johnny' },
-        { id: '2', name: 'Hugh' },
+        { id: '1', name: 'Johnny', isBot: false },
+        { id: '2', name: 'Hugh', isBot: false },
       ],
     }).getState();
     const cardsCount = state.players[1].hand.length;
@@ -66,10 +66,10 @@ describe('reducer', () => {
   describe('when ACCEPT_PENDING_SEVENS action with 4 cards and 4 players', () => {
     let state = new GameState({
       players: [
-        { id: '1', name: 'Johnny' },
-        { id: '2', name: 'Hugh' },
-        { id: '3', name: 'Marc' },
-        { id: '4', name: 'John' },
+        { id: '1', name: 'Johnny', isBot: false },
+        { id: '2', name: 'Hugh', isBot: false },
+        { id: '3', name: 'Marc', isBot: false },
+        { id: '4', name: 'John', isBot: false },
       ],
     }).getState();
 
@@ -111,8 +111,8 @@ describe('reducer', () => {
   describe('when PLAY_REGULAR_CARD with last card', () => {
     let state = new GameState({
       players: [
-        { id: '1', name: 'Johnny' },
-        { id: '2', name: 'Hugh' },
+        { id: '1', name: 'Johnny', isBot: false },
+        { id: '2', name: 'Hugh', isBot: false },
       ],
     }).getState();
 
@@ -128,12 +128,12 @@ describe('reducer', () => {
   describe('when PLAY_EIGHT as last card and two players', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Johnny' },
-        { id: '2', name: 'Hugh' },
+        { id: '1', name: 'Johnny', isBot: false },
+        { id: '2', name: 'Hugh', isBot: false },
       ],
     });
     const card = new Card(Suit.CLUBS, Rank.EIGHT);
-    const player = new Player('1', 'Johnny', [card]);
+    const player = new Player('1', 'Johnny', false, [card]);
     state.setPartialState({
       players: [player, state.getState().players[1]],
       stack: [new Card(Suit.CLUBS, Rank.KING)],

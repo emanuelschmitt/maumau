@@ -58,6 +58,7 @@ export default class MatchmakerService {
     if (playAgainstBot) {
       const botId = uuidv4();
       const botName = randomBotName();
+      logger.debug(`Matchmaking: Bot ${botId} joined the pool.`);
       this.pool[botId] = { name: botName, joinedAt: Date.now(), lastSeen: Date.now(), isBot: true };
     }
   }

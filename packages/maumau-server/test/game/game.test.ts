@@ -7,8 +7,8 @@ describe('game', () => {
   test('initalize should give players 7 cards', () => {
     const gameState = new GameState({
       players: [
-        { id: '1', name: 'Johnny' },
-        { id: '2', name: 'Hugh' },
+        { id: '1', name: 'Johnny', isBot: false },
+        { id: '2', name: 'Hugh', isBot: false },
       ],
     });
     for (const player of gameState.getState().players) {
@@ -19,8 +19,8 @@ describe('game', () => {
   test('card stack should have 32 cards', () => {
     const gameState = new GameState({
       players: [
-        { id: '1', name: 'Johnny' },
-        { id: '2', name: 'Hugh' },
+        { id: '1', name: 'Johnny', isBot: false },
+        { id: '2', name: 'Hugh', isBot: false },
       ],
     });
     // @ts-ignore
@@ -31,25 +31,25 @@ describe('game', () => {
   test('initalize should have remaining cards in stack after cards are dealt', () => {
     let gameState = new GameState({
       players: [
-        { id: '1', name: 'Johnny' },
-        { id: '2', name: 'Hugh' },
+        { id: '1', name: 'Johnny', isBot: false },
+        { id: '2', name: 'Hugh', isBot: false },
       ],
     });
     expect(gameState.getState().stack).toHaveLength(18);
     gameState = new GameState({
       players: [
-        { id: '1', name: 'Johnny' },
-        { id: '2', name: 'Hugh' },
-        { id: '3', name: 'Depp' },
+        { id: '1', name: 'Johnny', isBot: false },
+        { id: '2', name: 'Hugh', isBot: false },
+        { id: '3', name: 'Depp', isBot: false },
       ],
     });
     expect(gameState.getState().stack).toHaveLength(11);
     gameState = new GameState({
       players: [
-        { id: '1', name: 'Hugh' },
-        { id: '2', name: 'Hughy' },
-        { id: '3', name: 'Isa' },
-        { id: '4', name: 'Malte' },
+        { id: '1', name: 'Hugh', isBot: false },
+        { id: '2', name: 'Hughy', isBot: false },
+        { id: '3', name: 'Isa', isBot: false },
+        { id: '4', name: 'Malte', isBot: false },
       ],
     });
     expect(gameState.getState().stack).toHaveLength(8);
@@ -59,15 +59,15 @@ describe('game', () => {
     expect(
       () =>
         new GameState({
-          players: [{ id: '1', name: 'Hugh' }],
+          players: [{ id: '1', name: 'Hugh', isBot: false }],
         }),
     ).toThrow();
     expect(
       () =>
         new GameState({
           players: [
-            { id: '1', name: 'Hugh' },
-            { id: '2', name: 'Hughy' },
+            { id: '1', name: 'Hugh', isBot: false },
+            { id: '2', name: 'Hughy', isBot: false },
           ],
         }),
     ).not.toThrow();
@@ -75,9 +75,9 @@ describe('game', () => {
       () =>
         new GameState({
           players: [
-            { id: '1', name: 'Hugh' },
-            { id: '2', name: 'Hughy' },
-            { id: '3', name: 'Isa' },
+            { id: '1', name: 'Hugh', isBot: false },
+            { id: '2', name: 'Hughy', isBot: false },
+            { id: '3', name: 'Isa', isBot: false },
           ],
         }),
     ).not.toThrow();
@@ -85,10 +85,10 @@ describe('game', () => {
       () =>
         new GameState({
           players: [
-            { id: '1', name: 'Hugh' },
-            { id: '2', name: 'Hughy' },
-            { id: '3', name: 'Isa' },
-            { id: '4', name: 'Malte' },
+            { id: '1', name: 'Hugh', isBot: false },
+            { id: '2', name: 'Hughy', isBot: false },
+            { id: '3', name: 'Isa', isBot: false },
+            { id: '4', name: 'Malte', isBot: false },
           ],
         }),
     ).not.toThrow();
@@ -96,11 +96,11 @@ describe('game', () => {
       () =>
         new GameState({
           players: [
-            { id: '1', name: 'Hugh' },
-            { id: '2', name: 'Hughy' },
-            { id: '3', name: 'Isa' },
-            { id: '4', name: 'Malte' },
-            { id: '5', name: 'Emma' },
+            { id: '1', name: 'Hugh', isBot: false },
+            { id: '2', name: 'Hughy', isBot: false },
+            { id: '3', name: 'Isa', isBot: false },
+            { id: '4', name: 'Malte', isBot: false },
+            { id: '5', name: 'Emma', isBot: false },
           ],
         }),
     ).toThrow();
@@ -109,12 +109,12 @@ describe('game', () => {
   test('should end game based on when player plays his last card', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh' },
-        { id: '2', name: 'Hughy' },
+        { id: '1', name: 'Hugh', isBot: false },
+        { id: '2', name: 'Hughy', isBot: false },
       ],
     });
     const card = new Card(Suit.CLUBS, Rank.NINE);
-    const player = new Player('1', 'John', [card]);
+    const player = new Player('1', 'John', false, [card]);
 
     state.setPartialState({
       players: [player],
@@ -135,8 +135,8 @@ describe('game', () => {
   test('should auto perform KANNET if player has no other option', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh' },
-        { id: '2', name: 'Hughy' },
+        { id: '1', name: 'Hugh', isBot: false },
+        { id: '2', name: 'Hughy', isBot: false },
       ],
     });
 
@@ -144,7 +144,7 @@ describe('game', () => {
     const spadesTen = new Card(Suit.SPADES, Rank.TEN);
     const diamondQueen = new Card(Suit.DIAMONDS, Rank.QUEEN);
 
-    const player = new Player('1', 'John', [diamondQueen]);
+    const player = new Player('1', 'John', false, [diamondQueen]);
 
     state.setPartialState({
       players: [player, player],
@@ -163,8 +163,8 @@ describe('game', () => {
   test('should auto perform KANNET if player has no other option', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh' },
-        { id: '2', name: 'Hughy' },
+        { id: '1', name: 'Hugh', isBot: false },
+        { id: '2', name: 'Hughy', isBot: false },
       ],
     });
 
@@ -172,8 +172,8 @@ describe('game', () => {
     const spadesTen = new Card(Suit.SPADES, Rank.TEN);
     const diamondQueen = new Card(Suit.DIAMONDS, Rank.QUEEN);
 
-    const player1 = new Player('1', 'John', [diamondQueen, clubsSeven]);
-    const player2 = new Player('2', 'John', [spadesTen]);
+    const player1 = new Player('1', 'John', false, [diamondQueen, clubsSeven]);
+    const player2 = new Player('2', 'John', false, [spadesTen]);
 
     state.setPartialState({
       players: [player1, player2],
