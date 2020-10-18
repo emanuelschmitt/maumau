@@ -1,8 +1,10 @@
 import chunk from 'lodash.chunk';
 import { v4 as uuidv4 } from 'uuid';
+import { BotDifficulty } from '../models/bot-difficulty';
 
 import { logger } from '../server/logger';
 import randomBotName from '../utils/bot-name';
+import random from '../utils/random';
 
 /**
  * Why no Websockets?
@@ -30,7 +32,7 @@ import randomBotName from '../utils/bot-name';
  */
 
 type Pool = {
-  [userId: string]: { name: string; joinedAt: number; sessionId?: string; lastSeen: number, isBot: boolean };
+  [userId: string]: { name: string; joinedAt: number; sessionId?: string; lastSeen: number, bot: BotDifficulty | undefined };
 };
 export type Status = 'UNJOINED' | 'JOINED' | 'MATCHED';
 
@@ -38,7 +40,7 @@ export const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
 const AMOUNT_OF_PLAYERS = 2;
 const CLEANUP_THRESHOLD_MS = 10000;
 
-type onSessionCreateFn = (id: string, players: { id: string; name: string, isBot: boolean }[]) => void;
+type onSessionCreateFn = (id: string, players: { id: string; name: string, bot: BotDifficulty | undefined }[]) => void;
 
 export default class MatchmakerService {
   private pool: Pool;
@@ -54,12 +56,14 @@ export default class MatchmakerService {
 
   public joinPool({ id, name, playAgainstBot }: { id: string; name: string; playAgainstBot: boolean }): void {
     logger.debug(`Matchmaking: User ${id} joined the pool.`);
-    this.pool[id] = { name, joinedAt: Date.now(), lastSeen: Date.now(), isBot: false };
+    this.pool[id] = { name, joinedAt: Date.now(), lastSeen: Date.now(), bot: undefined };
     if (playAgainstBot) {
       const botId = uuidv4();
       const botName = randomBotName();
-      logger.debug(`Matchmaking: Bot ${botId} joined the pool.`);
-      this.pool[botId] = { name: botName, joinedAt: Date.now(), lastSeen: Date.now(), isBot: true };
+      const difficulties = [BotDifficulty.DUMB, BotDifficulty.EASY, BotDifficulty.HARD];
+      const difficulty = difficulties[random(0, difficulties.length - 1)];
+      logger.debug(`Matchmaking: Bot ${botId} (${difficulty}) joined the pool.`);
+      this.pool[botId] = { name: botName, joinedAt: Date.now(), lastSeen: Date.now(), bot: difficulty };
     }
   }
 
@@ -95,10 +99,10 @@ export default class MatchmakerService {
 
     for (const group of groupsWithLength) {
       const sessionId = uuidv4();
-      const players: { id: string; name: string, isBot: boolean }[] = [];
+      const players: { id: string; name: string, bot: BotDifficulty | undefined }[] = [];
       for (const [userId, user] of group) {
         this.pool[userId] = { ...user, sessionId };
-        players.push({ id: userId, name: user.name, isBot: user.isBot });
+        players.push({ id: userId, name: user.name, bot: user.bot });
         logger.debug(`Matchmaking: Assign user ${userId} to game ${sessionId}`);
       }
       this.onSessionCreate(sessionId, players);
@@ -107,7 +111,7 @@ export default class MatchmakerService {
 
   private unjoinNonBotPlayersIfTimedOut() {
     for (const [id, user] of Object.entries(this.pool)) {
-      if (user.isBot) { continue; }
+      if (user.bot != undefined) { continue; }
       const isTimedOut = Date.now() - user.lastSeen >= CLEANUP_THRESHOLD_MS;
       if (isTimedOut) {
         logger.debug(`Matchmaking: Remove user ${id} from pool.`);

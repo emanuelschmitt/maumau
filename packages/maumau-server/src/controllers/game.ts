@@ -4,7 +4,6 @@ import express, { Request, Response } from 'express';
 import { ClientState } from '../game/client-state-adapter';
 import { Action, State } from '../game/reducer';
 import { actionSchema } from '../game/validation';
-import { logger } from '../server/logger';
 import GameSessionService, { Session } from '../service/game-session';
 import BotController from './bot';
 
@@ -55,7 +54,6 @@ export default class GameController {
       if (!session) {
         throw "Session is undefined?";
       }
-      logger.debug("Bot is playing: " + JSON.stringify(action));
       const state = session.gameState.dispatchForPlayer(userId, action);
       this.playBotIfNeeded(state, session);
     };
@@ -91,8 +89,8 @@ export default class GameController {
 
   private playBotIfNeeded(state: State, session: Session) {
     const player = state.players[state.playersTurnIndex];
-    if (player.isBot) {
-      this.botController.playAction(session);
+    if (player.bot != undefined) {
+      this.botController.playAction(session, player.bot);
     }
   }
 }

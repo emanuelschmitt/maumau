@@ -1,3 +1,4 @@
+import { BotDifficulty } from '../models/bot-difficulty';
 import Card from '../models/card';
 import Player from '../models/player';
 import { allRanks } from '../models/rank';
@@ -20,7 +21,7 @@ const AMOUNT_OF_CARD_PER_PLAYER: Record<number, number> = {
 };
 
 type Options = {
-  players: { id: string; name: string, isBot: boolean }[];
+  players: { id: string; name: string, bot: BotDifficulty | undefined }[];
 };
 
 type Dispatch = (action: Action) => State;
@@ -111,7 +112,7 @@ export default class GameState {
     }
 
     for (const player of this.state.players) {
-      if (player.isBot == false && player.isDisconnected()) {
+      if (player.bot == undefined && player.isDisconnected()) {
         this.dispatch({
           type: ActionType.END_GAME,
           payload: {
@@ -150,10 +151,10 @@ export default class GameState {
     };
   }
 
-  private initializePlayers(options: { id: string; name: string, isBot: boolean }[]): Player[] {
+  private initializePlayers(options: { id: string; name: string, bot: BotDifficulty | undefined }[]): Player[] {
     const players: Player[] = [];
-    for (const { id, name, isBot } of options) {
-      players.push(new Player(id, name, isBot));
+    for (const { id, name, bot } of options) {
+      players.push(new Player(id, name, bot));
     }
     return players;
   }

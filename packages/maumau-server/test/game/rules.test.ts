@@ -11,8 +11,8 @@ describe('rules', () => {
   test('should show no actions but KANNET_AND_DRAW if no card matches', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh', isBot: false },
-        { id: '2', name: 'Hughy', isBot: false },
+        { id: '1', name: 'Hugh', bot: undefined },
+        { id: '2', name: 'Hughy', bot: undefined },
       ],
     }).getState();
     state.stack = [new Card(Suit.DIAMONDS, Rank.TEN)];
@@ -30,8 +30,8 @@ describe('rules', () => {
   test('should allow JACK to be placed on any card but pending sevens', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh', isBot: false },
-        { id: '2', name: 'Hughy', isBot: false },
+        { id: '1', name: 'Hugh', bot: undefined },
+        { id: '2', name: 'Hughy', bot: undefined },
       ],
     }).getState();
     const allCards = state.stack;
@@ -46,8 +46,8 @@ describe('rules', () => {
   test('should not allow JACK to be placed on pending sevens', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh', isBot: false },
-        { id: '2', name: 'Hughy', isBot: false },
+        { id: '1', name: 'Hugh', bot: undefined },
+        { id: '2', name: 'Hughy', bot: undefined },
       ],
     }).getState();
     state.pendingSevens = 2;
@@ -60,8 +60,8 @@ describe('rules', () => {
   test('should only allow PLAY_SEVEN or ACCEPT_PENDING_SEVENS on pending sevens', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh', isBot: false },
-        { id: '2', name: 'Hughy', isBot: false },
+        { id: '1', name: 'Hugh', bot: undefined },
+        { id: '2', name: 'Hughy', bot: undefined },
       ],
     }).getState();
     state.pendingSevens = 1;
@@ -78,8 +78,8 @@ describe('rules', () => {
   test('should only allow to play cards matching the next suit of a played jack', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh', isBot: false },
-        { id: '2', name: 'Hughy', isBot: false },
+        { id: '1', name: 'Hugh', bot: undefined },
+        { id: '2', name: 'Hughy', bot: undefined },
       ],
     }).getState();
     state.stack = [new Card(Suit.HEARTS, Rank.JACK)];
