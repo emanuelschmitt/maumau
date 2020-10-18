@@ -52,12 +52,12 @@ export default class MatchmakerService {
   }
 
   public joinPool({ id, name }: { id: string; name: string }): void {
-    logger.debug(`user ${id} joined`);
+    logger.debug(`Matchmaking: User ${id} joined the pool.`);
     this.pool[id] = { name, joinedAt: Date.now(), lastSeen: Date.now() };
   }
 
   public leavePool({ id }: { id: string }): void {
-    logger.debug(`user ${id} left`);
+    logger.debug(`Matchmaking: User ${id} left the pool.`);
     delete this.pool[id];
   }
 
@@ -89,9 +89,10 @@ export default class MatchmakerService {
     for (const group of groupsWithLength) {
       const sessionId = uuidv4();
       const players: { id: string; name: string }[] = [];
-      for (const [userId, entry] of group) {
-        this.pool[userId] = { ...entry, sessionId };
-        players.push({ id: userId, name: entry.name });
+      for (const [userId, user] of group) {
+        this.pool[userId] = { ...user, sessionId };
+        players.push({ id: userId, name: user.name });
+        logger.debug(`Matchmaking: Assign user ${userId} to game ${sessionId}`);
       }
       this.onSessionCreate(sessionId, players);
     }
@@ -101,7 +102,7 @@ export default class MatchmakerService {
     for (const [id, user] of Object.entries(this.pool)) {
       const isTimedOut = Date.now() - user.lastSeen >= CLEANUP_THRESHOLD_MS;
       if (isTimedOut) {
-        logger.debug(`cleaning up user ${id}`);
+        logger.debug(`Matchmaking: Remove user ${id} from pool.`);
         this.leavePool({ id });
       }
     }
