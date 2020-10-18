@@ -2,9 +2,10 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import express, { Request, Response } from 'express';
 
 import { ClientState } from '../game/client-state-adapter';
-import { Action } from '../game/reducer';
+import { Action, State } from '../game/reducer';
 import { actionSchema } from '../game/validation';
-import GameSessionService from '../service/game-session';
+import { logger } from '../server/logger';
+import GameSessionService, { Session } from '../service/game-session';
 import BotController from './bot';
 
 export default class GameController {
@@ -54,8 +55,9 @@ export default class GameController {
       if (!session) {
         throw "Session is undefined?";
       }
+      logger.debug("Bot is playing: " + JSON.stringify(action));
       const state = session.gameState.dispatchForPlayer(userId, action);
-      console.log(JSON.stringify(state));
+      this.playBotIfNeeded(state, session);
     };
   }
 
@@ -77,18 +79,20 @@ export default class GameController {
     if (!session) {
       return response.status(404).send({ message: 'session not found' });
     }
-
-    response.status(200).send({ message: 'ok' });
-
     const userId = request.headers['x-maumau-user-id'] as string;
     const state = session.gameState.dispatchForPlayer(userId, request.body);
-    const player = state.players[state.playersTurnIndex];
-    if (player.isBot) {
-      this.botController.playAction(session);
-    }
+    response.status(200).send({ message: 'ok' });
+    this.playBotIfNeeded(state, session);
   };
 
   public getRouter() {
     return this.router;
+  }
+
+  private playBotIfNeeded(state: State, session: Session) {
+    const player = state.players[state.playersTurnIndex];
+    if (player.isBot) {
+      this.botController.playAction(session);
+    }
   }
 }

@@ -34,58 +34,52 @@ export default class BotController {
         }
         const random = Math.round(Math.random() * (count - 1));
         const actionType = actionTypes[random];
-        console.log("action: " + actionType);
-        console.log("random: " + random);
-        console.log("topcard rank: " + state.stack[0].rank);
-
-        var action: Action | undefined
+        let action: Action | undefined;
         switch(actionType) {
-            case ActionType.PLAY_EIGHT, ActionType.PLAY_JACK, ActionType.PLAY_REGULAR_CARD, ActionType.PLAY_SEVEN:
+            case ActionType.PLAY_EIGHT:
+            case ActionType.PLAY_REGULAR_CARD:
+            case ActionType.PLAY_SEVEN:
+            case ActionType.PLAY_JACK:
                 action = this.playCard(player, state, actionType);
                 break;
             case ActionType.KANNET:
-                action = { type: ActionType.KANNET }
+                action = { type: ActionType.KANNET };
                 break;
             case ActionType.KANNET_AND_DRAW:
-                action = { type: ActionType.KANNET_AND_DRAW }
+                action = { type: ActionType.KANNET_AND_DRAW };
                 break;
             case ActionType.ACCEPT_PENDING_SEVENS:
-                action = { type: ActionType.ACCEPT_PENDING_SEVENS }
+                action = { type: ActionType.ACCEPT_PENDING_SEVENS };
                 break;
         }
 
         // TODO: Make it delayed async.
-        if (action != null) {
-            console.log("action set");
-            this.onBotPlaying(session.id, player.id, action);
-        } else {
-            console.log("no action ... ");
-        }
+        const delay = Math.random() * 3000 + 1000;
+        setTimeout(() => {
+            if (action != null) {
+                this.onBotPlaying(session.id, player.id, action);
+            }
+        }, delay);
     }
 
     private playCard(player: Player, state: State, actionType: ActionType) {
-        console.log("player: " + player);
-        console.log("0: " + player.hand.map(card => card.rank + "." + card.suit));
         var possibleCards = player.hand
-            .filter(card => { rankActionMap[card.rank] == actionType })
-        console.log("1: " + possibleCards)
+            .filter(card => { return rankActionMap[card.rank] == actionType; });
         possibleCards = possibleCards 
             .filter(card => { if (state.nextSuit != null) { return card.suit == state.nextSuit || card.isJack } else { return true; }})
-        console.log("2: " + possibleCards)
+        const topCard = state.stack[0];
         possibleCards = possibleCards
-            .filter(card => { (card.suit == state.stack[0].suit || card.rank == state.stack[0].rank) || card.isJack })
-        console.log("3: " + possibleCards)
-
-        console.log("step1: ");
+            .filter(card => { return card.suit == topCard.suit || card.rank == topCard.rank || card.isJack; })
         const card = this.randomCard(possibleCards)
-        console.log("step2: " + card.suit + "," + card.rank);
         return this.generateAction(actionType, card);
     }
 
     private generateAction(actionType: ActionType, card: Card): Action {
         var payload: any = null
         switch (actionType) {
-            case ActionType.PLAY_REGULAR_CARD, ActionType.PLAY_SEVEN, ActionType.PLAY_EIGHT:
+            case ActionType.PLAY_REGULAR_CARD:
+            case ActionType.PLAY_SEVEN:
+            case ActionType.PLAY_EIGHT:
                 payload = { suit: card.suit, rank: card.rank }
                 break;
             case ActionType.PLAY_JACK:
@@ -103,8 +97,6 @@ export default class BotController {
             throw "No cards to choose from.";
         }
         const random = Math.round(Math.random() * (count - 1));
-        console.log(cards);
-        console.log(random);
         const card = cards[random];
         return card;
     }

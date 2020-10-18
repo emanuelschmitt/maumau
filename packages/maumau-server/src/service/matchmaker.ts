@@ -74,7 +74,6 @@ export default class MatchmakerService {
     if (!exists) {
       return { status: 'UNJOINED', sessionId };
     }
-    console.log("pulse for " + this.pool[userId].name);
 
     this.updateLastSeen(userId);
     return { status: sessionId ? 'MATCHED' : 'JOINED', sessionId };
@@ -99,7 +98,7 @@ export default class MatchmakerService {
       for (const [userId, user] of group) {
         this.pool[userId] = { ...user, sessionId };
         players.push({ id: userId, name: user.name, isBot: user.isBot });
-		logger.debug(`Matchmaking: Assign user ${userId} to game ${sessionId}`);
+        logger.debug(`Matchmaking: Assign user ${userId} to game ${sessionId}`);
       }
       this.onSessionCreate(sessionId, players);
     }
