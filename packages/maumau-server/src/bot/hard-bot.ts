@@ -2,8 +2,9 @@ import { ActionType } from "../game/action-type";
 import { State } from "../game/reducer";
 import { Card } from "../types";
 import random from "../utils/random";
+import { Bot } from "./bots";
 
-export default class HardBot {
+export default class HardBot implements Bot {
 
     public chooseActionType(actionTypes: ActionType[]): ActionType {
         const nonKannetAction = actionTypes.filter(type => {

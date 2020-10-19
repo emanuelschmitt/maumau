@@ -7,9 +7,6 @@ import Player from "../models/player";
 import { Rank } from "../models/rank";
 import { Suit } from "../models/suit";
 import { Session } from "../service/game-session";import random from "../utils/random";
-;
-
-type onBotPlayingFn = (sessionId: string, userId: string, action: Action) => void;
 
 const rankActionMap: Record<Rank, ActionType> = {
     [Rank.EIGHT]: ActionType.PLAY_EIGHT,
@@ -23,7 +20,7 @@ const rankActionMap: Record<Rank, ActionType> = {
 };
   
 export default class BotController {
-    public onBotPlaying: onBotPlayingFn
+    public onBotPlaying: (sessionId: string, userId: string, action: Action) => void;
 
     public playAction(session: Session, difficulty: BotDifficulty): void {
         const gameState = session.gameState;
