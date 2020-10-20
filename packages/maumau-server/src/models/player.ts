@@ -19,7 +19,7 @@ export default class Player {
   }
 
   isBot(): boolean {
-    return this.bot != undefined;
+    return Boolean(this.bot);
   }
 
   hasCard(predicate: (card: Card) => boolean) {
