@@ -26,6 +26,9 @@ export default class BotController {
   public playAction(session: Session, difficulty: BotDifficulty): void {
     const gameState = session.gameState;
     const state = gameState.getState();
+    if (state.gameEnded != undefined) {
+      return;
+    }
     const player = state.players[state.playersTurnIndex];
     const clientState = gameState.getClientStateForPlayer(player.id);
     const actionTypes = clientState.player.possibleActions;
