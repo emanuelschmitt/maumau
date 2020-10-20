@@ -5,6 +5,7 @@ import { ClientState } from '../game/client-state-adapter';
 import { Action, State } from '../game/reducer';
 import { actionSchema } from '../game/validation';
 import GameSessionService, { Session } from '../service/game-session';
+
 import BotController from './bot';
 
 export default class GameController {
@@ -52,7 +53,7 @@ export default class GameController {
     this.botController.onBotPlaying = (sessionId: string, userId: string, action: Action) => {
       const session = this.gameSessionService.get(sessionId);
       if (!session) {
-        throw "Session is undefined?";
+        throw 'Session is undefined?';
       }
       const state = session.gameState.dispatchForPlayer(userId, action);
       this.playBotIfNeeded(state, session);

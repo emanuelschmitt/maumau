@@ -21,7 +21,7 @@ const AMOUNT_OF_CARD_PER_PLAYER: Record<number, number> = {
 };
 
 type Options = {
-  players: { id: string; name: string, bot: BotDifficulty | undefined }[];
+  players: { id: string; name: string; bot: BotDifficulty | undefined }[];
 };
 
 type Dispatch = (action: Action) => State;
@@ -151,7 +151,7 @@ export default class GameState {
     };
   }
 
-  private initializePlayers(options: { id: string; name: string, bot: BotDifficulty | undefined }[]): Player[] {
+  private initializePlayers(options: { id: string; name: string; bot: BotDifficulty | undefined }[]): Player[] {
     const players: Player[] = [];
     for (const { id, name, bot } of options) {
       players.push(new Player(id, name, bot));

@@ -1,7 +1,7 @@
 import chunk from 'lodash.chunk';
 import { v4 as uuidv4 } from 'uuid';
-import { BotDifficulty } from '../models/bot-difficulty';
 
+import { BotDifficulty } from '../models/bot-difficulty';
 import { logger } from '../server/logger';
 import randomBotName from '../utils/bot-name';
 import random from '../utils/random';
@@ -32,7 +32,13 @@ import random from '../utils/random';
  */
 
 type Pool = {
-  [userId: string]: { name: string; joinedAt: number; sessionId?: string; lastSeen: number, bot: BotDifficulty | undefined };
+  [userId: string]: {
+    name: string;
+    joinedAt: number;
+    sessionId?: string;
+    lastSeen: number;
+    bot: BotDifficulty | undefined;
+  };
 };
 export type Status = 'UNJOINED' | 'JOINED' | 'MATCHED';
 
@@ -40,7 +46,7 @@ export const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
 const AMOUNT_OF_PLAYERS = 2;
 const CLEANUP_THRESHOLD_MS = 10000;
 
-type onSessionCreateFn = (id: string, players: { id: string; name: string, bot: BotDifficulty | undefined }[]) => void;
+type onSessionCreateFn = (id: string, players: { id: string; name: string; bot: BotDifficulty | undefined }[]) => void;
 
 export default class MatchmakerService {
   private pool: Pool;
@@ -99,7 +105,7 @@ export default class MatchmakerService {
 
     for (const group of groupsWithLength) {
       const sessionId = uuidv4();
-      const players: { id: string; name: string, bot: BotDifficulty | undefined }[] = [];
+      const players: { id: string; name: string; bot: BotDifficulty | undefined }[] = [];
       for (const [userId, user] of group) {
         this.pool[userId] = { ...user, sessionId };
         players.push({ id: userId, name: user.name, bot: user.bot });
@@ -111,7 +117,9 @@ export default class MatchmakerService {
 
   private unjoinNonBotPlayersIfTimedOut() {
     for (const [id, user] of Object.entries(this.pool)) {
-      if (user.bot != undefined) { continue; }
+      if (user.bot != undefined) {
+        continue;
+      }
       const isTimedOut = Date.now() - user.lastSeen >= CLEANUP_THRESHOLD_MS;
       if (isTimedOut) {
         logger.debug(`Matchmaking: Remove user ${id} from pool.`);

@@ -2,7 +2,7 @@ import GameState from '../game/game-state';
 import { BotDifficulty } from '../models/bot-difficulty';
 
 export type Session = {
-  id: string,
+  id: string;
   gameState: GameState;
 };
 
@@ -17,7 +17,7 @@ export default class GameSessionService {
     this.sessions = {};
   }
 
-  public add(id: string, players: { id: string; name: string, bot: BotDifficulty | undefined }[]): Session {
+  public add(id: string, players: { id: string; name: string; bot: BotDifficulty | undefined }[]): Session {
     const gameState = new GameState({ players });
     const session: Session = { id, gameState };
 

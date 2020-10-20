@@ -1,37 +1,35 @@
-import { ActionType } from "../game/action-type";
-import { State } from "../game/reducer";
-import { Card } from "../types";
-import random from "../utils/random";
-import { Bot } from "./bots";
+import { ActionType } from '../game/action-type';
+import { State } from '../game/reducer';
+import { Card } from '../types';
+import random from '../utils/random';
+
+import { Bot } from './bots';
 
 export default class HardBot implements Bot {
+  public chooseActionType(actionTypes: ActionType[]): ActionType {
+    const nonKannetAction = actionTypes.filter((type) => {
+      return type != ActionType.KANNET_AND_DRAW && type != ActionType.KANNET;
+    });
 
-    public chooseActionType(actionTypes: ActionType[]): ActionType {
-        const nonKannetAction = actionTypes.filter(type => {
-            return type != ActionType.KANNET_AND_DRAW && type != ActionType.KANNET;
-        })
+    let filteredActionTypes: ActionType[];
+    if (nonKannetAction.length > 0) {
+      // TODO: try to keep one jack till the end.
+      // Exclude last jack if not the only possible action.
 
-        let filteredActionTypes: ActionType[]
-        if (nonKannetAction.length > 0) {
-        
-            // TODO: try to keep one jack till the end.
-            // Exclude last jack if not the only possible action.
-
-            filteredActionTypes = nonKannetAction;
-        } else {
-            filteredActionTypes = actionTypes;
-        }
-        const max = filteredActionTypes.length - 1;
-        const index = random(0, max);
-        return filteredActionTypes[index];
+      filteredActionTypes = nonKannetAction;
+    } else {
+      filteredActionTypes = actionTypes;
     }
+    const max = filteredActionTypes.length - 1;
+    const index = random(0, max);
+    return filteredActionTypes[index];
+  }
 
-    public chooseCard(cards: Card[], state: State, actionType: ActionType): Card {
+  public chooseCard(cards: Card[], state: State, actionType: ActionType): Card {
+    // TODO: Point to customize ...
 
-        // TODO: Point to customize ...
-
-        const max = cards.length - 1;
-        const index = random(0, max);
-        return cards[index];
-    }
+    const max = cards.length - 1;
+    const index = random(0, max);
+    return cards[index];
+  }
 }

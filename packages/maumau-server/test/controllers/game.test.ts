@@ -40,7 +40,7 @@ describe('PoolController', () => {
 
       const { gameState } = createGameStateMock();
       when(services.gameSessionServiceMock.get(gameId)).thenReturn({
-        id: "",
+        id: '',
         gameState: gameState,
       });
       const res = await request(app).get(`/game/${gameId}`).set('x-maumau-user-id', userId);
@@ -61,7 +61,7 @@ describe('PoolController', () => {
 
       const { gameState } = createGameStateMock();
       when(services.gameSessionServiceMock.get(gameId)).thenReturn({
-        id: "",
+        id: '',
         gameState: gameState,
       });
       const res = await request(app).get(`/game/${gameId}`);
