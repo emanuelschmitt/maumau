@@ -1,3 +1,4 @@
+import BotController from '../controllers/bot';
 import { BotDifficulty } from '../models/bot-difficulty';
 import Card from '../models/card';
 import Player from '../models/player';
@@ -32,15 +33,24 @@ export default class GameState {
   private listeners: Array<ListenerFunction>;
   private isDispatching: boolean;
   private interval: number;
+  private botController: BotController;
 
   constructor(options: Options) {
     this.isDispatching = false;
     this.listeners = [];
+    this.botController = new BotController();
 
     this.validateOptions(options);
     this.initializeGame(options);
     this.registerListeners();
+    this.configureBotController();
     this.startPlayerHeartBeats();
+  }
+
+  private configureBotController() {
+    this.botController.onBotPlaying = (userId: string, action: Action) => {
+      this.dispatchForPlayer(userId, action);
+    };
   }
 
   public getState(): State {
@@ -64,7 +74,16 @@ export default class GameState {
       listener(this.getState(), this.dispatch.bind(this));
     }
 
+    this.playBotIfNeeded();
+
     return this.state;
+  }
+
+  private playBotIfNeeded() {
+    const player = this.state.players[this.state.playersTurnIndex];
+    if (player.bot != undefined) {
+      this.botController.playAction(this, player.bot);
+    }
   }
 
   public dispatchForPlayer(id: string, action: Action): State {
@@ -112,7 +131,10 @@ export default class GameState {
     }
 
     for (const player of this.state.players) {
-      if (player.bot == undefined && player.isDisconnected()) {
+      if (Boolean(player.bot)) {
+        continue;
+      }
+      if (player.isDisconnected()) {
         this.dispatch({
           type: ActionType.END_GAME,
           payload: {

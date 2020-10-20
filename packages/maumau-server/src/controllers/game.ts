@@ -2,23 +2,18 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import express, { Request, Response } from 'express';
 
 import { ClientState } from '../game/client-state-adapter';
-import { Action, State } from '../game/reducer';
+import { Action } from '../game/reducer';
 import { actionSchema } from '../game/validation';
-import GameSessionService, { Session } from '../service/game-session';
-
-import BotController from './bot';
+import GameSessionService from '../service/game-session';
 
 export default class GameController {
   public router = express.Router();
   public static basePath: string = '/game';
   private gameSessionService: GameSessionService;
-  private botController: BotController;
 
   constructor(args: { gameSessionService: GameSessionService }) {
     this.gameSessionService = args.gameSessionService;
-    this.botController = new BotController();
     this.initializeRoutes();
-    this.configureBotController();
   }
 
   private initializeRoutes() {
@@ -49,17 +44,6 @@ export default class GameController {
     );
   }
 
-  private configureBotController() {
-    this.botController.onBotPlaying = (sessionId: string, userId: string, action: Action) => {
-      const session = this.gameSessionService.get(sessionId);
-      if (!session) {
-        throw 'Session is undefined?';
-      }
-      const state = session.gameState.dispatchForPlayer(userId, action);
-      this.playBotIfNeeded(state, session);
-    };
-  }
-
   private get = (request: Request<{ id: string }>, response: Response<ClientState | { message: string }>) => {
     const { id } = request.params;
     const session = this.gameSessionService.get(id);
@@ -79,19 +63,11 @@ export default class GameController {
       return response.status(404).send({ message: 'session not found' });
     }
     const userId = request.headers['x-maumau-user-id'] as string;
-    const state = session.gameState.dispatchForPlayer(userId, request.body);
+    session.gameState.dispatchForPlayer(userId, request.body);
     response.status(200).send({ message: 'ok' });
-    this.playBotIfNeeded(state, session);
   };
 
   public getRouter() {
     return this.router;
-  }
-
-  private playBotIfNeeded(state: State, session: Session) {
-    const player = state.players[state.playersTurnIndex];
-    if (player.bot != undefined) {
-      this.botController.playAction(session, player.bot);
-    }
   }
 }

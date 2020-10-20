@@ -1,12 +1,12 @@
 import createBot, { Bot } from '../bot/bots';
 import { ActionType } from '../game/action-type';
+import GameState from '../game/game-state';
 import { Action, State } from '../game/reducer';
 import { BotDifficulty } from '../models/bot-difficulty';
 import Card from '../models/card';
 import Player from '../models/player';
 import { Rank } from '../models/rank';
 import { Suit } from '../models/suit';
-import { Session } from '../service/game-session';
 import random from '../utils/random';
 
 const rankActionMap: Record<Rank, ActionType> = {
@@ -21,10 +21,9 @@ const rankActionMap: Record<Rank, ActionType> = {
 };
 
 export default class BotController {
-  public onBotPlaying: (sessionId: string, userId: string, action: Action) => void;
+  public onBotPlaying: (userId: string, action: Action) => void;
 
-  public playAction(session: Session, difficulty: BotDifficulty): void {
-    const gameState = session.gameState;
+  public playAction(gameState: GameState, difficulty: BotDifficulty): void {
     const state = gameState.getState();
     if (state.gameEnded != undefined) {
       return;
@@ -40,7 +39,7 @@ export default class BotController {
     const delay = random(1000, 4000);
     setTimeout(() => {
       if (action != null) {
-        this.onBotPlaying(session.id, player.id, action);
+        this.onBotPlaying(player.id, action);
       }
     }, delay);
   }
