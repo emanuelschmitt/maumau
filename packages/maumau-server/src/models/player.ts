@@ -6,11 +6,11 @@ const DISCONNECT_THRESHOLD_MS = 10 * 1000;
 export default class Player {
   public id: string;
   public name: string;
-  public bot: BotDifficulty | undefined;
+  public bot?: BotDifficulty;
   public hand: Card[];
   private lastSeen: number;
 
-  constructor(id: string, name: string, bot: BotDifficulty | undefined, hand: Card[] = []) {
+  constructor(id: string, name: string, bot?: BotDifficulty, hand: Card[] = []) {
     this.id = id;
     this.name = name;
     this.bot = bot;

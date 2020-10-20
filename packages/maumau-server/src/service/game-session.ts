@@ -17,7 +17,7 @@ export default class GameSessionService {
     this.sessions = {};
   }
 
-  public add(id: string, players: { id: string; name: string; bot: BotDifficulty | undefined }[]): Session {
+  public add(id: string, players: { id: string; name: string; bot?: BotDifficulty }[]): Session {
     const gameState = new GameState({ players });
     const session: Session = { id, gameState };
 

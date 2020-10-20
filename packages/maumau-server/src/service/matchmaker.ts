@@ -37,7 +37,7 @@ type Pool = {
     joinedAt: number;
     sessionId?: string;
     lastSeen: number;
-    bot: BotDifficulty | undefined;
+    bot?: BotDifficulty;
   };
 };
 export type Status = 'UNJOINED' | 'JOINED' | 'MATCHED';
@@ -46,7 +46,7 @@ export const MATCHMAKER_REPEAT_INTERVAL_MS = 1000;
 const AMOUNT_OF_PLAYERS = 2;
 const CLEANUP_THRESHOLD_MS = 10000;
 
-type onSessionCreateFn = (id: string, players: { id: string; name: string; bot: BotDifficulty | undefined }[]) => void;
+type onSessionCreateFn = (id: string, players: { id: string; name: string; bot?: BotDifficulty }[]) => void;
 
 export default class MatchmakerService {
   private pool: Pool;
@@ -62,14 +62,14 @@ export default class MatchmakerService {
 
   public joinPool({ id, name, playAgainstBot }: { id: string; name: string; playAgainstBot: boolean }): void {
     logger.debug(`Matchmaking: User ${id} joined the pool.`);
-    this.pool[id] = { name, joinedAt: Date.now(), lastSeen: Date.now(), bot: undefined };
+    this.pool[id] = { name, joinedAt: Date.now(), lastSeen: Date.now() };
     if (playAgainstBot) {
       const botId = uuidv4();
       const botName = randomBotName();
       const difficulties = [BotDifficulty.DUMB, BotDifficulty.EASY, BotDifficulty.HARD];
       const difficulty = difficulties[random(0, difficulties.length - 1)];
       logger.debug(`Matchmaking: Bot ${botId} (${difficulty}) joined the pool.`);
-      this.pool[botId] = { name: botName, joinedAt: Date.now(), lastSeen: Date.now(), bot: difficulty };
+      this.pool[botId] = { name: botName, joinedAt: Date.now(), lastSeen: Date.now() };
     }
   }
 
@@ -105,7 +105,7 @@ export default class MatchmakerService {
 
     for (const group of groupsWithLength) {
       const sessionId = uuidv4();
-      const players: { id: string; name: string; bot: BotDifficulty | undefined }[] = [];
+      const players: { id: string; name: string; bot?: BotDifficulty }[] = [];
       for (const [userId, user] of group) {
         this.pool[userId] = { ...user, sessionId };
         players.push({ id: userId, name: user.name, bot: user.bot });
