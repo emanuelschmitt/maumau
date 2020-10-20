@@ -4,8 +4,8 @@ describe('GameSessionService', () => {
   test('should expose functionality to add game sesseions', () => {
     const gameSessionService = new GameSessionService();
     gameSessionService.add('id', [
-      { id: '1', name: 'Johnny', bot: undefined },
-      { id: '2', name: 'Hugh', bot: undefined },
+      { id: '1', name: 'Johnny' },
+      { id: '2', name: 'Hugh' },
     ]);
     expect(gameSessionService.get('id')).toBeDefined();
   });
@@ -13,12 +13,12 @@ describe('GameSessionService', () => {
   test('should overwrite game session on same id', () => {
     const gameSessionService = new GameSessionService();
     const response = gameSessionService.add('id', [
-      { id: '1', name: 'Johnny', bot: undefined },
-      { id: '2', name: 'Hugh', bot: undefined },
+      { id: '1', name: 'Johnny' },
+      { id: '2', name: 'Hugh' },
     ]);
     const response2 = gameSessionService.add('id', [
-      { id: '1', name: 'Johnny', bot: undefined },
-      { id: '2', name: 'Hugh', bot: undefined },
+      { id: '1', name: 'Johnny' },
+      { id: '2', name: 'Hugh' },
     ]);
     expect(response).not.toBe(response2);
   });

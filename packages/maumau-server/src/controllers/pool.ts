@@ -20,6 +20,7 @@ export default class PoolController {
         body: Joi.object({
           id: Joi.string().uuid().required(),
           name: Joi.string().required(),
+          playAgainstBot: Joi.boolean().required(),
         }),
       }),
       this.join,

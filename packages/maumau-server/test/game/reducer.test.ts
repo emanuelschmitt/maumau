@@ -10,8 +10,8 @@ describe('reducer', () => {
   describe('when PLAY_REGULAR_CARD action', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Johnny', bot: undefined },
-        { id: '2', name: 'Hugh', bot: undefined },
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
       ],
     }).getState();
     const cardToPlay = state.players[0].hand[0];
@@ -36,8 +36,8 @@ describe('reducer', () => {
   describe('when ACCEPT_PENDING_SEVENS action with 2 players', () => {
     let state = new GameState({
       players: [
-        { id: '1', name: 'Johnny', bot: undefined },
-        { id: '2', name: 'Hugh', bot: undefined },
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
       ],
     }).getState();
     const cardsCount = state.players[1].hand.length;
@@ -66,10 +66,10 @@ describe('reducer', () => {
   describe('when ACCEPT_PENDING_SEVENS action with 4 cards and 4 players', () => {
     let state = new GameState({
       players: [
-        { id: '1', name: 'Johnny', bot: undefined },
-        { id: '2', name: 'Hugh', bot: undefined },
-        { id: '3', name: 'Marc', bot: undefined },
-        { id: '4', name: 'John', bot: undefined },
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
+        { id: '3', name: 'Marc' },
+        { id: '4', name: 'John' },
       ],
     }).getState();
 
@@ -111,8 +111,8 @@ describe('reducer', () => {
   describe('when PLAY_REGULAR_CARD with last card', () => {
     let state = new GameState({
       players: [
-        { id: '1', name: 'Johnny', bot: undefined },
-        { id: '2', name: 'Hugh', bot: undefined },
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
       ],
     }).getState();
 
@@ -128,8 +128,8 @@ describe('reducer', () => {
   describe('when PLAY_EIGHT as last card and two players', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Johnny', bot: undefined },
-        { id: '2', name: 'Hugh', bot: undefined },
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
       ],
     });
     const card = new Card(Suit.CLUBS, Rank.EIGHT);

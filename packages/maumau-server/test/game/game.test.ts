@@ -7,8 +7,8 @@ describe('game', () => {
   test('initalize should give players 7 cards', () => {
     const gameState = new GameState({
       players: [
-        { id: '1', name: 'Johnny', bot: undefined },
-        { id: '2', name: 'Hugh', bot: undefined },
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
       ],
     });
     for (const player of gameState.getState().players) {
@@ -19,8 +19,8 @@ describe('game', () => {
   test('card stack should have 32 cards', () => {
     const gameState = new GameState({
       players: [
-        { id: '1', name: 'Johnny', bot: undefined },
-        { id: '2', name: 'Hugh', bot: undefined },
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
       ],
     });
     // @ts-ignore
@@ -31,25 +31,25 @@ describe('game', () => {
   test('initalize should have remaining cards in stack after cards are dealt', () => {
     let gameState = new GameState({
       players: [
-        { id: '1', name: 'Johnny', bot: undefined },
-        { id: '2', name: 'Hugh', bot: undefined },
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
       ],
     });
     expect(gameState.getState().stack).toHaveLength(18);
     gameState = new GameState({
       players: [
-        { id: '1', name: 'Johnny', bot: undefined },
-        { id: '2', name: 'Hugh', bot: undefined },
-        { id: '3', name: 'Depp', bot: undefined },
+        { id: '1', name: 'Johnny' },
+        { id: '2', name: 'Hugh' },
+        { id: '3', name: 'Depp' },
       ],
     });
     expect(gameState.getState().stack).toHaveLength(11);
     gameState = new GameState({
       players: [
-        { id: '1', name: 'Hugh', bot: undefined },
-        { id: '2', name: 'Hughy', bot: undefined },
-        { id: '3', name: 'Isa', bot: undefined },
-        { id: '4', name: 'Malte', bot: undefined },
+        { id: '1', name: 'Hugh' },
+        { id: '2', name: 'Hughy' },
+        { id: '3', name: 'Isa' },
+        { id: '4', name: 'Malte' },
       ],
     });
     expect(gameState.getState().stack).toHaveLength(8);
@@ -59,15 +59,15 @@ describe('game', () => {
     expect(
       () =>
         new GameState({
-          players: [{ id: '1', name: 'Hugh', bot: undefined }],
+          players: [{ id: '1', name: 'Hugh' }],
         }),
     ).toThrow();
     expect(
       () =>
         new GameState({
           players: [
-            { id: '1', name: 'Hugh', bot: undefined },
-            { id: '2', name: 'Hughy', bot: undefined },
+            { id: '1', name: 'Hugh' },
+            { id: '2', name: 'Hughy' },
           ],
         }),
     ).not.toThrow();
@@ -75,9 +75,9 @@ describe('game', () => {
       () =>
         new GameState({
           players: [
-            { id: '1', name: 'Hugh', bot: undefined },
-            { id: '2', name: 'Hughy', bot: undefined },
-            { id: '3', name: 'Isa', bot: undefined },
+            { id: '1', name: 'Hugh' },
+            { id: '2', name: 'Hughy' },
+            { id: '3', name: 'Isa' },
           ],
         }),
     ).not.toThrow();
@@ -85,10 +85,10 @@ describe('game', () => {
       () =>
         new GameState({
           players: [
-            { id: '1', name: 'Hugh', bot: undefined },
-            { id: '2', name: 'Hughy', bot: undefined },
-            { id: '3', name: 'Isa', bot: undefined },
-            { id: '4', name: 'Malte', bot: undefined },
+            { id: '1', name: 'Hugh' },
+            { id: '2', name: 'Hughy' },
+            { id: '3', name: 'Isa' },
+            { id: '4', name: 'Malte' },
           ],
         }),
     ).not.toThrow();
@@ -96,11 +96,11 @@ describe('game', () => {
       () =>
         new GameState({
           players: [
-            { id: '1', name: 'Hugh', bot: undefined },
-            { id: '2', name: 'Hughy', bot: undefined },
-            { id: '3', name: 'Isa', bot: undefined },
-            { id: '4', name: 'Malte', bot: undefined },
-            { id: '5', name: 'Emma', bot: undefined },
+            { id: '1', name: 'Hugh' },
+            { id: '2', name: 'Hughy' },
+            { id: '3', name: 'Isa' },
+            { id: '4', name: 'Malte' },
+            { id: '5', name: 'Emma' },
           ],
         }),
     ).toThrow();
@@ -109,8 +109,8 @@ describe('game', () => {
   test('should end game based on when player plays his last card', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh', bot: undefined },
-        { id: '2', name: 'Hughy', bot: undefined },
+        { id: '1', name: 'Hugh' },
+        { id: '2', name: 'Hughy' },
       ],
     });
     const card = new Card(Suit.CLUBS, Rank.NINE);
@@ -135,8 +135,8 @@ describe('game', () => {
   test('should auto perform KANNET if player has no other option', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh', bot: undefined },
-        { id: '2', name: 'Hughy', bot: undefined },
+        { id: '1', name: 'Hugh' },
+        { id: '2', name: 'Hughy' },
       ],
     });
 
@@ -163,8 +163,8 @@ describe('game', () => {
   test('should auto perform KANNET if player has no other option', () => {
     const state = new GameState({
       players: [
-        { id: '1', name: 'Hugh', bot: undefined },
-        { id: '2', name: 'Hughy', bot: undefined },
+        { id: '1', name: 'Hugh' },
+        { id: '2', name: 'Hughy' },
       ],
     });
 
