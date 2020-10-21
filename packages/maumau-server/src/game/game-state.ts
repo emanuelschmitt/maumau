@@ -140,6 +140,7 @@ export default class GameState {
       if (Boolean(player.bot)) {
         continue;
       }
+
       if (player.isDisconnected()) {
         this.dispatch({
           type: ActionType.END_GAME,

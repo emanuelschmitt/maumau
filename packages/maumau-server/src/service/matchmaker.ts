@@ -63,13 +63,14 @@ export default class MatchmakerService {
   public joinPool({ id, name, playAgainstBot }: { id: string; name: string; playAgainstBot: boolean }): void {
     logger.debug(`Matchmaking: User ${id} joined the pool.`);
     this.pool[id] = { name, joinedAt: Date.now(), lastSeen: Date.now() };
+
     if (playAgainstBot) {
       const botId = uuidv4();
       const botName = randomBotName();
       const difficulties = [BotDifficulty.DUMB, BotDifficulty.EASY, BotDifficulty.HARD];
       const difficulty = difficulties[random(0, difficulties.length - 1)];
       logger.debug(`Matchmaking: Bot ${botId} (${difficulty}) joined the pool.`);
-      this.pool[botId] = { name: botName, joinedAt: Date.now(), lastSeen: Date.now() };
+      this.pool[botId] = { name: botName, joinedAt: Date.now(), lastSeen: Date.now(), bot: difficulty };
     }
   }
 
