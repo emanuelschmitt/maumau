@@ -46,17 +46,8 @@ export default class GameState {
 
     this.validateOptions(options);
     this.initializeGame(options);
-    this.initializeBotController();
     this.registerListeners();
     this.startPlayerHeartBeats();
-  }
-
-  private initializeBotController() {
-    this.botController = new BotController({
-      onBotPlaying: (userId: string, action: Action) => {
-        this.dispatchForPlayer(userId, action);
-      },
-    });
   }
 
   public getState(): State {
