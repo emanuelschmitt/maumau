@@ -38,7 +38,7 @@ export default class BotController {
 
     const delay = random(1000, 4000);
     setTimeout(() => {
-      if (Boolean(action)) {
+      if (action != null) {
         this.onBotPlaying(player.id, action);
       }
     }, delay);
