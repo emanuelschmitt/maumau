@@ -8,7 +8,7 @@ import { Bot } from './bots';
 export default class EasyBot implements Bot {
   public chooseActionType(actionTypes: ActionType[]): ActionType {
     const nonKannetAction = actionTypes.filter((type) => {
-      return type != ActionType.KANNET_AND_DRAW && type != ActionType.KANNET;
+      return type !== ActionType.KANNET_AND_DRAW && type !== ActionType.KANNET;
     });
     let filteredActionTypes: ActionType[];
     if (nonKannetAction.length > 0) {

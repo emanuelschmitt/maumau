@@ -25,7 +25,7 @@ export default class BotController {
 
   public playAction(gameState: GameState, difficulty: BotDifficulty): void {
     const state = gameState.getState();
-    if (state.gameEnded != undefined) {
+    if (Boolean(state.gameEnded)) {
       return;
     }
     const player = state.players[state.playersTurnIndex];
@@ -38,7 +38,7 @@ export default class BotController {
 
     const delay = random(1000, 4000);
     setTimeout(() => {
-      if (action != null) {
+      if (Boolean(action)) {
         this.onBotPlaying(player.id, action);
       }
     }, delay);
