@@ -87,7 +87,7 @@ export default class GameState {
 
   private playBotIfNeeded() {
     const player = this.state.players[this.state.playersTurnIndex];
-    if (player.bot != undefined) {
+    if (player.bot) {
       this.botController.playAction(this, player.bot);
     }
   }

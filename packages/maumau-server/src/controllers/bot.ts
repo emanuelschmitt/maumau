@@ -44,7 +44,7 @@ export default class BotController {
 
     const delay = random(1000, 4000);
     setTimeout(() => {
-      if (action != null) {
+      if (action) {
         this.onBotPlaying(player.id, action);
       }
     }, delay);
@@ -76,17 +76,17 @@ export default class BotController {
     const topCard = state.stack[0];
     const possibleCards = player.hand
       .filter((card) => {
-        return rankActionMap[card.rank] == actionType;
+        return rankActionMap[card.rank] === actionType;
       })
       .filter((card) => {
-        if (state.nextSuit != null) {
-          return card.suit == state.nextSuit || card.isJack;
+        if (state.nextSuit !== null) {
+          return card.suit === state.nextSuit || card.isJack;
         } else {
           return true;
         }
       })
       .filter((card) => {
-        return card.suit == topCard.suit || card.rank == topCard.rank || card.isJack;
+        return card.suit === topCard.suit || card.rank === topCard.rank || card.isJack;
       });
     const card = bot.chooseCard(possibleCards, state, actionType);
     return this.actionPayload(actionType, card);

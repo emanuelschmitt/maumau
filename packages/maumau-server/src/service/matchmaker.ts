@@ -118,7 +118,7 @@ export default class MatchmakerService {
 
   private unjoinNonBotPlayersIfTimedOut() {
     for (const [id, user] of Object.entries(this.pool)) {
-      if (user.bot != undefined) {
+      if (user.bot) {
         continue;
       }
       const isTimedOut = Date.now() - user.lastSeen >= CLEANUP_THRESHOLD_MS;
