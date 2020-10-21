@@ -20,8 +20,14 @@ const rankActionMap: Record<Rank, ActionType> = {
   [Rank.TEN]: ActionType.PLAY_REGULAR_CARD,
 };
 
+type OnBotPlayingFn = (userId: string, action: Action) => void;
+
 export default class BotController {
-  public onBotPlaying: (userId: string, action: Action) => void;
+  private onBotPlaying: OnBotPlayingFn;
+
+  constructor(options: { onBotPlaying: OnBotPlayingFn }) {
+    this.onBotPlaying = options.onBotPlaying;
+  }
 
   public playAction(gameState: GameState, difficulty: BotDifficulty): void {
     const state = gameState.getState();

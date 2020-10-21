@@ -38,19 +38,25 @@ export default class GameState {
   constructor(options: Options) {
     this.isDispatching = false;
     this.listeners = [];
-    this.botController = new BotController();
+    this.botController = new BotController({
+      onBotPlaying: (userId: string, action: Action) => {
+        this.dispatchForPlayer(userId, action);
+      },
+    });
 
     this.validateOptions(options);
     this.initializeGame(options);
+    this.initializeBotController();
     this.registerListeners();
-    this.configureBotController();
     this.startPlayerHeartBeats();
   }
 
-  private configureBotController() {
-    this.botController.onBotPlaying = (userId: string, action: Action) => {
-      this.dispatchForPlayer(userId, action);
-    };
+  private initializeBotController() {
+    this.botController = new BotController({
+      onBotPlaying: (userId: string, action: Action) => {
+        this.dispatchForPlayer(userId, action);
+      },
+    });
   }
 
   public getState(): State {
