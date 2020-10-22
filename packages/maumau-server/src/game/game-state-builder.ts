@@ -32,7 +32,7 @@ export default class GameStateBuilder {
   withPlayers(input: Pick<Player, 'id' | 'name'>[]): GameStateBuilder {
     const players: Player[] = [];
     for (const { id, name } of input) {
-      players.push(new Player({ id, name, isBot: false }));
+      players.push(new Player(id, name));
     }
     this.gameState = { ...this.gameState, players };
     return this;

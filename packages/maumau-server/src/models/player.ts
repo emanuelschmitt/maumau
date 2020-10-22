@@ -6,14 +6,12 @@ export default class Player {
   public id: string;
   public name: string;
   public hand: Card[];
-  public isBot: boolean;
   private lastSeen: number;
 
-  constructor({ id, name, hand = [], isBot = false }: { id: string; name: string; hand?: Card[]; isBot: boolean }) {
+  constructor(id: string, name: string, hand: Card[] = []) {
     this.id = id;
     this.name = name;
     this.hand = hand;
-    this.isBot = isBot;
     this.lastSeen = Date.now();
   }
 

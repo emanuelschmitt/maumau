@@ -23,9 +23,14 @@ describe('game', () => {
         { id: '2', name: 'Hugh' },
       ],
     });
-    // @ts-ignore
-    const allCards = gameState.initalizeCardStack();
-    expect(allCards).toHaveLength(32);
+
+    let playerHandCount = 0;
+    for (const p of gameState.getState().players) {
+      playerHandCount += p.hand.length;
+    }
+
+    const totalCards = playerHandCount + gameState.getState().stack.length;
+    expect(totalCards).toBe(32);
   });
 
   test('initalize should have remaining cards in stack after cards are dealt', () => {
