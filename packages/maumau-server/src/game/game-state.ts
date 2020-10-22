@@ -1,35 +1,34 @@
-import { logger } from '../server/logger';
-
-import { ActionType } from './action-type';
 import { getClientStateForPlayerId } from './client-state-adapter';
 import GameStateBuilder from './game-state-builder';
 import { autoAcceptSevens } from './listeners/auto-accept-seven';
 import { autoEndGame } from './listeners/auto-end-game';
 import { autoKannet } from './listeners/auto-kannet';
-import { reducer, State, Action, GameEndReason } from './reducer';
+import PlayerConnectionManager from './player-connection-manager';
+import { reducer, State, Action } from './reducer';
 import { getActionTypesForPlayer } from './rules';
 
 type Options = {
   players: { id: string; name: string }[];
 };
 
-type Dispatch = (action: Action) => State;
+export type Dispatch = (action: Action) => State;
 export type ListenerFunction = (state: State, dispatch: Dispatch) => void;
 
 export default class GameState {
   private state: State;
   private listeners: Array<ListenerFunction>;
   private isDispatching: boolean;
-  private interval: number;
+  private playerConnectionManager: PlayerConnectionManager;
 
   constructor(options: Options) {
     this.isDispatching = false;
     this.listeners = [];
 
-    this.validateOptions(options);
-    this.initializeGame(options);
+    this.state = new GameStateBuilder().withPlayers(options.players).withCardStack().withDealtCards().build();
+    this.playerConnectionManager = new PlayerConnectionManager(this.state, this.dispatch.bind(this));
+
     this.registerListeners();
-    this.startPlayerHeartBeats();
+    this.playerConnectionManager.start();
   }
 
   public getState(): State {
@@ -85,45 +84,6 @@ export default class GameState {
   public registerListeners() {
     const listeners: ListenerFunction[] = [autoEndGame, autoKannet, autoAcceptSevens];
     this.listeners.push(...listeners);
-  }
-
-  public startPlayerHeartBeats() {
-    this.interval = setInterval(this.checkForDisconnectedPlayer.bind(this), 1000);
-  }
-
-  public stopPlayerHeartBeats() {
-    clearInterval(this.interval);
-  }
-
-  public checkForDisconnectedPlayer() {
-    if (this.state.gameEnded) {
-      this.stopPlayerHeartBeats();
-    }
-
-    for (const player of this.state.players) {
-      if (player.isDisconnected()) {
-        this.dispatch({
-          type: ActionType.END_GAME,
-          payload: {
-            type: GameEndReason.DISCONNECT,
-            id: player.id,
-          },
-        });
-        logger.debug(`Game ended because player ${player.id} disconnected.`);
-        this.stopPlayerHeartBeats();
-        break;
-      }
-    }
-  }
-
-  private validateOptions({ players }: Options): void {
-    if (players.length < 2 || players.length > 4) {
-      throw new Error('Cannot initialize game with ' + players.length + ' players. Only 2-4 players allowed.');
-    }
-  }
-
-  private initializeGame(options: Options): void {
-    this.state = new GameStateBuilder().withPlayers(options.players).withCardStack().withDealtCards().build();
   }
 
   /**

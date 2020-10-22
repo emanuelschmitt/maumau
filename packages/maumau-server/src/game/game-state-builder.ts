@@ -30,6 +30,10 @@ export default class GameStateBuilder {
   }
 
   withPlayers(input: Pick<Player, 'id' | 'name'>[]): GameStateBuilder {
+    if (input.length < 2 || input.length > 4) {
+      throw new Error('Cannot initialize game with ' + input.length + ' players. Only 2-4 players allowed.');
+    }
+
     const players: Player[] = [];
     for (const { id, name } of input) {
       players.push(new Player(id, name));
