@@ -1,4 +1,4 @@
-import GameState from '../game/game-state';
+import GameState, { GameStateOptions } from '../game/game-state';
 
 export type Session = {
   gameState: GameState;
@@ -15,8 +15,8 @@ export default class GameSessionService {
     this.sessions = {};
   }
 
-  public add(id: string, players: { id: string; name: string }[]): Session {
-    const gameState = new GameState({ players });
+  public add(id: string, options: GameStateOptions): Session {
+    const gameState = new GameState(options);
     const session: Session = { gameState };
 
     this.sessions[id] = session;
