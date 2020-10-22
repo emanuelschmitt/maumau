@@ -28,7 +28,7 @@ beforeEach(() => {
 
 describe('PoolController', () => {
   describe('PUT /pool/join', () => {
-    test('200 should join pool with paylaod', async () => {
+    test('200 should join pool with paylaod', async (done) => {
       const app = setUpServer((app) => {
         app.use(
           PoolController.basePath,
@@ -43,9 +43,11 @@ describe('PoolController', () => {
 
       expect(res.status).toBe(200);
       verify(services.matchmakerServiceMock.joinPool(deepEqual(payload))).once();
+
+      done();
     });
 
-    test('400 should fail on invalid paylaod', async () => {
+    test('400 should fail on invalid paylaod', async (done) => {
       const app = setUpServer((app) => {
         app.use(
           PoolController.basePath,
@@ -60,11 +62,13 @@ describe('PoolController', () => {
 
       expect(res.status).toBe(400);
       verify(services.matchmakerServiceMock.joinPool(deepEqual(payload))).never();
+
+      done();
     });
   });
 
   describe('PUT /pool/leave', () => {
-    test('200 should lave pool with id', async () => {
+    test('200 should lave pool with id', async (done) => {
       const app = setUpServer((app) => {
         app.use(
           PoolController.basePath,
@@ -79,11 +83,13 @@ describe('PoolController', () => {
 
       expect(res.status).toBe(200);
       verify(services.matchmakerServiceMock.leavePool(deepEqual(payload))).once();
+
+      done();
     });
   });
 
   describe('PUT /pool/status/:id', () => {
-    test('200 should return player status', async () => {
+    test('200 should return player status', async (done) => {
       const app = setUpServer((app) => {
         app.use(
           PoolController.basePath,
@@ -102,6 +108,8 @@ describe('PoolController', () => {
       const res = await request(app).get(`/pool/status/${payload.id}`);
       expect(res.status).toBe(200);
       verify(services.matchmakerServiceMock.getStatusByUserId(payload.id)).once();
+
+      done();
     });
   });
 });

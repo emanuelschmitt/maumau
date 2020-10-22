@@ -7,7 +7,9 @@ import PlayerConnectionManager from './player-connection-manager';
 import { reducer, State, Action } from './reducer';
 import { getActionTypesForPlayer } from './rules';
 
-type Options = {
+const isTest = process.env.NODE_ENV === 'test';
+
+export type GameStateOptions = {
   players: { id: string; name: string }[];
 };
 
@@ -20,15 +22,18 @@ export default class GameState {
   private isDispatching: boolean;
   private playerConnectionManager: PlayerConnectionManager;
 
-  constructor(options: Options) {
+  constructor({ players }: GameStateOptions) {
     this.isDispatching = false;
     this.listeners = [];
 
-    this.state = new GameStateBuilder().withPlayers(options.players).withCardStack().withDealtCards().build();
+    this.state = new GameStateBuilder().withPlayers(players).withCardStack().withDealtCards().build();
     this.playerConnectionManager = new PlayerConnectionManager(this.state, this.dispatch.bind(this));
 
     this.registerListeners();
-    this.playerConnectionManager.start();
+
+    if (!isTest) {
+      this.playerConnectionManager.start();
+    }
   }
 
   public getState(): State {

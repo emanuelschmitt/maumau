@@ -28,18 +28,21 @@ export default class PlayerConnectionManager {
     }
 
     for (const player of this.state.players) {
-      if (player.isDisconnected()) {
-        this.dispatch({
-          type: ActionType.END_GAME,
-          payload: {
-            id: player.id,
-            type: GameEndReason.DISCONNECT,
-          },
-        });
-        logger.debug(`Game ended because player ${player.id} disconnected.`);
-        this.stop();
-        break;
+      if (!player.isDisconnected()) {
+        continue;
       }
+
+      this.dispatch({
+        type: ActionType.END_GAME,
+        payload: {
+          id: player.id,
+          type: GameEndReason.DISCONNECT,
+        },
+      });
+
+      logger.debug(`Game ended because player ${player.id} disconnected.`);
+      this.stop();
+      break;
     }
   }
 }
