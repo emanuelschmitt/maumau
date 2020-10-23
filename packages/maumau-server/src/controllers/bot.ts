@@ -2,6 +2,7 @@ import createBot, { Bot } from '../bot/bots';
 import { ActionType } from '../game/action-type';
 import GameState from '../game/game-state';
 import { Action, State } from '../game/reducer';
+import { getActionTypesForPlayer } from '../game/rules';
 import { BotDifficulty } from '../models/bot-difficulty';
 import Card from '../models/card';
 import Player from '../models/player';
@@ -34,15 +35,15 @@ export default class BotController {
     if (Boolean(state.gameEnded)) {
       return;
     }
+
     const player = state.players[state.playersTurnIndex];
-    const clientState = gameState.getClientStateForPlayer(player.id);
-    const actionTypes = clientState.player.possibleActions;
+    const possibleActionTypes = getActionTypesForPlayer(player.id, state);
 
     const bot = createBot(difficulty);
-    const actionType = bot.chooseActionType(actionTypes, state);
-    const action = this.action(player, state, actionType, bot);
+    const actionType = bot.chooseActionType(possibleActionTypes, state);
+    const action = this.createAction(player, state, actionType, bot);
 
-    const delay = random(1000, 4000);
+    const delay = random(1000, 1500);
     setTimeout(() => {
       if (action) {
         this.onBotPlaying(player.id, action);
@@ -50,14 +51,14 @@ export default class BotController {
     }, delay);
   }
 
-  private action(player: Player, state: State, actionType: ActionType, bot: Bot): Action | undefined {
+  private createAction(player: Player, state: State, actionType: ActionType, bot: Bot): Action | undefined {
     let action: Action | undefined;
     switch (actionType) {
       case ActionType.PLAY_EIGHT:
       case ActionType.PLAY_REGULAR_CARD:
       case ActionType.PLAY_SEVEN:
       case ActionType.PLAY_JACK:
-        action = this.playCardAction(player, state, actionType, bot);
+        action = this.getRegularCardAction(player, state, actionType, bot);
         break;
       case ActionType.KANNET:
         action = { type: ActionType.KANNET };
@@ -72,15 +73,16 @@ export default class BotController {
     return action;
   }
 
-  private playCardAction(player: Player, state: State, actionType: ActionType, bot: Bot): Action {
+  private getRegularCardAction(player: Player, state: State, actionType: ActionType, bot: Bot): Action {
     const topCard = state.stack[0];
     const possibleCards = player.hand
       .filter((card) => {
         return rankActionMap[card.rank] === actionType;
       })
       .filter((card) => {
+        // Does next suit exist, then match or is joker
         if (state.nextSuit !== null) {
-          return card.suit === state.nextSuit || card.isJack;
+          return card.suit === state.nextSuit || card.isJack();
         } else {
           return true;
         }
@@ -88,11 +90,12 @@ export default class BotController {
       .filter((card) => {
         return card.suit === topCard.suit || card.rank === topCard.rank || card.isJack;
       });
+
     const card = bot.chooseCard(possibleCards, state, actionType);
-    return this.actionPayload(actionType, card);
+    return this.getRegularActionWithPayload(actionType, card);
   }
 
-  private actionPayload(actionType: ActionType, card: Card): Action {
+  private getRegularActionWithPayload(actionType: ActionType, card: Card): Action {
     let payload: any = null;
     switch (actionType) {
       case ActionType.PLAY_REGULAR_CARD:

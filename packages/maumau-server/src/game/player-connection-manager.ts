@@ -28,6 +28,10 @@ export default class PlayerConnectionManager {
     }
 
     for (const player of this.state.players) {
+      if (player.bot) {
+        continue;
+      }
+
       if (!player.isDisconnected()) {
         continue;
       }

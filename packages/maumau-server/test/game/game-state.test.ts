@@ -12,7 +12,7 @@ describe('GameState', () => {
       ],
     });
     const card = new Card(Suit.CLUBS, Rank.NINE);
-    const player = new Player('1', 'John', [card]);
+    const player = new Player('1', 'John', undefined, [card]);
 
     state.setPartialState({
       players: [player],
@@ -44,7 +44,7 @@ describe('GameState', () => {
     const spadesTen = new Card(Suit.SPADES, Rank.TEN);
     const diamondQueen = new Card(Suit.DIAMONDS, Rank.QUEEN);
 
-    const player = new Player('1', 'John', [diamondQueen]);
+    const player = new Player('1', 'John', undefined, [diamondQueen]);
 
     state.setPartialState({
       players: [player, player],
@@ -74,8 +74,8 @@ describe('GameState', () => {
     const spadesTen = new Card(Suit.SPADES, Rank.TEN);
     const diamondQueen = new Card(Suit.DIAMONDS, Rank.QUEEN);
 
-    const player1 = new Player('1', 'John', [diamondQueen, clubsSeven]);
-    const player2 = new Player('2', 'John', [spadesTen]);
+    const player1 = new Player('1', 'John', undefined, [diamondQueen, clubsSeven]);
+    const player2 = new Player('2', 'John', undefined, [spadesTen]);
 
     state.setPartialState({
       players: [player1, player2],
