@@ -1,53 +1,48 @@
 import BotController from '../controllers/bot';
 import { BotDifficulty } from '../models/bot-difficulty';
-import Card from '../models/card';
-import Player from '../models/player';
-import { allRanks } from '../models/rank';
-import { allSuits } from '../models/suit';
-import { logger } from '../server/logger';
-import shuffle from '../utils/shuffle';
 
-import { ActionType } from './action-type';
 import { getClientStateForPlayerId } from './client-state-adapter';
+import GameStateBuilder from './game-state-builder';
 import { autoAcceptSevens } from './listeners/auto-accept-seven';
 import { autoEndGame } from './listeners/auto-end-game';
 import { autoKannet } from './listeners/auto-kannet';
-import { reducer, State, Action, GameEndReason } from './reducer';
+import PlayerConnectionManager from './player-connection-manager';
+import { reducer, State, Action } from './reducer';
 import { getActionTypesForPlayer } from './rules';
 
-const AMOUNT_OF_CARD_PER_PLAYER: Record<number, number> = {
-  2: 7,
-  3: 7,
-  4: 6,
-};
+const isTest = process.env.NODE_ENV === 'test';
 
-type Options = {
+export type GameStateOptions = {
   players: { id: string; name: string; bot?: BotDifficulty }[];
 };
 
-type Dispatch = (action: Action) => State;
+export type Dispatch = (action: Action) => State;
 export type ListenerFunction = (state: State, dispatch: Dispatch) => void;
 
 export default class GameState {
   private state: State;
   private listeners: Array<ListenerFunction>;
   private isDispatching: boolean;
-  private interval: number;
   private botController: BotController;
+  private playerConnectionManager: PlayerConnectionManager;
 
-  constructor(options: Options) {
+  constructor({ players }: GameStateOptions) {
     this.isDispatching = false;
     this.listeners = [];
+
+    this.state = new GameStateBuilder().withPlayers(players).withCardStack().withDealtCards().build();
+    this.playerConnectionManager = new PlayerConnectionManager(this.state, this.dispatch.bind(this));
     this.botController = new BotController({
       onBotPlaying: (userId: string, action: Action) => {
         this.dispatchForPlayer(userId, action);
       },
     });
 
-    this.validateOptions(options);
-    this.initializeGame(options);
     this.registerListeners();
-    this.startPlayerHeartBeats();
+
+    if (!isTest) {
+      this.playerConnectionManager.start();
+    }
   }
 
   public getState(): State {
@@ -63,6 +58,7 @@ export default class GameState {
     try {
       this.isDispatching = true;
       this.state = reducer(this.state, action);
+      console.log(this.state);
     } finally {
       this.isDispatching = false;
     }
@@ -112,96 +108,6 @@ export default class GameState {
   public registerListeners() {
     const listeners: ListenerFunction[] = [autoEndGame, autoKannet, autoAcceptSevens];
     this.listeners.push(...listeners);
-  }
-
-  public startPlayerHeartBeats() {
-    this.interval = setInterval(this.checkForDisconnectedPlayer.bind(this), 1000);
-  }
-
-  public stopPlayerHeartBeats() {
-    clearInterval(this.interval);
-  }
-
-  public checkForDisconnectedPlayer() {
-    if (this.state.gameEnded) {
-      this.stopPlayerHeartBeats();
-    }
-
-    for (const player of this.state.players) {
-      if (Boolean(player.bot)) {
-        continue;
-      }
-
-      if (player.isDisconnected()) {
-        this.dispatch({
-          type: ActionType.END_GAME,
-          payload: {
-            type: GameEndReason.DISCONNECT,
-            id: player.id,
-          },
-        });
-        logger.debug(`Game ended because player ${player.name} disconnected.`);
-        this.stopPlayerHeartBeats();
-        break;
-      }
-    }
-  }
-
-  private validateOptions({ players }: Options): void {
-    if (players.length < 2 || players.length > 4) {
-      throw new Error('Cannot initialize game with ' + players.length + ' players. Only 2-4 players allowed.');
-    }
-  }
-
-  private initializeGame(options: Options): void {
-    const players = this.initializePlayers(options.players);
-    const cards = this.initalizeCardStack();
-
-    shuffle(cards);
-    this.dealCards(players, cards);
-
-    this.state = {
-      stack: cards,
-      players,
-      hasDrawnCard: false,
-      nextSuit: null,
-      pendingSevens: null,
-      playersTurnIndex: 0,
-      gameEnded: null,
-    };
-  }
-
-  private initializePlayers(options: { id: string; name: string; bot?: BotDifficulty }[]): Player[] {
-    const players: Player[] = [];
-    for (const { id, name, bot } of options) {
-      players.push(new Player(id, name, bot));
-    }
-    return players;
-  }
-
-  private initalizeCardStack(): Card[] {
-    const stack: Card[] = [];
-    for (const suit of allSuits) {
-      for (const rank of allRanks) {
-        stack.push(new Card(suit, rank));
-      }
-    }
-    return stack;
-  }
-
-  private dealCards(players: Player[], cardStack: Card[]) {
-    const numberOfCards = AMOUNT_OF_CARD_PER_PLAYER[players.length];
-    if (!numberOfCards) {
-      throw new Error('amount of cards per player undefined.');
-    }
-    for (let i = 0; i < numberOfCards; i++) {
-      for (const player of players) {
-        const card = cardStack.pop();
-        if (card) {
-          player.giveCard(card);
-        }
-      }
-    }
   }
 
   /**

@@ -27,7 +27,7 @@ beforeEach(() => {
 
 describe('PoolController', () => {
   describe('GET /game/:id', () => {
-    test('200 should return client state of game', async () => {
+    test('200 should return client state of game', async (done) => {
       const app = setUpServer((app) => {
         app.use(
           GameController.basePath,
@@ -47,9 +47,11 @@ describe('PoolController', () => {
 
       expect(res.status).toBe(200);
       verify(services.gameSessionServiceMock.get(deepEqual(gameId))).once();
+
+      done();
     });
 
-    test('should return 400 when user id headers are not set', async () => {
+    test('should return 400 when user id headers are not set', async (done) => {
       const app = setUpServer((app) => {
         app.use(
           GameController.basePath,
@@ -68,9 +70,11 @@ describe('PoolController', () => {
 
       expect(res.status).toBe(400);
       verify(services.gameSessionServiceMock.get(deepEqual(gameId))).never();
+
+      done();
     });
 
-    test('should return 404 when game session is not found', async () => {
+    test('should return 404 when game session is not found', async (done) => {
       const app = setUpServer((app) => {
         app.use(
           GameController.basePath,
@@ -85,6 +89,8 @@ describe('PoolController', () => {
       const res = await request(app).get(`/game/${gameId}`).set('x-maumau-user-id', userId);
       expect(res.status).toBe(404);
       verify(services.gameSessionServiceMock.get(deepEqual(gameId))).once();
+
+      done();
     });
   });
 });

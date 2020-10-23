@@ -27,6 +27,8 @@ describe('matchmaker', () => {
     expect(matchmaker.getStatusByUserId(player1.id).status).toBe('MATCHED');
     expect(matchmaker.getStatusByUserId(player2.id).status).toBe('MATCHED');
     expect(matchmaker.getStatusByUserId(player1.id).status).toBe(matchmaker.getStatusByUserId(player2.id).status);
+
+    matchmaker.stop();
   });
 
   test('should not matchmake when not enough people are available', () => {
@@ -47,6 +49,8 @@ describe('matchmaker', () => {
 
     expect(Object.keys(matchmaker.getPool())).toHaveLength(1);
     expect(matchmaker.getStatusByUserId(player1.id)).toMatchObject({ status: 'JOINED' });
+
+    matchmaker.stop();
   });
 
   test('should matchmake available players to unique sessions', () => {
@@ -73,6 +77,8 @@ describe('matchmaker', () => {
           .filter(Boolean),
       ),
     ]).toHaveLength(6);
+
+    matchmaker.stop();
   });
 
   test('should match sessions in chronolocial order by joinedAt timestamp', () => {
@@ -101,5 +107,7 @@ describe('matchmaker', () => {
     const sorted = timestamps.sort();
 
     expect(timestamps).toBe(sorted);
+
+    matchmaker.stop();
   });
 });
