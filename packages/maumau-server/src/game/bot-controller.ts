@@ -1,13 +1,14 @@
 import { BotDifficulty } from '../bot/bot-difficulty';
 import createBot, { Bot } from '../bot/bots';
-import { ActionType } from '../game/action-type';
-import { Action, State } from '../game/reducer';
-import { getActionTypesForPlayer } from '../game/rules';
 import Card from '../models/card';
 import Player from '../models/player';
 import { Rank } from '../models/rank';
 import { Suit } from '../models/suit';
 import random from '../utils/random';
+
+import { ActionType } from './action-type';
+import { Action, State } from './reducer';
+import { getActionTypesForPlayer } from './rules';
 
 const rankActionMap: Record<Rank, ActionType> = {
   [Rank.EIGHT]: ActionType.PLAY_EIGHT,

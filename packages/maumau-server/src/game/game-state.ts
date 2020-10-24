@@ -1,6 +1,6 @@
 import { BotDifficulty } from '../bot/bot-difficulty';
-import BotController from '../controllers/bot';
 
+import BotController from './bot-controller';
 import { getClientStateForPlayerId } from './client-state-adapter';
 import GameStateBuilder from './game-state-builder';
 import { autoAcceptSevens } from './listeners/auto-accept-seven';
