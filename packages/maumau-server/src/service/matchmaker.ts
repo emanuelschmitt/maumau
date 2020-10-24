@@ -1,7 +1,7 @@
 import chunk from 'lodash.chunk';
 import { v4 as uuidv4 } from 'uuid';
 
-import { BotDifficulty } from '../models/bot-difficulty';
+import { BotDifficulty } from '../bot/bot-difficulty';
 import { logger } from '../server/logger';
 import randomBotName from '../utils/bot-name';
 import random from '../utils/random';

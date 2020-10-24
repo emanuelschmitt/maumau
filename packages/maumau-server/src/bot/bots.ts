@@ -1,6 +1,6 @@
 import { ActionType } from '../game/action-type';
 import { State } from '../game/reducer';
-import { BotDifficulty } from '../models/bot-difficulty';
+import { BotDifficulty } from './bot-difficulty';
 import { Card } from '../types';
 
 import DumbBot from './dumb-bot';

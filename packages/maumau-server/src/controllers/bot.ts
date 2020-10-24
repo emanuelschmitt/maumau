@@ -2,7 +2,7 @@ import createBot, { Bot } from '../bot/bots';
 import { ActionType } from '../game/action-type';
 import { Action, State } from '../game/reducer';
 import { getActionTypesForPlayer } from '../game/rules';
-import { BotDifficulty } from '../models/bot-difficulty';
+import { BotDifficulty } from '../bot/bot-difficulty';
 import Card from '../models/card';
 import Player from '../models/player';
 import { Rank } from '../models/rank';

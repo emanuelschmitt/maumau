@@ -1,5 +1,5 @@
+import { BotDifficulty } from '../bot/bot-difficulty';
 import BotController from '../controllers/bot';
-import { BotDifficulty } from '../models/bot-difficulty';
 
 import { getClientStateForPlayerId } from './client-state-adapter';
 import GameStateBuilder from './game-state-builder';

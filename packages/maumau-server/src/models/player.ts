@@ -1,4 +1,4 @@
-import { BotDifficulty } from './bot-difficulty';
+import { BotDifficulty } from '../bot/bot-difficulty';
 import Card from './card';
 
 const DISCONNECT_THRESHOLD_MS = 10 * 1000;
