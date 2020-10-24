@@ -58,7 +58,6 @@ export default class GameState {
     try {
       this.isDispatching = true;
       this.state = reducer(this.state, action);
-      console.log(this.state);
     } finally {
       this.isDispatching = false;
     }
@@ -75,7 +74,7 @@ export default class GameState {
   private playBotIfNeeded() {
     const player = this.state.players[this.state.playersTurnIndex];
     if (player.bot) {
-      this.botController.playAction(this, player.bot);
+      this.botController.playAction(this.state, player.bot);
     }
   }
 

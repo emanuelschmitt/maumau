@@ -17,7 +17,7 @@ describe('reducer', () => {
     const cardToPlay = state.players[0].hand[0];
     const newState = reducer(state, {
       type: ActionType.PLAY_REGULAR_CARD,
-      payload: cardToPlay,
+      payload: { suit: cardToPlay.suit, rank: cardToPlay.rank },
     });
     test('should remove card from current players hand', () => {
       expect(newState.players[0].hand.includes(cardToPlay)).toBeFalsy();
@@ -26,7 +26,7 @@ describe('reducer', () => {
       expect(newState.playersTurnIndex).toEqual(1);
     });
     test('should append card to stack', () => {
-      expect(newState.stack.includes(cardToPlay)).toBeTruthy();
+      expect(newState.stack.find((c) => c.isEqual(cardToPlay))).toBeTruthy();
     });
     test('should not end game', () => {
       expect(newState.gameEnded).toBeFalsy();

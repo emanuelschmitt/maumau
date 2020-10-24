@@ -58,8 +58,6 @@ export default class GameController {
 
   private send = (request: Request<{ id: string }, Action>, response: Response<{ message: string }>) => {
     const { id } = request.params;
-    const action = request.body;
-
     const session = this.gameSessionService.get(id);
 
     if (!session) {
@@ -67,8 +65,7 @@ export default class GameController {
     }
     const userId = request.headers['x-maumau-user-id'] as string;
 
-    const sanitizedAction = recreateCardInstances(action);
-    session.gameState.dispatchForPlayer(userId, sanitizedAction);
+    session.gameState.dispatchForPlayer(userId, request.body as Action);
     response.status(200).send({ message: 'ok' });
   };
 
@@ -77,16 +74,16 @@ export default class GameController {
   }
 }
 
-function recreateCardInstances(input: { [x: string]: any }): Action {
-  console.log('input..', input);
-  const isCardObject = (input: { [x: string]: any }): input is Card => input.suit && input.rank;
+export function recreateCardInstances<T extends Record<string, any>>(input: T): T {
+  const isCardObject = (input: { [x: string]: any }) => input.suit && input.rank;
+
   for (const [key, value] of Object.entries(input)) {
     if (typeof value === 'object') {
-      recreateCardInstances(value);
+      input[key as keyof T] = recreateCardInstances(value);
     }
     if (isCardObject(value)) {
-      input[key] = new Card(value.suit, value.rank);
+      input[key as keyof T] = new Card(value.suit, value.rank) as any;
     }
   }
-  return input as Action;
+  return input;
 }

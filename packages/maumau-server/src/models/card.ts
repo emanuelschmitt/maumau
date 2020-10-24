@@ -1,6 +1,11 @@
 import { Rank } from './rank';
 import { Suit } from './suit';
 
+export type IncomingCard = {
+  suit: Suit;
+  rank: Rank;
+};
+
 export default class Card {
   constructor(public suit: Suit, public rank: Rank) {}
 
