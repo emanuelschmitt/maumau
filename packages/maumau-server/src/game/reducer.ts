@@ -1,4 +1,4 @@
-import Card from '../models/card';
+import Card, { IncomingCard } from '../models/card';
 import Player from '../models/player';
 import { Suit } from '../models/suit';
 import { logger } from '../server/logger';
@@ -26,10 +26,10 @@ export type State = {
 };
 
 export type Action =
-  | { type: ActionType.PLAY_REGULAR_CARD; payload: Card }
-  | { type: ActionType.PLAY_EIGHT; payload: Card }
-  | { type: ActionType.PLAY_SEVEN; payload: Card }
-  | { type: ActionType.PLAY_JACK; payload: { card: Card; suit: Suit } }
+  | { type: ActionType.PLAY_REGULAR_CARD; payload: IncomingCard }
+  | { type: ActionType.PLAY_EIGHT; payload: IncomingCard }
+  | { type: ActionType.PLAY_SEVEN; payload: IncomingCard }
+  | { type: ActionType.PLAY_JACK; payload: { card: IncomingCard; suit: Suit } }
   | { type: ActionType.KANNET_AND_DRAW }
   | { type: ActionType.KANNET }
   | { type: ActionType.ACCEPT_PENDING_SEVENS }
@@ -43,12 +43,13 @@ export function reducer(state: State, action: Action): State {
   switch (action.type) {
     case ActionType.PLAY_REGULAR_CARD: {
       const player = players[playersTurnIndex];
-      const newHand = player.hand.filter((card) => !card.isEqual(action.payload));
+      const incomingCard = Card.fromObject(action.payload);
+      const newHand = player.hand.filter((card) => !card.isEqual(incomingCard));
       players[playersTurnIndex].hand = newHand;
 
       return {
         players,
-        stack: [...stack, action.payload],
+        stack: [...stack, Card.fromObject(action.payload)],
         playersTurnIndex: (playersTurnIndex + 1) % players.length,
         hasDrawnCard: false,
         nextSuit: null,
@@ -59,13 +60,14 @@ export function reducer(state: State, action: Action): State {
 
     case ActionType.PLAY_EIGHT: {
       const player = players[playersTurnIndex];
-      const newHand = player.hand.filter((card) => !card.isEqual(action.payload));
+      const incomingCard = Card.fromObject(action.payload);
+      const newHand = player.hand.filter((card) => !card.isEqual(incomingCard));
       players[playersTurnIndex].hand = newHand;
 
       return {
         ...state,
         players,
-        stack: [...stack, action.payload],
+        stack: [...stack, incomingCard],
         playersTurnIndex: (playersTurnIndex + 2) % players.length,
         hasDrawnCard: false,
         nextSuit: null,
@@ -75,12 +77,13 @@ export function reducer(state: State, action: Action): State {
 
     case ActionType.PLAY_SEVEN: {
       const player = players[playersTurnIndex];
-      const newHand = player.hand.filter((card) => !card.isEqual(action.payload));
+      const incomingCard = Card.fromObject(action.payload);
+      const newHand = player.hand.filter((card) => !card.isEqual(incomingCard));
       players[playersTurnIndex].hand = newHand;
 
       return {
         players,
-        stack: [...stack, action.payload],
+        stack: [...stack, incomingCard],
         playersTurnIndex: (playersTurnIndex + 1) % players.length,
         pendingSevens: (state?.pendingSevens ?? 0) + 1,
         hasDrawnCard: false,
@@ -91,12 +94,13 @@ export function reducer(state: State, action: Action): State {
 
     case ActionType.PLAY_JACK: {
       const player = players[playersTurnIndex];
-      const newHand = player.hand.filter((card) => !card.isEqual(action.payload.card));
+      const incomingCard = Card.fromObject(action.payload.card);
+      const newHand = player.hand.filter((card) => !card.isEqual(incomingCard));
       players[playersTurnIndex].hand = newHand;
 
       return {
         players,
-        stack: [...stack, action.payload.card],
+        stack: [...stack, incomingCard],
         playersTurnIndex: (playersTurnIndex + 1) % players.length,
         pendingSevens: null,
         hasDrawnCard: false,

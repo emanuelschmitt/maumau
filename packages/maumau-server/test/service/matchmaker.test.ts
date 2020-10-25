@@ -14,8 +14,8 @@ describe('matchmaker', () => {
   test('should matchmake two available players into one shared session', () => {
     const matchmaker = new Matchmaker({ onSessionCreate: () => null });
 
-    const player1 = { name: 'Hannes', id: uuidv4() };
-    const player2 = { name: 'Johnny', id: uuidv4() };
+    const player1 = { name: 'Hannes', id: uuidv4(), playAgainstBot: false };
+    const player2 = { name: 'Johnny', id: uuidv4(), playAgainstBot: false };
 
     matchmaker.joinPool(player1);
     matchmaker.joinPool(player2);
@@ -36,8 +36,8 @@ describe('matchmaker', () => {
 
     expect(Object.keys(matchmaker.getPool())).toHaveLength(0);
 
-    const player1 = { name: 'John', id: uuidv4() };
-    const player2 = { name: 'John 2', id: uuidv4() };
+    const player1 = { name: 'John', id: uuidv4(), playAgainstBot: false };
+    const player2 = { name: 'John 2', id: uuidv4(), playAgainstBot: false };
 
     matchmaker.joinPool(player1);
     matchmaker.joinPool(player2);
@@ -60,7 +60,7 @@ describe('matchmaker', () => {
 
     const players = [];
     for (let i = 0; i < 13; i++) {
-      const player = { name: `Playa ${i}`, id: uuidv4() };
+      const player = { name: `Playa ${i}`, id: uuidv4(), playAgainstBot: false };
       matchmaker.joinPool(player);
       players.push(player);
     }
@@ -88,7 +88,7 @@ describe('matchmaker', () => {
 
     const players = [];
     for (let i = 0; i < 13; i++) {
-      const player = { name: `Playa ${i}`, id: uuidv4() };
+      const player = { name: `Playa ${i}`, id: uuidv4(), playAgainstBot: false };
       matchmaker.joinPool(player);
       players.push(player);
       jest.advanceTimersByTime(1000);

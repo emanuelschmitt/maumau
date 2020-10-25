@@ -1,3 +1,6 @@
+import { BotDifficulty } from '../bot/bot-difficulty';
+
+import BotController from './bot-controller';
 import { getClientStateForPlayerId } from './client-state-adapter';
 import GameStateBuilder from './game-state-builder';
 import { autoAcceptSevens } from './listeners/auto-accept-seven';
@@ -10,7 +13,7 @@ import { getActionTypesForPlayer } from './rules';
 const isTest = process.env.NODE_ENV === 'test';
 
 export type GameStateOptions = {
-  players: { id: string; name: string }[];
+  players: { id: string; name: string; bot?: BotDifficulty }[];
 };
 
 export type Dispatch = (action: Action) => State;
@@ -20,6 +23,7 @@ export default class GameState {
   private state: State;
   private listeners: Array<ListenerFunction>;
   private isDispatching: boolean;
+  private botController: BotController;
   private playerConnectionManager: PlayerConnectionManager;
 
   constructor({ players }: GameStateOptions) {
@@ -28,6 +32,11 @@ export default class GameState {
 
     this.state = new GameStateBuilder().withPlayers(players).withCardStack().withDealtCards().build();
     this.playerConnectionManager = new PlayerConnectionManager(this.state, this.dispatch.bind(this));
+    this.botController = new BotController({
+      onBotPlaying: (userId: string, action: Action) => {
+        this.dispatchForPlayer(userId, action);
+      },
+    });
 
     this.registerListeners();
 
@@ -57,7 +66,16 @@ export default class GameState {
       listener(this.getState(), this.dispatch.bind(this));
     }
 
+    this.playBotIfNeeded();
+
     return this.state;
+  }
+
+  private playBotIfNeeded() {
+    const player = this.state.players[this.state.playersTurnIndex];
+    if (player.bot) {
+      this.botController.playAction(this.state, player.bot);
+    }
   }
 
   public dispatchForPlayer(id: string, action: Action): State {
@@ -70,7 +88,7 @@ export default class GameState {
 
     const possibleActions = getActionTypesForPlayer(id, this.state);
     if (!possibleActions.includes(action.type)) {
-      throw new Error('forbidden action');
+      throw new Error('forbidden action: ' + action.type);
     }
 
     return this.dispatch(action);

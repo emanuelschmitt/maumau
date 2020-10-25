@@ -17,7 +17,7 @@ describe('reducer', () => {
     const cardToPlay = state.players[0].hand[0];
     const newState = reducer(state, {
       type: ActionType.PLAY_REGULAR_CARD,
-      payload: cardToPlay,
+      payload: { suit: cardToPlay.suit, rank: cardToPlay.rank },
     });
     test('should remove card from current players hand', () => {
       expect(newState.players[0].hand.includes(cardToPlay)).toBeFalsy();
@@ -26,7 +26,7 @@ describe('reducer', () => {
       expect(newState.playersTurnIndex).toEqual(1);
     });
     test('should append card to stack', () => {
-      expect(newState.stack.includes(cardToPlay)).toBeTruthy();
+      expect(newState.stack.find((c) => c.isEqual(cardToPlay))).toBeTruthy();
     });
     test('should not end game', () => {
       expect(newState.gameEnded).toBeFalsy();
@@ -133,7 +133,7 @@ describe('reducer', () => {
       ],
     });
     const card = new Card(Suit.CLUBS, Rank.EIGHT);
-    const player = new Player('1', 'Johnny', [card]);
+    const player = new Player('1', 'Johnny', undefined, [card]);
     state.setPartialState({
       players: [player, state.getState().players[1]],
       stack: [new Card(Suit.CLUBS, Rank.KING)],

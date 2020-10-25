@@ -38,7 +38,7 @@ describe('PoolController', () => {
         );
       });
 
-      const payload = { id: uuidV4(), name: 'Johnny' };
+      const payload = { id: uuidV4(), name: 'Johnny', playAgainstBot: false };
       const res = await request(app).put('/pool/join').send(payload);
 
       expect(res.status).toBe(200);
@@ -57,7 +57,7 @@ describe('PoolController', () => {
         );
       });
 
-      const payload = { id: 'id', name: 'Johnny' };
+      const payload = { id: 'id', name: 'Johnny', playAgainstBot: false };
       const res = await request(app).put('/pool/join').send(payload);
 
       expect(res.status).toBe(400);

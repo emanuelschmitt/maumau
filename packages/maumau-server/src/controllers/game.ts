@@ -5,6 +5,7 @@ import { ClientState } from '../game/client-state-adapter';
 import { Action } from '../game/reducer';
 import { actionSchema } from '../game/validation';
 import GameSessionService from '../service/game-session';
+import { Card } from '../types';
 
 export default class GameController {
   public router = express.Router();
@@ -62,14 +63,27 @@ export default class GameController {
     if (!session) {
       return response.status(404).send({ message: 'session not found' });
     }
-
     const userId = request.headers['x-maumau-user-id'] as string;
-    session.gameState.dispatchForPlayer(userId, request.body);
 
+    session.gameState.dispatchForPlayer(userId, request.body as Action);
     response.status(200).send({ message: 'ok' });
   };
 
   public getRouter() {
     return this.router;
   }
+}
+
+export function recreateCardInstances<T extends Record<string, any>>(input: T): T {
+  const isCardObject = (input: { [x: string]: any }) => input.suit && input.rank;
+
+  for (const [key, value] of Object.entries(input)) {
+    if (typeof value === 'object') {
+      input[key as keyof T] = recreateCardInstances(value);
+    }
+    if (isCardObject(value)) {
+      input[key as keyof T] = new Card(value.suit, value.rank) as any;
+    }
+  }
+  return input;
 }

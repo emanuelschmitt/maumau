@@ -20,6 +20,7 @@ export default class PoolController {
         body: Joi.object({
           id: Joi.string().uuid().required(),
           name: Joi.string().required(),
+          playAgainstBot: Joi.boolean().default(true),
         }),
       }),
       this.join,
@@ -44,9 +45,13 @@ export default class PoolController {
     );
   }
 
-  private join = (request: Request<{}, {}, { id: string; name: string }>, response: Response<{ status: Status }>) => {
-    const { id, name } = request.body;
-    this.matchmakerService.joinPool({ id, name });
+  private join = (
+    request: Request<{}, {}, { id: string; name: string; playAgainstBot: boolean }>,
+    response: Response<{ status: Status }>,
+  ) => {
+    const { id, name, playAgainstBot } = request.body;
+
+    this.matchmakerService.joinPool({ id, name, playAgainstBot });
     response.status(200).send({ status: 'JOINED' });
   };
 

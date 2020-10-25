@@ -1,6 +1,7 @@
 import GameState, { GameStateOptions } from '../game/game-state';
 
 export type Session = {
+  id: string;
   gameState: GameState;
 };
 
@@ -17,7 +18,7 @@ export default class GameSessionService {
 
   public add(id: string, options: GameStateOptions): Session {
     const gameState = new GameState(options);
-    const session: Session = { gameState };
+    const session: Session = { id, gameState };
 
     this.sessions[id] = session;
 

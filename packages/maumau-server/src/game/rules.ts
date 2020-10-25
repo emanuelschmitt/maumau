@@ -31,6 +31,7 @@ export function getActionTypesForPlayer(id: string, state: State): ActionType[] 
   const { players, playersTurnIndex } = state;
 
   if (players[playersTurnIndex].id !== id) {
+    // if it's not players turn, then no actions are possible;
     return [];
   }
 
