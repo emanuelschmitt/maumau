@@ -23,6 +23,7 @@ export default class GameState {
   private state: State;
   private listeners: Array<ListenerFunction>;
   private isDispatching: boolean;
+
   private botController: BotController;
   private playerConnectionManager: PlayerConnectionManager;
 
@@ -31,17 +32,15 @@ export default class GameState {
     this.listeners = [];
 
     this.state = new GameStateBuilder().withPlayers(players).withCardStack().withDealtCards().build();
-    this.playerConnectionManager = new PlayerConnectionManager(this.state, this.dispatch.bind(this));
-    this.botController = new BotController({
-      onBotPlaying: (userId: string, action: Action) => {
-        this.dispatchForPlayer(userId, action);
-      },
-    });
+
+    this.playerConnectionManager = new PlayerConnectionManager(this.getState.bind(this), this.dispatch.bind(this));
+    this.botController = new BotController(this.getState.bind(this), this.dispatch.bind(this));
 
     this.registerListeners();
 
     if (!isTest) {
       this.playerConnectionManager.start();
+      this.botController.start();
     }
   }
 
@@ -66,16 +65,7 @@ export default class GameState {
       listener(this.getState(), this.dispatch.bind(this));
     }
 
-    this.playBotIfNeeded();
-
     return this.state;
-  }
-
-  private playBotIfNeeded() {
-    const player = this.state.players[this.state.playersTurnIndex];
-    if (player.bot) {
-      this.botController.playAction(this.state, player.bot);
-    }
   }
 
   public dispatchForPlayer(id: string, action: Action): State {
@@ -101,6 +91,7 @@ export default class GameState {
     }
 
     player.updateLastSeen();
+
     return getClientStateForPlayerId(id, this.getState());
   }
 

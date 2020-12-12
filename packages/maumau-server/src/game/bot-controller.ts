@@ -4,9 +4,11 @@ import Card from '../models/card';
 import Player from '../models/player';
 import { Rank } from '../models/rank';
 import { Suit } from '../models/suit';
-import random from '../utils/random';
+import delay from '../utils/delay';
+import randomBetween from '../utils/random-between';
 
 import { ActionType } from './action-type';
+import { Dispatch } from './game-state';
 import { Action, State } from './reducer';
 import { getActionTypesForPlayer } from './rules';
 
@@ -21,16 +23,47 @@ const rankActionMap: Record<Rank, ActionType> = {
   [Rank.TEN]: ActionType.PLAY_REGULAR_CARD,
 };
 
-type OnBotPlayingFn = (userId: string, action: Action) => void;
-
 export default class BotController {
-  private onBotPlaying: OnBotPlayingFn;
+  private getState: () => State;
+  private dispatch: Dispatch;
+  private interval: number;
+  private isPlaying: boolean;
 
-  constructor(options: { onBotPlaying: OnBotPlayingFn }) {
-    this.onBotPlaying = options.onBotPlaying;
+  constructor(getState: () => State, dispatch: Dispatch) {
+    this.getState = getState;
+    this.dispatch = dispatch;
+    this.isPlaying = false;
   }
 
-  public playAction(state: State, difficulty: BotDifficulty): void {
+  public start() {
+    this.interval = setInterval(this.playBotIfNeeded.bind(this), 1000);
+  }
+
+  public stop() {
+    clearInterval(this.interval);
+  }
+
+  private async playBotIfNeeded() {
+    const state = this.getState();
+
+    if (state.gameEnded) {
+      // don't play bot if game has ended.
+      return;
+    }
+
+    const player = state.players[state.playersTurnIndex];
+
+    if (player.isBot() && player.bot && !this.isPlaying) {
+      try {
+        this.isPlaying = true;
+        await this.playAction(state, player.bot);
+      } finally {
+        this.isPlaying = false;
+      }
+    }
+  }
+
+  public async playAction(state: State, difficulty: BotDifficulty): Promise<void> {
     // 1. Ensure that only the player is playing who is a bot
     // 2. Ensure game is not ended
     if (Boolean(state.gameEnded)) {
@@ -42,16 +75,15 @@ export default class BotController {
     const possibleActionTypes = getActionTypesForPlayer(player.id, state);
     const bot = createBot(difficulty);
 
-    // Idea: Create a record of possible cards with prepared actions appended to it.
-    // Also interesting for the client state since this logic is very complicated on the
-    // frontend already.
     // Bot then only has to chose a possible card and off we go.
     const actionType = bot.chooseActionType(possibleActionTypes, state);
     const action = this.createAction(player, state, actionType, bot);
 
-    // No delay because of concurrency issues.
-    // FIXME: Fix concurrency.
-    this.onBotPlaying(player.id, action);
+    // delay the bot;
+    const randomDelayMs = randomBetween(1000, 3000);
+    await delay(randomDelayMs);
+
+    this.dispatch(action);
   }
 
   private createAction(player: Player, state: State, actionType: ActionType, bot: Bot): Action {
@@ -100,7 +132,7 @@ export default class BotController {
         break;
       case ActionType.PLAY_JACK:
         const allSuits = [Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES];
-        const nextSuit = allSuits[random(0, allSuits.length - 1)];
+        const nextSuit = allSuits[randomBetween(0, allSuits.length - 1)];
         payload = { card: { suit: card.suit, rank: card.rank }, suit: nextSuit };
         break;
     }

@@ -2,7 +2,7 @@ import { BotDifficulty } from '../bot/bot-difficulty';
 
 import Card from './card';
 
-const DISCONNECT_THRESHOLD_MS = 10 * 1000;
+const DISCONNECT_THRESHOLD_MS = 20 * 1000;
 
 export default class Player {
   public id: string;
@@ -37,6 +37,7 @@ export default class Player {
   }
 
   isDisconnected(): boolean {
-    return Date.now() - this.lastSeen >= DISCONNECT_THRESHOLD_MS;
+    const delta = Date.now() - this.lastSeen;
+    return delta >= DISCONNECT_THRESHOLD_MS;
   }
 }
