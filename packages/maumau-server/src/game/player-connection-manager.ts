@@ -5,12 +5,12 @@ import { Dispatch } from './game-state';
 import { GameEndReason, State } from './reducer';
 
 export default class PlayerConnectionManager {
-  private state: State;
+  private getState: () => State;
   private dispatch: Dispatch;
   private interval: number;
 
-  constructor(state: State, dispatch: Dispatch) {
-    this.state = state;
+  constructor(getState: () => State, dispatch: Dispatch) {
+    this.getState = getState;
     this.dispatch = dispatch;
   }
 
@@ -23,11 +23,13 @@ export default class PlayerConnectionManager {
   }
 
   private checkForDisconnectedPlayer() {
-    if (this.state.gameEnded) {
+    const state = this.getState();
+
+    if (state.gameEnded) {
       this.stop();
     }
 
-    for (const player of this.state.players) {
+    for (const player of state.players) {
       if (player.bot) {
         continue;
       }

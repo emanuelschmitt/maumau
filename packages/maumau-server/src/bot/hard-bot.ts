@@ -1,7 +1,7 @@
 import { ActionType } from '../game/action-type';
 import { State } from '../game/reducer';
 import { Card } from '../types';
-import random from '../utils/random';
+import random from '../utils/random-between';
 
 import { Bot } from './bots';
 

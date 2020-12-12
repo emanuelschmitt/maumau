@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { BotDifficulty } from '../bot/bot-difficulty';
 import { logger } from '../server/logger';
 import randomBotName from '../utils/bot-name';
-import random from '../utils/random';
+import random from '../utils/random-between';
 
 /**
  * Why no Websockets?
