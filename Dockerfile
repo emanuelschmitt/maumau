@@ -19,13 +19,8 @@ WORKDIR ./packages/maumau-server
 ENV NODE_ENV production
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
-# set ts node to transpile only because of memory issues on heroku's free tier.
 ENV TS_NODE_TRANSPILE_ONLY 1
 
-# defined by heroku
-ENV APP_PORT $PORT
-
-# ignored by heroku
 EXPOSE 8080
 
 CMD [ "node", "-r", "ts-node/register", "./src/server/main.ts"]
