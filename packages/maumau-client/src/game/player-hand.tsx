@@ -20,8 +20,6 @@ const CardContainer = styled(animated.div)`
   position: absolute;
 `;
 
-const HoverContainer = styled(animated.div)``;
-
 export type Props = {
   hand: TCard[];
   onPlayCard: (card: TCard) => void;
@@ -90,16 +88,14 @@ function PlayerHand({ hand, onPlayCard, onSelectJack, canPlayCard }: Props) {
     <Container>
       {transitions.map(({ item: card, props, key }) => (
         <CardContainer style={props} key={key}>
-          <HoverContainer>
-            <PlayableCard
-              key={card.rank + card.suit}
-              card={card}
-              buttonProps={{
-                onClick: onCardPlay(card),
-                disabled: !canPlayCard(card),
-              }}
-            />
-          </HoverContainer>
+          <PlayableCard
+            key={card.rank + card.suit}
+            card={card}
+            buttonProps={{
+              onClick: onCardPlay(card),
+              disabled: !canPlayCard(card),
+            }}
+          />
         </CardContainer>
       ))}
     </Container>
