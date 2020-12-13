@@ -2,6 +2,7 @@ import React from 'react';
 import { useTransition, animated, config } from 'react-spring';
 import styled from 'styled-components';
 
+import { ScaleAndSound } from '../animations/scale-and-sound';
 import PlainButton from '../ui/plain-button';
 
 import CardBack from './card-back';
@@ -9,11 +10,11 @@ import CardBack from './card-back';
 const Button = styled(PlainButton)`
   position: relative;
   border-radius: 8px;
-  transition: box-shadow 0.25s ease;
 
-  &:hover {
+  &:hover:enabled {
     cursor: pointer;
     box-shadow: 3px 9px 28px -2px rgba(0, 0, 0, 0.25);
+    z-index: 100;
   }
 `;
 
@@ -50,14 +51,16 @@ function CardStack({ cardBadge, buttonProps }: Props) {
   });
 
   return (
-    <Button {...(buttonProps as any)}>
-      {transitions.map((transition) => (
-        <Badge style={transition.props} key={transition.key}>
-          {transition.item}
-        </Badge>
-      ))}
-      <CardBack />
-    </Button>
+    <ScaleAndSound disabled={buttonProps?.disabled}>
+      <Button {...(buttonProps as any)}>
+        {transitions.map((transition) => (
+          <Badge style={transition.props} key={transition.key}>
+            {transition.item}
+          </Badge>
+        ))}
+        <CardBack />
+      </Button>
+    </ScaleAndSound>
   );
 }
 

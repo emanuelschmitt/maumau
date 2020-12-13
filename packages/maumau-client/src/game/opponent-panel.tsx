@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import useSounds from '../common/use-sounds';
 import CardStatusIcon from '../icons/cards-status';
 
 const Container = styled.div`
@@ -82,6 +83,12 @@ export type OpponentPanelProps = {
 
 function OpponentPanel({ name = '', cardAmount = 0, isPlaying = false }: OpponentPanelProps) {
   const stripAbbreviation = (name: string) => name.substr(0, 2);
+
+  const [playSound] = useSounds('bubble');
+  React.useEffect(() => {
+    playSound({ playbackRate: 0.25 });
+  }, [cardAmount]);
+
   return (
     <Container>
       <Avatar>{stripAbbreviation(name)}</Avatar>

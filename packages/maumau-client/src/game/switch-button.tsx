@@ -3,6 +3,7 @@ import React from 'react';
 import { useTransition, animated } from 'react-spring';
 import styled from 'styled-components';
 
+import useSounds from '../common/use-sounds';
 import SwitchIcon from '../icons/switch';
 import PlainButton from '../ui/plain-button';
 
@@ -34,17 +35,25 @@ const Container = styled(animated.div)`
 type SwitchButtonProps = { show: boolean } & React.HTMLProps<HTMLButtonElement>;
 
 function SwitchButton(props: SwitchButtonProps) {
+  const [playSound] = useSounds('bubble');
   const transitions = useTransition(props.show, null, {
     from: {
       transform: 'scale(0) rotate(0deg)',
     },
-    enter: {
-      transform: 'scale(1) rotate(360deg)',
+    enter: () => {
+      playSound({ playbackRate: 2 });
+      return {
+        transform: 'scale(1) rotate(360deg)',
+      };
     },
-    leave: {
-      transform: 'scale(0) rotate(0deg)',
+    leave: () => {
+      playSound({ playbackRate: 0.75 });
+      return {
+        transform: 'scale(0) rotate(0deg)',
+      };
     },
   });
+
   return (
     <>
       {transitions.map(

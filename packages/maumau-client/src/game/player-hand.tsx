@@ -78,6 +78,14 @@ function PlayerHand({ hand, onPlayCard, onSelectJack, canPlayCard }: Props) {
     },
   });
 
+  const onCardPlay = (card: TCard) => () => {
+    if (card.rank === Rank.JACK) {
+      onSelectJack(card);
+    } else {
+      onPlayCard(card);
+    }
+  };
+
   return (
     <Container>
       {transitions.map(({ item: card, props, key }) => (
@@ -87,7 +95,7 @@ function PlayerHand({ hand, onPlayCard, onSelectJack, canPlayCard }: Props) {
               key={card.rank + card.suit}
               card={card}
               buttonProps={{
-                onClick: () => (card.rank === Rank.JACK ? onSelectJack(card) : onPlayCard(card)),
+                onClick: onCardPlay(card),
                 disabled: !canPlayCard(card),
               }}
             />
